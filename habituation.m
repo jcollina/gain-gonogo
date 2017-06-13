@@ -25,8 +25,6 @@ while cnt < 2000
     end
     
     cnt = cnt + 1;
-    
-   
 end
 
 delete(p);

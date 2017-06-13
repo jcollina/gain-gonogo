@@ -6,11 +6,12 @@ int lickState;             // the current reading from the input pin
 int lastlickState = LOW;   // the previous reading from the input pin
 unsigned long lickStamp;
 long lastReward;
+int rewardCount = 0;
 
 // the following variables are long's because the time, measured in miliseconds,
 // will quickly become a bigger number than can be stored in an int.
 long lastDebounceTime = 0;  // the last time the output pin was toggled
-float debounceDelay = 20000;    // the debounce time; increase if the output flickers
+float debounceDelay = 7000;    // the debounce time; increase if the output flickers
 
 // float variables from MATLAB (sent each session)
 float rewardDur;
@@ -86,7 +87,9 @@ void loop() {
       if ((micros() - lastReward) > (long)(holdTime * (float)1000000)) {
         digitalWrite(valvePin, HIGH);
         lastReward = micros();
-        Serial.print("1  ");
+        rewardCount++;
+        Serial.print(rewardCount);
+        Serial.print("  ");
         Serial.println(micros());
       }
     }
