@@ -11,7 +11,7 @@ p = setupSerialPort(params.com,9600);
 
 % start habituation
 cnt = 0;
-while cnt < 2000
+while cnt < 1e6
     out = serialRead(p);
     fprintf('%s\n',out);
     

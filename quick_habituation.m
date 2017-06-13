@@ -6,7 +6,7 @@ delete(instrfindall)
 dbstop if error
 
 if nargin < 2 || ~exist('paramFile','var');
-    paramFile = 'booth2-params.txt';
+    paramFile = 'booth1-params.txt';
 end
 if nargin < 1 || ~exist('ID','var')
     ID = 'CA999';
