@@ -1,0 +1,2 @@
+boothID,comport,reward_duration(s),debounce(ms),device,channels,samplerate,filterfile,amplification
+booth4,COM3,.011,1000,NIDAQ,[0 1],400000,botBoothFilterNIDAQ_200-90e3hz_fs400e3,10
