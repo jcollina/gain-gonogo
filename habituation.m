@@ -12,7 +12,7 @@ p = setupSerialPort(params.com,9600);
 % start habituation
 cnt = 0;
 while cnt < 1e6
-    out = serialRead(p);
+    out = serialRead(p,params.boothID);
     fprintf('%s\n',out);
     
     % Once started, send variables to arduino
@@ -28,5 +28,9 @@ while cnt < 1e6
 end
 
 delete(p);
+
+% load a blank arduino sketch
+hexPath = [params.hex filesep 'blank.ino.hex'];
+loadArduinoSketch(params.com,hexPath);
 
 
