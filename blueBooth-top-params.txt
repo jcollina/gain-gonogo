@@ -1,2 +1,2 @@
 boothID,comport,reward_duration(s),debounce(ms),device,channels,samplerate,filterfile,amplification
-top,COM5,.0125,7000,ASIO Lynx,[1 2],192000,20170109_topBoothRightFilterSC_3k-80k_fs192k,10/11
+top,COM5,.0125,7000,Asio Lynx,[1 2],192000,20170109_topBoothRightFilterSC_3k-80k_fs192k,10/11

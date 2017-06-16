@@ -11,13 +11,14 @@ p = setupSerialPort(params.com,9600);
 
 % construct the stimuli
 params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
+params.targetDBShift = 15;
 rng(params.seed); % (to make the same stimulus each time)
 if params.sd(2) - params.sd(1) > 0
     params.stim = ['D:\stimuli\gainBehavior\170321_trainingLoHiChord-' params.boothID '.mat'];
-    params.targetDBShift = 20;
+    params.toneA = params.amp70 .* 10 .^ (params.dbSteps./20);
 else
     params.stim = ['D:\stimuli\gainBehavior\170321_trainingHiLoChord-' params.boothID '.mat'];
-    params.targetDBShift = 10;
+    params.toneA = params.toneA(1);
 end
 [stim, events, params.target, params.targetF] = constructStimChordTraining(params,s);
 

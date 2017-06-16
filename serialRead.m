@@ -19,7 +19,7 @@ while 1
         break
     end
     [~,~,keyCode] = KbCheck;
-    if sum(keyCode) >= 1
+    if sum(keyCode) == 2
         if all(strcmp(KbName(keyCode),esc))
             out = '0000 999999 USEREXIT';
             break

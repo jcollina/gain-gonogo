@@ -1,8 +1,10 @@
 function queueOutput(s,stim,device)
 
 isNIDAQ = strcmp(device,'NIDAQ');
+isLYNX = contains(device,'Lynx E44');
+isASIO = strcmp(device,'ASIO Lynx');
 
-if ~isNIDAQ
+if isASIO
     % load stim to soundcard
     PsychPortAudio('FillBuffer', s, stim');
 else

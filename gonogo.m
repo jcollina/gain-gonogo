@@ -1,11 +1,11 @@
-function gonogo(ID,STAGE,paramFile)
+function gonogo(ID,STAGE,paramFile,condition)
 close all
-clearvars -except ID STAGE paramFile
+clearvars -except ID STAGE paramFile condition
 delete(instrfindall)
 dbstop if error
 
 if nargin < 3 || ~exist('paramFile','var');
-    paramFile = 'blueBooth-bot-params.txt';
+    paramFile = 'booth1-params.txt';
 end
 if nargin < 2 || ~exist('STAGE','var')
     STAGE = 0;
@@ -29,7 +29,7 @@ params.data     = [pwd filesep 'data' filesep params.IDstr];
 params.hex      = [pwd filesep '_hex'];
 params.stage    = STAGE;
 params.fn       = [params.data filesep params.IDsess];
-params.filtdir  = 'C:\Users\geffen-behaviour2\Documents\GitHub\filters';
+params.filtdir  = 'D:\GitHub\filters';
 if ~exist(params.data,'dir')
     mkdir(params.data);
 end
@@ -53,7 +53,11 @@ params.rampD        = .005;
 params.nTones       = 34;
 params.freqs        = 4e3 * (2 .^ (([0:params.nTones-1])/10)); % this is n freqs spaced 1/6 octave apart
 params.mu           = 50;
-params.sd           = [15 5];
+if strcmp(condition,'lohi')
+    params.sd = [5 15];
+elseif strcmp(condition,'hilo')
+    params.sd = [15 5];
+end
 params.chordDuration = .025;
 params.nNoiseExemplars = 5;
 params.postTargetTime = 1;
