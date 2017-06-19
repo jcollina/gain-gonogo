@@ -27,6 +27,7 @@ params.dB = params.dB(1);
 
 % open data file
 fn = [params.fn '_training.txt'];
+mat = [params.fn '_training.mat'];
 fid = fopen(fn,'w');
 
 fprintf('PRESS ANY KEY TO START...\n');
@@ -93,6 +94,13 @@ while cnt < 2000
         break;
     end
 end
+
+% compute percent correct
+pc = sum(resp' == tt(:,1)) / length(resp);
+fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
+
+% save matfile
+save(mat,'params','tt','resp');
 
 delete(instrfindall)
 if strcmp(params.device,'NIDAQ')

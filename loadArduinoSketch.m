@@ -5,7 +5,7 @@ cmdIn = sprintf('%s%s%s%s:i"','cmd /C ""C:\Program Files (x86)\Arduino\hardware\
 [status,cmdOut] = dos(cmdIn);
 
 if status == 0
-    disp('LOADED HEX FILE');
+    fprintf('LOADED HEX FILE: %s\n',sketch);
 else
     error('FAILED TO LOAD HEX FILE');
 end
