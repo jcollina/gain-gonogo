@@ -73,6 +73,8 @@ while cnt < 2000
         fprintf(fid,'%04d %s\r',cnt,['00000000 ' cnd]);
         fprintf('%04d %s\n',cnt,['00000000 ' cnd]);
     elseif contains(out,'TON')
+        
+        
         % play stimulus
         startOutput(s,params.device);
     elseif contains(out,'TOFF')
