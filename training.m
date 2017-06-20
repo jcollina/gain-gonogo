@@ -98,7 +98,11 @@ while cnt < 2000
 end
 
 % compute percent correct
-pc = sum(resp' == tt(:,1)) / length(resp);
+if length(resp)==length(tt)
+    pc = sum(resp' == tt(:,1)) / length(resp);
+else
+   pc = sum(resp' == tt(1:length(resp),1)) / length(resp); 
+end
 fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
 
 % save matfile
