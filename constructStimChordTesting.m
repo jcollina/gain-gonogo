@@ -13,6 +13,7 @@ if ~exist(params.stim,'file')
     % make stim
     for i = 1:params.nNoiseExemplars
         for j = 1:length(offset)
+            for k = 1:length(params.
             fprintf('Noise patt %02d, offset %1.2f... ',i,offset(j) - params.baseNoiseD);
             tic
             

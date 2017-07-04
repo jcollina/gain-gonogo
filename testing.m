@@ -1,4 +1,4 @@
-function training(s,params)
+function testing(s, params)
 KbName('UnifyKeyNames');
 delete(instrfindall);
 
@@ -18,7 +18,7 @@ else
     params.stim = ['D:\stimuli\gainBehavior\170321_trainingHiLoChord-' params.boothID '.mat'];
     params.targetDBShift = 10;
 end
-[stim, events, params.target, params.targetF] = constructStimChordTraining(params,s);
+[stim, events, params.target, params.targetF] = constructStimChordTesting(params,s);
 
 % modify params to reflect actual stimuli used
 params.dbSteps = params.dbSteps(1);
