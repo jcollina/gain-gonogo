@@ -96,6 +96,9 @@ while cnt < 2000
     end
 end
 
+% save matfile
+save(mat,'params','tt','resp');
+
 % compute percent correct
 if length(resp)==length(tt)
     pc = sum(resp' == tt(:,1)) / length(resp);
@@ -103,9 +106,6 @@ else
    pc = sum(resp' == tt(1:length(resp),1)) / length(resp); 
 end
 fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
-
-% save matfile
-save(mat,'params','tt','resp');
 
 delete(instrfindall)
 if strcmp(params.device,'NIDAQ')
