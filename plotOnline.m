@@ -1,6 +1,6 @@
 function plotOnline(tt,resp,avg)
 
-tt = tt(:,1)';
+tt = tt(:,1)'>0;
 
 if length(tt) > avg + 1
     correct = tt == resp;

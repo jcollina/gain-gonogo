@@ -3,7 +3,7 @@ function [stim] = makeContrastBlocks(fs,rs,cs,totalDuration,freqs,amps)
 addpath(genpath('~/chris-lab/projects/util/'));
 
 % make a waveform
-stim = zeros(1,totalDuration * fs);
+stim = zeros(1,round(totalDuration * fs));
 t = 0:1/fs:totalDuration-(1/fs);
 % for each frequency
 for i = 1:length(freqs)
