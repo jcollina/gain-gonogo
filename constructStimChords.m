@@ -64,5 +64,3 @@ for i = 1:size(stimf,2)
     %figure;
     %plot([stimf{2,i,1,6};events{i}]');
 end
-
-keyboard
