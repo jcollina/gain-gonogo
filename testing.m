@@ -9,22 +9,25 @@ loadArduinoSketch(params.com,hexPath);
 % open the serial port
 p = setupSerialPort(params.com,9600);
 
-params.noiseD = params.baseNoiseD + [.05 .1 .25 .5 1];
+params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
+%[.05 .1 .25 .5 1];
 rng(params.seed); % (to make the same stimulus each time)
 if params.sd(2) - params.sd(1) > 0
-    params.stim = ['D:\stimuli\gainBehavior\170629_testingLoHiChord-' params.boothID '.mat'];
-    params.targetDBShift = linspace(0,20,6);
+    params.stim = ['D:\stimuli\gainBehavior\170713_testingLoHiChord-' params.boothID '.mat'];
+    params.targetDBShift = linspace(8,20,6);
 else
-    params.stim = ['D:\stimuli\gainBehavior\170629_testingHiLoChord-' params.boothID '.mat'];
-    params.targetDBShift =linspace(-10,10,6);
+    params.stim = ['D:\stimuli\gainBehavior\170713_testingHiLoChord-' params.boothID '.mat'];
+    params.targetDBShift =linspace(-5,15,6);
 end
 [stim, events, params.target, params.targetF] = constructStimChords(params);
+rng('shuffle');
 
 % modify params to reflect actual stimuli used
 % add modifications here
 
 % presentation probabilities
-params.offsetP = [.2 .2 .2 .2 .2];
+params.offsetP = [.25 .25 .25 .25];
+%[.2 .2 .2 .2 .2];
 params.dbP = [.4 .05 .05 .05 .05 .2 .2];
 
 % open data file
@@ -64,9 +67,19 @@ while cnt < 1e6
         % signal or noise
         tt(cnt,1) = l - 1;
         
-        % make sure there aren't too many repeats
-        if cnt > 3 && range(tt(end-3:end-1,1)) == 0
-            tt(cnt,1) = ~tt(cnt-1,1);
+        % make sure there aren't too many repeats of signal or noise
+        if cnt > 3 
+            if all(tt(end-3:end-1,1) == 0)
+                % if they're all noise, make next trial a signal trial
+                % according to the signal probabilities
+                intl = [0 cumsum(params.dbP(2:end)) / sum(params.dbP(2:end))];
+                l = discretize(rand,intl,'IncludedEdge','right');
+                tt(cnt,1) = l;
+            end
+            if all(tt(end-3:end-1,1) > 0)
+                % if they're all signal trials, make the next trial noise
+                tt(cnt,1) = 0;
+            end
         end
         
         % determine offset
@@ -119,9 +132,9 @@ save(mat,'params','tt','resp');
 
 % compute percent correct
 if length(resp)==length(tt)
-    pc = sum(resp' == tt(:,1)) / length(resp);
+    pc = sum(resp' == tt(:,1))>0 / length(resp);
 else
-   pc = sum(resp' == tt(1:length(resp),1)) / length(resp); 
+   pc = sum(resp' == tt(1:length(resp),1))>0 / length(resp); 
 end
 fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
 
@@ -135,5 +148,18 @@ delete(p);
 hexPath = [params.hex filesep 'blank.ino.hex'];
 loadArduinoSketch(params.com,hexPath);
 
-clear all
+% plot performance over time and save
+f1 = figure(1);
+plotOnline(tt,resp,runningAverage);
+print(f1,sprintf('%s_testing_performance.png',params.fn),'-dpng','-r300');
+
+% and psychometric performance
+f2 = figure(2);
+l = [nan params.targetDBShift];
+[t,trialType,response,RT] = parseLog(fn);
+psychometricCurve(trialType,response,l);
+title(sprintf('%s Psychometric Curve',params.IDsess));
+
+keyboard
+
 

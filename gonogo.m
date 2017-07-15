@@ -88,4 +88,5 @@ while cnt <= length(STAGE)
 end
 
 close('all')
+close all
 clear all

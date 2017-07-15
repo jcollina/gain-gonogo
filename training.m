@@ -15,10 +15,11 @@ if params.sd(2) - params.sd(1) > 0
     params.stim = ['D:\stimuli\gainBehavior\170321_trainingLoHiChord-' params.boothID '.mat'];
     params.targetDBShift = 20;
 else
-    params.stim = ['D:\stimuli\gainBehavior\170321_trainingHiLoChord-' params.boothID '.mat'];
-    params.targetDBShift = 10;
+    params.stim = ['D:\stimuli\gainBehavior\170708_trainingHiLoChord-' params.boothID '.mat'];
+    params.targetDBShift = 15;
 end
 [stim, events, params.target, params.targetF] = constructStimChordTraining(params,s);
+rng('shuffle');
 
 % modify params to reflect actual stimuli used
 params.dbSteps = params.dbSteps(1);
@@ -116,4 +117,7 @@ delete(p);
 % load the arduino sketch
 hexPath = [params.hex filesep 'blank.ino.hex'];
 loadArduinoSketch(params.com,hexPath);
-clear all
+
+f1 = figure(1);
+plotOnline(tt,resp,runningAverage);
+print(f1,sprintf('%s_training_performance.png',params.fn),'-dpng','-r300');
