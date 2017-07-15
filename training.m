@@ -69,7 +69,7 @@ while cnt < 2000
         sound = [stim{tt(cnt,1)+1,tt(cnt,2),tt(cnt,3)} * params.ampF; ...
             events{tt(cnt,2)} * 1]';
         queueOutput(s,sound,params.device);
-        cnd = sprintf('COND%d%d%02d',tt(cnt,:));
+        cnd = sprintf('COND%d%d%d',tt(cnt,:));
         fprintf(fid,'%04d %s\r',cnt,['00000000 ' cnd]);
         fprintf('%04d %s\n',cnt,['00000000 ' cnd]);
     elseif contains(out,'TON')
