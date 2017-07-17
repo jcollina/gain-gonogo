@@ -156,7 +156,6 @@ print(f1,sprintf('%s_testing_performance.png',params.fn),'-dpng','-r300');
 % and psychometric performance
 f2 = figure(2);
 l = [nan params.targetDBShift];
-[t,trialType,response,RT] = parseLog(fn);
 psychometricCurve(trialType,response,l);
 title(sprintf('%s Psychometric Curve',params.IDsess));
 
