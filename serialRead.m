@@ -8,6 +8,10 @@ elseif strcmp(id,'booth3')
     escapeCode = '3#';
 elseif strcmp(id,'booth4')
     escapeCode = '4$';
+elseif strcmp(id,'booth5')
+    escapeCode = '5%';
+elseif strcmp(id,'booth6')
+    escapeCode = '6^';
 else
     escapeCode = [];
 end

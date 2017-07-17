@@ -7,8 +7,12 @@ isASIO = strcmp(device,'ASIO Lynx');
 if isASIO
     % load stim to soundcard
     PsychPortAudio('FillBuffer', s, stim');
-else
+elseif isNIDAQ
     % load stim to NIDAQ
+    queueOutputData(s,stim);
+elseif isLYNX
+    % load stim to DirectSoundDriver
+    stim(:,2) = stim(:,2) / 2;
     queueOutputData(s,stim);
 end
 

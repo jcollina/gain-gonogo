@@ -109,7 +109,7 @@ while cnt < 1e6
         startOutput(s,params.device);
     elseif contains(out,'TOFF')
         % make sure we're ready for the next trial
-        if strcmp(params.device,'NIDAQ')
+        if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
             if s.IsRunning
                 stop(s);
             end

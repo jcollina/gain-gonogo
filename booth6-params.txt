@@ -1,0 +1,3 @@
+boothID,comport,reward_duration(s),debounce(ms),device,channels,samplerate,filterfile,amplification
+booth6,COM5,.011,1000,2- Lynx E44,[1 2],192e3,170615_booth6_3k-80k_fs192k,10/11
+
