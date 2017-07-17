@@ -119,5 +119,6 @@ hexPath = [params.hex filesep 'blank.ino.hex'];
 loadArduinoSketch(params.com,hexPath);
 
 f1 = figure(1);
+[~,tt,resp,~] = parseLog(fn);
 plotOnline(tt,resp,runningAverage);
 print(f1,sprintf('%s_training_performance.png',params.fn),'-dpng','-r300');
