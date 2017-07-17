@@ -14,7 +14,7 @@ for i = 1:nConditions
 end
 
 % fit the psychometric function
-fit = psychometricFit(r(2:end),n(2:end),l(2:end));
+fit = psychometricFit(r(2:end),n(2:end),l);
 
 % plotting
 h = figure;
@@ -24,7 +24,7 @@ plot(min(l)-5, hr(1),'.k','MarkerSize',30);
 xLimits = xlim;
 plot([xLimits(1) fit.thresh],[.5 .5],'--k');
 plot([fit.thresh fit.thresh],[0 .5],'--k');
-plot(l(2:end),hr(2:end),'.r','MarkerSize',30);
+plot(l,hr(2:end),'.r','MarkerSize',30);
 xlabel('dbSteps');
 ylabel('pHit');
 ylim([0 1]);

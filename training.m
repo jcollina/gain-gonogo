@@ -120,5 +120,5 @@ loadArduinoSketch(params.com,hexPath);
 
 f1 = figure(1);
 [~,tt,resp,~] = parseLog(fn);
-plotOnline(tt,resp,runningAverage);
+plotOnline(tt(:,1),resp,runningAverage);
 print(f1,sprintf('%s_training_performance.png',params.fn),'-dpng','-r300');

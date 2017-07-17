@@ -150,14 +150,17 @@ loadArduinoSketch(params.com,hexPath);
 
 % plot performance over time and save
 f1 = figure(1);
-plotOnline(tt,resp,runningAverage);
+[~,trialType,response,~] = parseLog(fn);
+plotOnline(trialType(:,1),response,runningAverage);
 print(f1,sprintf('%s_testing_performance.png',params.fn),'-dpng','-r300');
 
 % and psychometric performance
 f2 = figure(2);
-l = [nan params.targetDBShift];
-psychometricCurve(trialType,response,l);
+l = params.targetDBShift;
+psychometricCurve(trialType(:,1),response,l);
 title(sprintf('%s Psychometric Curve',params.IDsess));
+print(f2,sprintf('%s_testing_curve.png',params.fn),'-dpng','-r300');
+
 
 keyboard
 
