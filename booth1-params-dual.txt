@@ -1,3 +1,2 @@
 boothID,comport,reward_duration(s),debounce(ms),device,channels,samplerate,filterfile,amplification
-booth3,COM4,.012,1000,ASIO Lynx,[0 1],192e3,170615_booth3_3k-80k_fs192k,10/11
-
+booth1,COM4,.03,1000,Lynx E44,[1 2],192e3,170615_booth1_3k-80k_fs192k,10/11

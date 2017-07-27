@@ -17,7 +17,6 @@ end
 fit = psychometricFit(r(2:end),n(2:end),l);
 
 % plotting
-h = figure;
 hold on
 plot(fit.x,fit.y,'k','LineWidth',2);
 plot(min(l)-5, hr(1),'.k','MarkerSize',30);

@@ -99,7 +99,7 @@ while cnt < 1e6
             lvl = tt(cnt,1);
         end
         sound = [stim{(tt(cnt,1)>0)+1,tt(cnt,2),tt(cnt,3),lvl} * params.ampF; ...
-            events{tt(cnt,2)} * 1]';
+            events{tt(cnt,2)} / 2]';
         queueOutput(s,sound,params.device);
         cnd = sprintf('COND%d%d%d',tt(cnt,:));
         fprintf(fid,'%04d %s\r',cnt,['00000000 ' cnd]);
@@ -160,8 +160,4 @@ l = params.targetDBShift;
 psychometricCurve(trialType(:,1),response,l);
 title(sprintf('%s Psychometric Curve',params.IDsess));
 print(f2,sprintf('%s_testing_curve.png',params.fn),'-dpng','-r300');
-
-
-keyboard
-
 
