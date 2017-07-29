@@ -1,4 +1,4 @@
-function plotOnline(tt,resp,avg)
+function plotOnline(tt,resp,avg,tstr)
 
 tt = tt(:,1)'>0;
 
@@ -12,6 +12,7 @@ if length(tt) > avg + 1
         'LineWidth',2,...
         'TickDir','out',...
         'FontSize',15);
+    plot([0 length(tt)],[.5 .5],'k--','LineWidth',1);
     plot(1:length(meanCorrect),meanCorrect,'Color',[0 0 0],'LineWidth',2);
     for i = 1:length(meanCorrect)
         if tt(i) == 1
@@ -39,7 +40,9 @@ if length(tt) > avg + 1
     ylabel('% Correct');
     legend(h,'Hit','Miss','FA','CR','Location','southeast');
     legend boxoff
+    title(tstr)
     hold off
+    grid on
     
     drawnow
 end
