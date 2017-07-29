@@ -15,7 +15,7 @@ if params.sd(2) - params.sd(1) > 0
     params.stim = ['D:\stimuli\gainBehavior\170728_trainingLoHiChord-' params.boothID '-dual.mat'];
     params.targetDBShift = 20;
 else
-    params.stim = ['D:\stimuli\gainBehavior\170728_trainingHiLoChord-' params.boothID '-dual.mat'];
+    params.stim = ['D:\stimuli\gainBehavior\17072_trainingHiLoChord-' params.boothID '-dual.mat'];
     params.targetDBShift = 15;
 end
 [stim, events, params.target, params.targetF] = constructStimChordTraining(params,s);
@@ -24,6 +24,9 @@ rng('shuffle');
 % modify params to reflect actual stimuli used
 params.dbSteps = params.dbSteps(1);
 params.dB = params.dB(1);
+
+% graph title
+tstr = [params.boothID ': ' params.IDstr];
 
 % open data file
 fn = [params.fn '_training.txt'];
@@ -85,7 +88,7 @@ while cnt < 2000
             end
         end
         % plot the stuff
-        plotOnline(tt,resp,runningAverage);
+        plotOnline(tt,resp,runningAverage,tstr);
         cnt = cnt + 1;
     elseif contains(out,'REWARDON') || contains(out,'TOSTART')
         % some response logic
@@ -120,5 +123,5 @@ loadArduinoSketch(params.com,hexPath);
 
 f1 = figure(1);
 [~,tt,resp,~] = parseLog(fn);
-plotOnline(tt(:,1),resp,runningAverage);
+plotOnline(tt(:,1),resp,runningAverage,tstr);
 print(f1,sprintf('%s_training_performance.png',params.fn),'-dpng','-r300');
