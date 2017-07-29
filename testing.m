@@ -30,6 +30,9 @@ params.offsetP = [.25 .25 .25 .25];
 %[.2 .2 .2 .2 .2];
 params.dbP = [.4 .05 .05 .05 .05 .2 .2];
 
+% graph title
+tstr = [params.boothID ': ' params.IDstr];
+
 % open data file
 fn = [params.fn '_testing.txt'];
 mat = [params.fn '_testing.mat'];
@@ -115,7 +118,7 @@ while cnt < 1e6
             end
         end
         % plot the stuff
-        plotOnline(tt,resp,runningAverage);
+        plotOnline(tt,resp,runningAverage,tstr);
         cnt = cnt + 1;
     elseif contains(out,'REWARDON') || contains(out,'TOSTART')
         % some response logic
@@ -151,7 +154,7 @@ loadArduinoSketch(params.com,hexPath);
 % plot performance over time and save
 f1 = figure(1);
 [~,trialType,response,~] = parseLog(fn);
-plotOnline(trialType(:,1),response,runningAverage);
+plotOnline(trialType(:,1),response,runningAverage,tstr);
 print(f1,sprintf('%s_testing_performance.png',params.fn),'-dpng','-r300');
 
 % and psychometric performance
