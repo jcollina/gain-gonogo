@@ -103,14 +103,6 @@ end
 % save matfile
 save(mat,'params','tt','resp');
 
-% compute percent correct
-if length(resp)==length(tt)
-    pc = sum(resp' == tt(:,1)) / length(resp);
-else
-   pc = sum(resp' == tt(1:length(resp),1)) / length(resp); 
-end
-fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
-
 delete(instrfindall)
 if strcmp(params.device,'NIDAQ')
     stop(s);
@@ -121,7 +113,19 @@ delete(p);
 hexPath = [params.hex filesep 'blank.ino.hex'];
 loadArduinoSketch(params.com,hexPath);
 
+% save figure
 f1 = figure(1);
 [~,tt,resp,~] = parseLog(fn);
 plotOnline(tt(:,1),resp,runningAverage,tstr);
 print(f1,sprintf('%s_training_performance.png',params.fn),'-dpng','-r300');
+
+% compute percent correct
+if length(resp)==length(tt)
+    pc = sum(resp' == tt(:,1)) / length(resp);
+else
+   pc = sum(resp' == tt(1:length(resp),1)) / length(resp); 
+end
+rews = sum(resp'==1 & (tt(:,1)>0));
+fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
+fprintf('\nReceived %03d rewards: %0.4f nL per reward (if  received 1 mL total)\n\n', ...
+    rews,1/rews*1000);
