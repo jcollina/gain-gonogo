@@ -133,14 +133,22 @@ end
 % save matfile
 save(mat,'params','tt','resp');
 
-% close everything
+% compute percent correct and reward count
+if length(resp)==length(tt)
+    pc = mean(resp' == (tt(:,1)>0));
+else
+    pc = mean(resp' == (tt(1:length(resp),1)>0));
+end
+rews = sum(resp'==1 & (tt(:,1)>0));
+fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
+fprintf('\n\nReceived %03d rewards: %0
+
 delete(instrfindall)
 if strcmp(params.device,'NIDAQ')
     stop(s);
 end
 fclose('all');
 delete(p);
-
 % load the arduino sketch
 hexPath = [params.hex filesep 'blank.ino.hex'];
 loadArduinoSketch(params.com,hexPath);
@@ -157,15 +165,4 @@ l = params.targetDBShift;
 psychometricCurve(trialType(:,1),response,l);
 title(sprintf('%s Psychometric Curve',params.IDsess));
 print(f2,sprintf('%s_testing_curve.png',params.fn),'-dpng','-r300');
-
-% compute percent correct and reward count
-if length(resp)==length(tt)
-    pc = mean(resp' == (tt(:,1)>0));
-else
-    pc = mean(resp' == (tt(1:length(resp),1)>0));
-end
-rews = sum(resp'==1 & (tt(:,1)>0));
-fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
-fprintf('\nReceived %03d rewards: %0.4f nL per reward (if  received 1 mL total)\n\n', ...
-    rews,1/rews*1000);
 
