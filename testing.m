@@ -161,10 +161,12 @@ print(f2,sprintf('%s_testing_curve.png',params.fn),'-dpng','-r300');
 % compute percent correct and reward count
 if length(resp)==length(tt)
     pc = mean(resp' == (tt(:,1)>0));
+    rews = sum(resp'==1 & (tt(:,1)>0));
 else
     pc = mean(resp' == (tt(1:length(resp),1)>0));
+    rews = sum(resp'==1 & (tt(1:length(resp),1)>0));
 end
-rews = sum(resp'==1 & (tt(:,1)>0));
+
 fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
 fprintf('\nReceived %03d rewards: %0.4f nL per reward (if  received 1 mL total)\n\n', ...
     rews,1/rews*1000);
