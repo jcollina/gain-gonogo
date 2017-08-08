@@ -44,11 +44,7 @@ params.filt         = load([params.filtdir filesep params.filtFile]);
 params.filt         = params.filt.FILT;
 params.toneF        = 15e3;
 params.baseNoiseD   = 3;
-params.dbSteps      = [linspace(5,-15,6)]; %linspace(0,-20,5);
-params.dB           = 70 + params.dbSteps;
 params.amp70        = .1;
-params.toneA        = params.amp70 .* 10 .^ (params.dbSteps./20);
-params.noiseA       = 1;
 params.rampD        = .005;
 params.nTones       = 34;
 params.freqs        = 4e3 * (2 .^ (([0:params.nTones-1])/10)); % this is n freqs spaced 1/6 octave apart
@@ -81,8 +77,8 @@ while cnt <= length(STAGE)
             disp('RUNNING TESTING');
             testing(s,params);
         case 3
-            disp('RUNNING VARIABLE NOISE');
-            testingVarOffsets(s,params);
+            disp('RUNNING OFFSET TESTING');
+            testingOffsets(s,params);
     end
     cnt = cnt + 1;
 end

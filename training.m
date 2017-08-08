@@ -66,7 +66,7 @@ while cnt < 2000
         tt(cnt,2) = randi(size(stim,2),1);
         
         % determine noise pattern
-        tt(cnt,3) = randi(size(stim,2),1);
+        tt(cnt,3) = randi(size(stim,3),1);
         
         % queue stimulus
         sound = [stim{tt(cnt,1)+1,tt(cnt,2),tt(cnt,3)} * params.ampF; ...
