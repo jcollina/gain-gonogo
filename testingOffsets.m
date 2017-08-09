@@ -41,8 +41,8 @@ params.dbP = [.4 .2 .4];
 tstr = [params.boothID ': ' params.IDstr];
 
 % open data file
-fn = [params.fn '_testing.txt'];
-mat = [params.fn '_testing.mat'];
+fn = [params.fn '_offsetTesting.txt'];
+mat = [params.fn '_offsetTesting.mat'];
 fid = fopen(fn,'w');
 
 fprintf('PRESS ANY KEY TO START...\n');
@@ -156,14 +156,14 @@ loadArduinoSketch(params.com,hexPath);
 f1 = figure(1);
 [~,trialType,response,~] = parseLog(fn);
 plotOnline(trialType(:,1),response,runningAverage,tstr);
-print(f1,sprintf('%s_testing_performance.png',params.fn),'-dpng','-r300');
+print(f1,sprintf('%s_offsetTesting_performance.png',params.fn),'-dpng','-r300');
 
 % and psychometric performance
 f2 = figure(2);
 l = params.targetDBShift;
 psychometricCurve(trialType(:,1),response,l);
 title(sprintf('%s Psychometric Curve',params.IDsess));
-print(f2,sprintf('%s_testing_curve.png',params.fn),'-dpng','-r300');
+print(f2,sprintf('%s_offsetTesting_curve.png',params.fn),'-dpng','-r300');
 
 % compute percent correct and reward count
 if length(resp)==length(tt)
