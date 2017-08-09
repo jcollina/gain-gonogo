@@ -22,8 +22,6 @@ end
 rng('shuffle');
 
 % modify params to reflect actual stimuli used
-params.dbSteps = params.dbSteps(1);
-params.dB = params.dB(1);
 
 % graph title
 tstr = [params.boothID ': ' params.IDstr];
