@@ -5,6 +5,8 @@ disp(['ANALYZING MOUSE ' ID]);
 baseDir = '~/gits/gain-gonogo/data';
 dataDir = [baseDir filesep ID];
 
+taskStr = {'LoHi','HiLo'};
+
 %% analyze training
 % load training files (only ones with n trials or more)
 n = 150;
@@ -29,7 +31,7 @@ axis tight
 legend('.25','.5','.75','1.0','avg','Location','se');
 ylabel('d-prime');
 xlabel('Training Session');
-title(ID)
+title([ID ' - ' taskStr{task+1}])
 
 % percent correct
 subplot(3,3,4)
@@ -164,6 +166,55 @@ if ~isempty(testingFiles)
     print(f2,[ID '-gumbalfits'],'-dpdf','-r300');
 end
     
+
+%% analyze offset testing
+n = 150;
+offsetFiles = dir([dataDir filesep '*_offsetTesting.txt']);
+if ~isempty(offsetFiles)
+    [rate,fa,dp,snr,offsets] = offsetAnalysis(offsetFiles,dataDir, ...
+                                              n);
+    
+    
+    % plot rates
+    figure(1)
+    subplot(3,3,8)
+    hold on
+    plot(offsets,rate(1,:),'r','LineWidth',2);
+    plot(offsets,rate(2,:),'k','LineWidth',2);
+    plot(offsets,fa,'-','Color',[.4 .4 .4],'LineWidth',2);
+    hold off
+    ylabel('p(Response)')
+    xlabel('Offset (s)');
+    xtickangle(90);
+    legend('Threshold','High SNR','FA','Location','East');
+    set(gca,'XTick',offsets);
+    set(gca,'FontSize',16);
+    set(gca,'LineWidth',2);
+    set(gca,'TickDir','out'); 
+    
+    subplot(3,3,9)
+    hold on
+    plot(offsets,dp(1,:),'r','LineWidth',2);
+    plot(offsets,dp(2,:),'k','LineWidth',2);
+    hold off
+    ylabel('d-prime')
+    xlabel('Offset (s)');
+    xtickangle(90);
+    legend('Threshold','High SNR','Location','East');
+    set(gca,'XTick',offsets);
+    set(gca,'FontSize',16);
+    set(gca,'LineWidth',2);
+    set(gca,'TickDir','out');
+    
+    set(f1,'PaperPositionMode','auto');         
+    set(f1,'PaperOrientation','landscape');
+    set(f1,'PaperUnits','points');
+    set(f1,'PaperSize',[1300 1000]);
+    set(f1,'Position',[0 0 1300 1000]);
+    print(f1,[ID '-summary'],'-dpdf','-r300');
+end
+
+
 
 
 

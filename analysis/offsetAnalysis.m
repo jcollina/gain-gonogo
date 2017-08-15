@@ -1,42 +1,60 @@
-function [hrThresh, hrEasyTr, fa, offsets] =  offsetAnalysis(d,files)
+function [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList,dataDir,n)
 
-% preload all files and remove ones with too few trials
-for i = 1:length(files)
-    a = load([d filesep files(i).name]);
-    if length(a.ts) < 100
-        files(i) = [];
-    end
-end
-
-% for each file
-for i = 1:length(files)
-    clear trialType ts params ind resp
-    load([d filesep files(i).name]);
-    
-    % extract responses and trial type
-    for j = 1:length(ts)
-        resp(j) = any(ts(j).lick < ts(j).respend & ...
-                      ts(j).lick > ts(j).respstart);
-    end
-    ind = removeBadTrials(resp);
-    resp = resp(ind(1):ind(2));
-    tt = trialType(ind(1):ind(2),:);
-    
-    % get performance at offset for each level
-    lvls = unique(tt(:,1));
-    offs = unique(tt(:,2));
-    for j = 1:length(lvls)
-        for k = 1:length(offs)
-            ind = tt(:,1) == lvls(j) & tt(:,2) == offs(k);
-            ntrials(j,k) = sum(ind);
-            nresps(j,k) = sum(resp(ind));
-            rate(j,k) = nresps(j,k) / ntrials(j,k);
+addpath(genpath('~/chris-lab/code_general/'));
+disp('Loading offset testing files...');
+cnt = 1;
+for i = 1:length(fileList)
+    fn = [dataDir filesep fileList(i).name];
+    if fileList(i).bytes > 1000
+        t = parseLog(fn);
+        if length(t) > n
+            testingList{cnt} = fn;
+            cnt = cnt + 1;
         end
     end
-    hrThresh(i,:) = rate(3,:);
-    hrEasyTr(i,:) = rate(2,:);
-    fa(i,:) = rate(1,:);
 end
 
-offsets = params.offset - params.baseNoiseD;
+%% analyze each testing session
+% 1. stats
+% 2. fit all of them
+% (trialtype: [signal/noise, offset, noisepatt])
+figure(2)
+disp('Analyzing offset testing session: ');
+for i = 1:length(testingList)
+    % load the data (and get the date and snr values used)
+    [~, trialType, response, RT] = parseLog(testingList{i});
+    tmp = strfind(testingList{i},'_');
+    dateStr(i,:) = str2num(testingList{i}(tmp(1)+1:tmp(2)-1));
+    disp(dateStr(i,:));
+    load([testingList{i}(1:end-4) '.mat'],'params');
+    snr(i,:) = params.targetDBShift;
+    offsets(i,:) = params.noiseD - params.baseNoiseD;
+    
+    % get good trials
+    [~,~,~,~,goodIdx] = computePerformanceGoNoGo(response,trialType,1,7);
+    RT = RT(goodIdx==1);
+    response = response(goodIdx==1);
+    trialType = trialType(goodIdx==1,:);
+        
+    % compute stats
+    lvls = unique(trialType(:,1));
+    offs = unique(trialType(:,2));
+    for j = 1:length(lvls)
+        for k = 1:length(offs)
+            ind = trialType(:,1) == lvls(j) & ...
+                  trialType(:,2) == offs(k);
+            rate(j,k) = mean(response(ind));
+        end
+    end
+    % split out fa and rate
+    fa = rate(1,:);
+    rate = rate(2:3,:);
+    
+    % dprime
+    rate(rate>.999) = .999;
+    rate(rate<.001) = .001;
+    dp(1,:) = norminv(rate(1,:)) - norminv(fa);
+    dp(2,:) = norminv(rate(2,:)) - norminv(fa);
+    end
+end
 
