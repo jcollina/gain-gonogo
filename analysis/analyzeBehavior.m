@@ -14,6 +14,13 @@ trainingFiles = dir([dataDir filesep '*_training.txt']);
 [dprime,pcorrect,allRT,dpOffset,pcOffset,rtOffset,day] = ...
     trainingAnalysis(trainingFiles,dataDir,n);
 
+if task == 1
+    str = 'HiLo';
+    lineColor = [0 0 1];
+elseif task == 0
+    lineColor = [1 0 0];
+end
+
 f1 = figure(1); clf;
 % d'
 subplot(3,3,1)
@@ -174,34 +181,55 @@ if ~isempty(offsetFiles)
     [rate,fa,dp,snr,offsets] = offsetAnalysis(offsetFiles,dataDir, ...
                                               n);
     
-    
     % plot rates
     figure(1)
     subplot(3,3,8)
     hold on
-    plot(offsets,rate(1,:),'r','LineWidth',2);
-    plot(offsets,rate(2,:),'k','LineWidth',2);
-    plot(offsets,fa,'-','Color',[.4 .4 .4],'LineWidth',2);
+    x = offsets(1,:);
+    if size(rate,1) > 1
+        errorbar(x,mean(squeeze(rate(:,1,:))), ...
+                 std(squeeze(rate(:,1,:)))./sqrt(size(rate,1)), ...
+                 '-','LineWidth',2,'Markersize',25,'Color',lineColor);
+        errorbar(x,mean(squeeze(rate(:,2,:))), ...
+                 std(squeeze(rate(:,2,:)))./sqrt(size(rate,1)), ...
+                 'k-','LineWidth',2,'Markersize',25);
+        errorbar(x,mean(fa),std(fa)./sqrt(size(fa,1)), ...
+                 '-','Color',[.4 .4 .4],'LineWidth',2);
+    else
+        plot(x,squeeze(rate(:,1,:)),'Color',lineColor,'LineWidth',2);
+        plot(x,squeeze(rate(:,2,:)),'k','LineWidth',2);
+        plot(x,fa,'-','Color',[.4 .4 .4],'LineWidth',2);
+    end
     hold off
     ylabel('p(Response)')
     xlabel('Offset (s)');
     xtickangle(90);
     legend('Threshold','High SNR','FA','Location','East');
-    set(gca,'XTick',offsets);
+    set(gca,'XTick',x);
     set(gca,'FontSize',16);
     set(gca,'LineWidth',2);
     set(gca,'TickDir','out'); 
+
     
     subplot(3,3,9)
     hold on
-    plot(offsets,dp(1,:),'r','LineWidth',2);
-    plot(offsets,dp(2,:),'k','LineWidth',2);
+    if size(dp,1) > 1
+        errorbar(x,mean(squeeze(dp(:,1,:))), ...
+                 std(squeeze(dp(:,1,:)))./sqrt(size(dp,1)), ...
+                 '-','LineWidth',2,'Markersize',25,'Color',lineColor);
+        errorbar(x,mean(squeeze(dp(:,2,:))), ...
+                 std(squeeze(rate(:,2,:)))./sqrt(size(dp,1)), ...
+                 'k-','LineWidth',2,'Markersize',25,'LineWidth',2);
+    else
+        plot(x,squeeze(dp(:,1,:)),'Color',lineColor,'LineWidth',2);
+        plot(x,squeeze(dp(:,2,:)),'k','LineWidth',2);
+    end
     hold off
     ylabel('d-prime')
     xlabel('Offset (s)');
     xtickangle(90);
     legend('Threshold','High SNR','Location','East');
-    set(gca,'XTick',offsets);
+    set(gca,'XTick',x);
     set(gca,'FontSize',16);
     set(gca,'LineWidth',2);
     set(gca,'TickDir','out');
