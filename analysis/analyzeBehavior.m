@@ -85,7 +85,7 @@ print(f1,[ID '-summary'],'-dpdf','-r300');
 
 %% analyze testing
 n = 150;
-faCut = .25;
+faCut = .3;
 testingFiles = dir([dataDir filesep '*_testing.txt']);
 if ~isempty(testingFiles)
     f2 = figure(2);
@@ -132,8 +132,8 @@ if ~isempty(testingFiles)
     hold on
     plot([tx tx], [0 ty],'k--','LineWidth',2);
     plot(fitx,fity,'r','LineWidth',2)
-    if size(rate,1) > 1
-        errorbar(x,mean(rate(ind1&ind,:)), ...
+    if size(rate(ind1&ind,:),1) > 1
+        errorbar(x,mean(rate(ind1&ind,:),1), ...
                  std(rate(ind1&ind,:))./sqrt(sum(ind1&ind)), ...
                  'k.','LineWidth',2,'Markersize',25);
         errorbar(min(x) - mean(diff(x)), ...
@@ -142,8 +142,8 @@ if ~isempty(testingFiles)
                  '.','Color',[.5 .5 .5], ...
                  'LineWidth',2,'MarkerSize',25);
     else
-        plot(x,rate,'k.','LineWidth',2,'Markersize',25);
-        plot(min(x) - mean(diff(x)),fa,'.','Color',[.5 .5 .5], ...
+        plot(x,rate(ind1&ind,:),'k.','LineWidth',2,'Markersize',25);
+        plot(min(x) - mean(diff(x)),fa(ind1&ind),'.','Color',[.5 .5 .5], ...
                  'LineWidth',2,'MarkerSize',25);
     end
     set(gca,'XTick',[min(x)-mean(diff(x)) x])

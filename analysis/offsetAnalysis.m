@@ -53,6 +53,8 @@ for i = 1:length(testingList)
     % dprime
     rate(rate>.999) = .999;
     rate(rate<.001) = .001;
+    fa(fa>.999) = .999;
+    fa(fa<.001) = .001;
     dp(i,1,:) = norminv(squeeze(rate(i,1,:))') - norminv(fa(i,:));
     dp(i,2,:) = norminv(squeeze(rate(i,2,:))') - norminv(fa(i,:));
     end
