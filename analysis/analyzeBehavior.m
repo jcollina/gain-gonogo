@@ -86,11 +86,12 @@ print(f1,[ID '-summary'],'-dpdf','-r300');
 %% analyze testing
 n = 150;
 faCut = .3;
+hrCut = .8;
 testingFiles = dir([dataDir filesep '*_testing.txt']);
 if ~isempty(testingFiles)
     f2 = figure(2);
     [rate,fa,dp,threshold,fit,ind,dbs] = psychAnalysis(testingFiles, ...
-                                                      dataDir,n,faCut);
+                                                      dataDir,n,faCut,hrCut);
     display(['Threshold = ' num2str(threshold)]);
 
     % exclude initial dbs values

@@ -1,4 +1,4 @@
-function [rate,fa,dp,threshold,fit,ind,snr] = psychAnalysis(fileList,dataDir,n,faCut)
+function [rate,fa,dp,threshold,fit,ind,snr] = psychAnalysis(fileList,dataDir,n,faCut,hrCut)
 
 addpath(genpath('~/chris-lab/code_general/'));
 disp('Loading testing files...');
@@ -18,7 +18,7 @@ end
 % 1. stats
 % 2. fit all of them
 % (trialtype: [signal/noise, offset, noisepatt])
-figure(2)
+figure(2); clf;
 disp('Analyzing testing session: ');
 for i = 1:length(testingList)
     % load the data (and get the date and snr values used)
@@ -46,6 +46,6 @@ for i = 1:length(testingList)
 end
 
 % get threshold for good sessions
-ind = fa < faCut;
+ind = fa < faCut & max(rate,[],2)' > hrCut;
 tmp = [fit.thresh];
 threshold = mean(tmp(ind));
