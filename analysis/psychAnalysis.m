@@ -1,4 +1,4 @@
-function [rate,fa,dp,threshold,fit,ind,snr] = psychAnalysis(fileList,dataDir,n,faCut,hrCut)
+function [rate,fa,dp,nresp,ntrials,threshold,fit,ind,snr] = psychAnalysis(fileList,dataDir,n,faCut,hrCut)
 
 addpath(genpath('~/chris-lab/code_general/'));
 disp('Loading testing files...');

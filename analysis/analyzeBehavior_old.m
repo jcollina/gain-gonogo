@@ -1,4 +1,4 @@
-function analyzeBehavior(ID,task)
+function analyzeBehavior_old(ID,task)
 
 disp(['ANALYZING MOUSE ' ID]);
 
@@ -93,6 +93,13 @@ if ~isempty(testingFiles)
     [rate,fa,dp,nresp,ntrials,threshold,fit,ind,dbs] = psychAnalysis(testingFiles, ...
                                                       dataDir,n, ...
                                                       faCut,hrCut);
+    keyboard
+    
+    display(['Threshold (good sessions) = ' num2str(mean(threshold(ind)))]);
+    display(['Threshold (all sessions) = ' num2str(mean(threshold))]);
+    
+    threshold = mean(threshold);
+
     % exclude initial dbs values
     if task == 0
         ind1 = dbs(:,1)' > 0;
@@ -117,23 +124,37 @@ if ~isempty(testingFiles)
     set(gca,'LineWidth',2)
     set(gca,'TickDir','out');
 
-    % plot psychometric performance across all sessions
+    % plot psychometric performance
     %index = ind1&ind;
     index = ind1;
     subplot(3,3,5:6)
-    resp = sum(nresp(index,:));
-    trials = sum(ntrials(index,:));
-    fit = psychometricFit(resp,trials,dbs(find(ind1>0,1,'first'),:));
-    
-    [~,tind] = min(abs(fit.x-fit.thresh));
-    tx = fit.x(tind);
-    ty = fit.y(tind);
+    fitx = fit(find(ind1>0,1,'first')).x;
+    p = find(index);
+    fity = zeros(1,length(fitx));
+    for i = 1:length(p)
+        fity = fity + fit(p(i)).y;
+    end
+    fity = fity / length(p);
+    [~,tind] = min(abs(fitx-threshold));
+    tx = fitx(tind);
+    ty = fity(tind);
     hold on
     plot([tx tx], [0 ty],'k--','LineWidth',2);
-    plot(fit.x,fit.y,'r','LineWidth',2)
-    plot(x,resp./trials,'k.','LineWidth',2,'Markersize',25);
-    plot(min(x) - mean(diff(x)),mean(fa(index)),'.','Color',[.5 .5 .5], ...
-         'LineWidth',2,'MarkerSize',25);
+    plot(fitx,fity,'r','LineWidth',2)
+    if size(rate(ind1&ind,:),1) > 1
+        errorbar(x,mean(rate(index,:),1), ...
+                 std(rate(index,:))./sqrt(sum(index)), ...
+                 'k.','LineWidth',2,'Markersize',25);
+        errorbar(min(x) - mean(diff(x)), ...
+                 mean(fa(index)), ...
+                 std(fa(index))./sqrt(sum(index)), ...
+                 '.','Color',[.5 .5 .5], ...
+                 'LineWidth',2,'MarkerSize',25);
+    else
+        plot(x,rate(index,:),'k.','LineWidth',2,'Markersize',25);
+        plot(min(x) - mean(diff(x)),fa(index),'.','Color',[.5 .5 .5], ...
+                 'LineWidth',2,'MarkerSize',25);
+    end
     set(gca,'XTick',[min(x)-mean(diff(x)) x])
     lbl = cell(1,7);
     lbl(2:end) = strread(num2str(x),'%s');
@@ -145,8 +166,6 @@ if ~isempty(testingFiles)
     ylim([0 1]);
     ylabel('Hit Rate');
     xlabel('SNR (dB)');
-    
-    disp(['Threshold: ' num2str(fit.thresh)]);
     
     set(f1,'PaperPositionMode','auto');         
     set(f1,'PaperOrientation','landscape');
