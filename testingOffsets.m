@@ -12,10 +12,10 @@ p = setupSerialPort(params.com,9600);
 params.noiseD = params.baseNoiseD + [.05 .1 .25 .5 1];
 rng(params.seed); % (to make the same stimulus each time)
 if params.sd(2) - params.sd(1) > 0
-    params.stim = ['D:\stimuli\gainBehavior\170808_offsetsLoHiChord-' params.boothID '-' params.IDstr '-dual.mat'];
+    params.stim = ['D:\stimuli\gainBehavior\170901_offsetsLoHiChord-' params.boothID '-' params.IDstr '-dual.mat'];
     params.targetDBShift = 20;
 else
-    params.stim = ['D:\stimuli\gainBehavior\170808_offsetsHiLoChord-' params.boothID '-' params.IDstr '-dual.mat'];
+    params.stim = ['D:\stimuli\gainBehavior\170901_offsetsHiLoChord-' params.boothID '-' params.IDstr '-dual.mat'];
     params.targetDBShift = 15;
 end
 
