@@ -48,4 +48,4 @@ end
 % get threshold for good sessions
 ind = fa < faCut & max(rate,[],2)' > hrCut;
 tmp = [fit.thresh];
-threshold = mean(tmp(ind));
+threshold = tmp;

@@ -91,7 +91,10 @@ testingFiles = dir([dataDir filesep '*_testing.txt']);
 if ~isempty(testingFiles)
     f2 = figure(2);
     [rate,fa,dp,threshold,fit,ind,dbs] = psychAnalysis(testingFiles, ...
-                                                      dataDir,n,faCut,hrCut);
+                                                      dataDir,n, ...
+                                                      faCut,hrCut);
+    
+    keyboard
     display(['Threshold = ' num2str(threshold)]);
 
     % exclude initial dbs values
