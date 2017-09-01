@@ -20,7 +20,7 @@ else
 end
 
 % extract threshold from file
-load('thresholds.mat');
+load('thresholds2.mat');
 [ind] = find(strcmp(d,params.IDstr));
 params.targetDBShift = [d{ind,2} params.targetDBShift];
 disp(['Threshold = ' num2str(d{ind,2})]);
