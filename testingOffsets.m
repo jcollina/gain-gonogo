@@ -11,17 +11,18 @@ p = setupSerialPort(params.com,9600);
 
 params.noiseD = params.baseNoiseD + [.05 .1 .25 .5 1];
 rng(params.seed); % (to make the same stimulus each time)
-if params.sd(2) - params.sd(1) > 0
-    params.stim = ['D:\stimuli\gainBehavior\170916_offsetsLoHiChord-' params.boothID '-' params.IDstr '-dual.mat'];
-    params.targetDBShift = 20;
-else
-    params.stim = ['D:\stimuli\gainBehavior\170916_offsetsHiLoChord-' params.boothID '-' params.IDstr '-dual.mat'];
-    params.targetDBShift = 15;
-end
 
 % extract threshold from file
 load('thresholds2.mat');
 [ind] = find(strcmp(d,params.IDstr));
+thresh = num2str(d{ind,2});
+if params.sd(2) - params.sd(1) > 0
+    params.stim = ['D:\stimuli\gainBehavior\170916_offsetsLoHiChord-' params.boothID '-' params.IDstr '-thresh' thresh '-dual.mat'];
+    params.targetDBShift = 20;
+else
+    params.stim = ['D:\stimuli\gainBehavior\170916_offsetsHiLoChord-' params.boothID '-' params.IDstr '-thresh' thresh '-dual.mat'];
+    params.targetDBShift = 15;
+end
 params.targetDBShift = [d{ind,2} params.targetDBShift];
 disp(['Threshold = ' num2str(d{ind,2})]);
 
