@@ -4,6 +4,9 @@ clearvars -except ID STAGE paramFile condition
 delete(instrfindall)
 dbstop if error
 
+if nargin < 4 || ~exist('condition','var')
+    condition = 'hilo';
+end
 if nargin < 3 || ~exist('paramFile','var');
     paramFile = 'booth1-params.txt';
 end

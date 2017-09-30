@@ -130,7 +130,7 @@ if ~isempty(testingFiles)
     ty = fit.y(tind);
     hold on
     plot([tx tx], [0 ty],'k--','LineWidth',2);
-    plot(fit.x,fit.y,'r','LineWidth',2)
+    plot(fit.x,fit.y,'Color',lineColor,'LineWidth',2)
     plot(x,resp./trials,'k.','LineWidth',2,'Markersize',25);
     plot(min(x) - mean(diff(x)),mean(fa(index)),'.','Color',[.5 .5 .5], ...
          'LineWidth',2,'MarkerSize',25);
