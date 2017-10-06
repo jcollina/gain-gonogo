@@ -1,18 +1,7 @@
-function [rate,fa,dp,nresp,ntrials,threshold,fit,ind,snr] = psychAnalysis(fileList,dataDir,n,faCut,hrCut)
+function [rate,fa,dp,nresp,ntrials,threshold,fit,ind,snr] = ...
+    psychAnalysis(fileList,fileInd)
 
 addpath(genpath('~/chris-lab/code_general/'));
-disp('Loading testing files...');
-cnt = 1;
-for i = 1:length(fileList)
-    fn = [dataDir filesep fileList(i).name];
-    if fileList(i).bytes > 1000
-        t = parseLog(fn);
-        if length(t) > n
-            testingList{cnt} = fn;
-            cnt = cnt + 1;
-        end
-    end
-end
 
 %% analyze each testing session
 % 1. stats
@@ -20,20 +9,26 @@ end
 % (trialtype: [signal/noise, offset, noisepatt])
 figure(2); clf;
 disp('Analyzing testing session: ');
-for i = 1:length(testingList)
+nresp = [];
+ntrials = [];
+rate = [];
+dp = [];
+fa = [];
+for i = 1:length(fileList)
     % load the data (and get the date and snr values used)
-    [~, trialType, response, RT] = parseLog(testingList{i});
-    tmp = strfind(testingList{i},'_');
-    dateStr(i,:) = str2num(testingList{i}(tmp(1)+1:tmp(2)-1));
-    disp(dateStr(i,:));
-    load([testingList{i}(1:end-4) '.mat'],'params');
+    load(fileList{i})
     snr(i,:) = params.targetDBShift;
+    fprintf('\t%i\n',fileInd(i,3));
     
-    % get good trials
-    [~,~,~,~,goodIdx] = computePerformanceGoNoGo(response,trialType,1,7);
-    RT = RT(goodIdx==1);
+    % remove erroneous trials
+    [mn mi] = min([length(tt) length(resp)]);
+    response = resp(1:mn)';
+    trialType = tt(1:mn,:);
+    
+    % compute averages and remove early end anding trials
+    [~,~,dp,pc,goodIdx] = computePerformanceGoNoGo(response,trialType,20,7);
     response = response(goodIdx==1);
-    trialType = trialType(goodIdx==1,:);
+    trialType = trialType(goodIdx==1,:);  
     
     % compute stats
     [nresp(i,:),ntrials(i,:),rate(i,:),dp(i,:),fa(i)] = ...
