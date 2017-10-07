@@ -123,7 +123,10 @@ if ~isempty(testingFiles)
     subplot(3,3,5:6)
     resp = sum(nresp(index,:));
     trials = sum(ntrials(index,:));
-    fit = psychometricFit(resp,trials,dbs(find(ind1>0,1,'first'),:));
+    fit = psychometricFit(resp,trials,dbs(find(ind1>0,1,'first'),: ...
+                                          ));
+    
+    keyboard
     
     [~,tind] = min(abs(fit.x-fit.thresh));
     tx = fit.x(tind);

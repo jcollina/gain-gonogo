@@ -1,38 +1,24 @@
-function [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList,dataDir,n)
-
-addpath(genpath('~/chris-lab/code_general/'));
-disp('Loading offset testing files...');
-cnt = 1;
-for i = 1:length(fileList)
-    fn = [dataDir filesep fileList(i).name];
-    if fileList(i).bytes > 1000
-        t = parseLog(fn);
-        if length(t) > n
-            testingList{cnt} = fn;
-            cnt = cnt + 1;
-        end
-    end
-end
+function [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList,fileInd)
 
 %% analyze each testing session
 % 1. stats
 % 2. fit all of them
 % (trialtype: [signal/noise, offset, noisepatt])
-if exist('testingList','var')
     disp('Analyzing offset testing session: ');
-    for i = 1:length(testingList)
+    for i = 1:length(fileList)
         % load the data (and get the date and snr values used)
-        [~, trialType, response, RT] = parseLog(testingList{i});
-        tmp = strfind(testingList{i},'_');
-        dateStr(i,:) = str2num(testingList{i}(tmp(1)+1:tmp(2)-1));
-        disp(dateStr(i,:));
-        load([testingList{i}(1:end-4) '.mat'],'params');
+        load(fileList{i})
         snr(i,:) = params.targetDBShift;
         offsets(i,:) = params.noiseD - params.baseNoiseD;
+        fprintf('\t%i\n',fileInd(i,3));
         
+        % remove erroneous trials
+        [mn mi] = min([length(tt) length(resp)]);
+        response = resp(1:mn)';
+        trialType = tt(1:mn,:);
+     
         % get good trials
         [~,~,~,~,goodIdx] = computePerformanceGoNoGo(response,trialType,1,7);
-        RT = RT(goodIdx==1);
         response = response(goodIdx==1);
         trialType = trialType(goodIdx==1,:);
         
@@ -59,6 +45,5 @@ if exist('testingList','var')
         dp(i,1,:) = norminv(squeeze(rate(i,1,:))') - norminv(fa(i,:));
         dp(i,2,:) = norminv(squeeze(rate(i,2,:))') - norminv(fa(i,:));
     end
-end
-end
+
 

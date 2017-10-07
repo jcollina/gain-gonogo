@@ -40,6 +40,8 @@ for i = 1:length(testingList)
         psychometricPerformanceGoNoGo(trialType,response);
     fit(i) = psychometricFit(nresp(i,:),ntrials(i,:),snr(i,:));
     
+    keyboard
+    
     % plot psychometric curves
     subplot(1,length(testingList),i)
     plotPsychometricSession(snr(i,:),rate(i,:),fa(i),fit(i));

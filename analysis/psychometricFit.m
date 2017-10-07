@@ -2,7 +2,7 @@ function fit = psychometricFit(resps,count,snr)
 
 % Initial parameters
 PF = @PAL_Gumbel;
-p0 = [mean(snr)+(.5*mean(snr)) .2 .1 0];
+p0 = [mean(snr)+(.75*mean(snr)) .25 .1 .025];
 pFree = [1 1 1 1];
 lapseLimits = [0 1];
 
@@ -16,7 +16,7 @@ resps(resps == 0) = 1;
 
 % Set search options
 options = PAL_minimize('options');
-options.TolFun = 1e-9;
+options.TolFun = 1e-10;
 
 % Maximum likelihood fitting using Palamedes
 [pFit, ll, exitflag, output] = PAL_PFML_Fit(snr,resps,count,p0,pFree,PF,...

@@ -1,4 +1,4 @@
-function [rate,fa,dp,nresp,ntrials,threshold,fit,ind,snr] = ...
+function [rate,fa,dp,nresp,ntrials,threshold,fit,snr] = ...
     psychAnalysis(fileList,fileInd)
 
 addpath(genpath('~/chris-lab/code_general/'));
@@ -26,7 +26,7 @@ for i = 1:length(fileList)
     trialType = tt(1:mn,:);
     
     % compute averages and remove early end anding trials
-    [~,~,dp,pc,goodIdx] = computePerformanceGoNoGo(response,trialType,20,7);
+    [~,~,~,~,goodIdx] = computePerformanceGoNoGo(response,trialType,1,7);
     response = response(goodIdx==1);
     trialType = trialType(goodIdx==1,:);  
     
@@ -36,11 +36,9 @@ for i = 1:length(fileList)
     fit(i) = psychometricFit(nresp(i,:),ntrials(i,:),snr(i,:));
     
     % plot psychometric curves
-    subplot(1,length(testingList),i)
+    subplot(1,length(fileList),i)
     plotPsychometricSession(snr(i,:),rate(i,:),fa(i),fit(i));
 end
 
-% get threshold for good sessions
-ind = fa < faCut & max(rate,[],2)' > hrCut;
-tmp = [fit.thresh];
-threshold = tmp;
+% get threshold
+threshold = mean([fit.thresh]);
