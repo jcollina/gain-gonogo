@@ -1,5 +1,5 @@
 function [rate,fa,dp,nresp,ntrials,threshold,fit,snr] = ...
-    psychAnalysis(fileList,fileInd)
+    psychAnalysis(fileList,fileInd,faCut)
 
 addpath(genpath('~/chris-lab/code_general/'));
 
@@ -39,6 +39,16 @@ for i = 1:length(fileList)
     subplot(1,length(fileList),i)
     plotPsychometricSession(snr(i,:),rate(i,:),fa(i),fit(i));
 end
+
+
+ind = fa < faCut;
+rate = rate(ind,:);
+fa = fa(ind);
+dp = dp(ind,:);
+nresp = nresp(ind,:);
+ntrials = ntrials(ind,:);
+fit = fit(ind);
+snr = snr(ind,:);
 
 % get threshold
 threshold = mean([fit.thresh]);

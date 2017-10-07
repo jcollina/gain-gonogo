@@ -2,7 +2,7 @@ function fit = psychometricFit(resps,count,snr)
 
 % Initial parameters
 PF = @PAL_Gumbel;
-p0 = [mean(snr)+(.75*mean(snr)) .25 .1 .025];
+p0 = [mean(snr)+(.4*mean(snr)) .25 .1 .025];
 pFree = [1 1 1 1];
 lapseLimits = [0 1];
 

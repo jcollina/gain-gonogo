@@ -1,4 +1,4 @@
-function behaviorAnalysis(ID)
+function threshold = behaviorAnalysis(ID)
 
 disp(['ANALYZING MOUSE ' ID]);
 
@@ -15,238 +15,143 @@ lineColor = [1 0 0; 0 0 1];
 
 %% TRAINING ANALYSIS
 f1 = figure(1); clf;
-% for lohi
-ind = fileInd(:,2) == 1 & fileInd(:,1) == 1;
-if sum(ind)>0
-    [dprime,pcorrect,dpOffset,pcOffset] = ...
-        trainingAnalysis(fileList(ind),fileInd(ind,:));
-    
-    % plot d' over time
-    subplot(4,2,1)
-    hold on
-    p = plot(dpOffset);
-    cols = repmat(linspace(.8,.2,4),3,1)';
-    for i = 1:length(p)
-        p(i).Color = cols(i,:);
+for i = 1:2
+    % for lohi
+    ind = fileInd(:,2) == 1 & fileInd(:,1) == i;
+    if sum(ind)>0
+        [dprime,pcorrect,dpOffset,pcOffset] = ...
+            trainingAnalysis(fileList(ind),fileInd(ind,:));
+        
+        % plot d' over time
+        subplot(4,2,0+i)
+        hold on
+        p = plot(dpOffset);
+        cols = repmat(linspace(.8,.2,4),3,1)';
+        for j = 1:length(p)
+            p(j).Color = cols(j,:);
+        end
+        plot(dprime,'Color',lineColor(i,:),'LineWidth',2);
+        axis tight
+        legend('.25','.5','.75','1.0','avg','Location','se');
+        ylabel('d-prime');
+        xlabel('Training Session');
+        title([ID ' - ' taskStr{i}])
+        ylim([-1 7]);
+        hold off
+        plotPrefs
     end
-    plot(dprime,'Color',lineColor(1,:),'LineWidth',2);
-    axis tight
-    legend('.25','.5','.75','1.0','avg','Location','se');
-    ylabel('d-prime');
-    xlabel('Training Session');
-    title([ID ' - ' taskStr{1}])
-    ylim([-1 7]);
-    hold off
-    plotPrefs
-end
-
-
-% for hilo
-ind = fileInd(:,2) == 1 & fileInd(:,1) == 2;
-if sum(ind) > 0
-    [dprime,pcorrect,dpOffset,pcOffset] = ...
-        trainingAnalysis(fileList(ind),fileInd(ind,:));
-    
-    % plot d' over time
-    subplot(4,2,2)
-    hold on
-    p = plot(dpOffset);
-    cols = repmat(linspace(.8,.2,4),3,1)';
-    for i = 1:length(p)
-        p(i).Color = cols(i,:);
-    end
-    plot(dprime,'Color',lineColor(2,:),'LineWidth',2);
-    axis tight
-    legend('.25','.5','.75','1.0','avg','Location','se');
-    ylabel('d-prime');
-    xlabel('Training Session');
-    title([ID ' - ' taskStr{2}])
-    ylim([-1 7]);
-    plotPrefs
 end
 
 
 
 %% PSYCHOMETRIC ANALYSIS
 % for lohi
-ind = fileInd(:,2) == 2 & fileInd(:,1) == 1;
-if sum(ind)>0
-    [rate,fa,dp,nresp,ntrials,threshold,fit,snr] = ...
-        psychAnalysis(fileList(ind),fileInd(ind,:));
-    
-    % plot average psychometric performance
-    figure(1);
-    subplot(4,2,3)
-    resp = sum(nresp);
-    trials = sum(ntrials);
-    fit = psychometricFit(resp,trials,snr(1,:));
-    x = snr(1,:);
-    
-    [~,tind] = min(abs(fit.x-fit.thresh));
-    tx = fit.x(tind);
-    ty = fit.y(tind);
-    hold on
-    plot([tx tx], [0 ty],'k--','LineWidth',2);
-    plot(fit.x,fit.y,'Color',lineColor(1,:),'LineWidth',2)
-    plot(x,resp./trials,'k.','LineWidth',2,'Markersize',25);
-    plot(min(x) - mean(diff(x)),mean(fa),'.','Color',[.5 .5 .5], ...
-         'LineWidth',2,'MarkerSize',25);
-    set(gca,'XTick',[min(x)-mean(diff(x)) x])
-    lbl = cell(1,7);
-    lbl(2:end) = strread(num2str(x),'%s');
-    lbl{1} = 'FA';
-    set(gca,'XTickLabels',lbl)       
-    ylim([0 1]);
-    ylabel('Hit Rate');
-    xlabel('SNR (dB)');
-    plotPrefs;
-end
-
-% for hilo
-ind = fileInd(:,2) == 2 & fileInd(:,1) == 2;
-if sum(ind)>0
-    [rate,fa,dp,nresp,ntrials,threshold,fit,snr] = ...
-        psychAnalysis(fileList(ind),fileInd(ind,:));
-    
-    % plot average psychometric performance
-    figure(1);
-    subplot(4,2,4)
-    resp = sum(nresp);
-    trials = sum(ntrials);
-    fit = psychometricFit(resp,trials,snr(1,:));
-    x = snr(1,:);
-    
-    [~,tind] = min(abs(fit.x-fit.thresh));
-    tx = fit.x(tind);
-    ty = fit.y(tind);
-    hold on
-    plot([tx tx], [0 ty],'k--','LineWidth',2);
-    plot(fit.x,fit.y,'Color',lineColor(2,:),'LineWidth',2)
-    plot(x,resp./trials,'k.','LineWidth',2,'Markersize',25);
-    plot(min(x) - mean(diff(x)),mean(fa),'.','Color',[.5 .5 .5], ...
-         'LineWidth',2,'MarkerSize',25);
-    set(gca,'XTick',[min(x)-mean(diff(x)) x])
-    lbl = cell(1,7);
-    lbl(2:end) = strread(num2str(x),'%s');
-    lbl{1} = 'FA';
-    set(gca,'XTickLabels',lbl)       
-    ylim([0 1]);
-    ylabel('Hit Rate');
-    xlabel('SNR (dB)');
-    plotPrefs;
+threshold = nan(1,2);
+for i = 1:2
+    ind = fileInd(:,2) == 2 & fileInd(:,1) == i;
+    if sum(ind)>0
+        f2 = figure(2); clf;
+        [rate,fa,dp,nresp,ntrials,threshold(i),fit,snr] = ...
+            psychAnalysis(fileList(ind),fileInd(ind,:),.25);
+                
+        % plot average psychometric performance
+        figure(1);
+        subplot(4,2,2+i)
+        resp = sum(nresp);
+        trials = sum(ntrials);
+        fit = psychometricFit(resp,trials,snr(1,:));
+        x = snr(1,:);
+        
+        [~,tind] = min(abs(fit.x-fit.thresh));
+        tx = fit.x(tind);
+        ty = fit.y(tind);
+        hold on
+        plot([tx tx], [0 ty],'k--','LineWidth',2);
+        plot(fit.x,fit.y,'Color',lineColor(i,:),'LineWidth',2)
+        plot(x,resp./trials,'k.','LineWidth',2,'Markersize',25);
+        plot(min(x) - mean(diff(x)),mean(fa),'.','Color',[.5 .5 .5], ...
+             'LineWidth',2,'MarkerSize',25);
+        set(gca,'XTick',[min(x)-mean(diff(x)) x])
+        lbl = cell(1,7);
+        lbl(2:end) = strread(num2str(x),'%s');
+        lbl{1} = 'FA';
+        set(gca,'XTickLabels',lbl)       
+        ylim([0 1]);
+        ylabel('Hit Rate');
+        xlabel('SNR (dB)');
+        plotPrefs;
+        hold off
+        
+        threshold(i) = fit.thresh;
+        
+        % save figure 2
+        set(f2,'PaperPositionMode','auto');         
+        set(f2,'PaperOrientation','landscape');
+        set(f2,'PaperUnits','points');
+        set(f2,'PaperSize',[2500 400]);
+        set(f2,'Position',[0 0 2500 400]);
+        print(f2,[ID '-gumbalfits-' taskStr{i}],'-dpdf','-r300');
+    end
 end
 
 
 
 %% OFFSET ANALYSIS
-ind = fileInd(:,2) == 3 & fileInd(:,1) == 1;
-if sum(ind) > 0
-    [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList(ind), ...
-                                              fileInd(ind,:));
-    
-    % plot pc
-    figure(1)
-    subplot(4,2,5)
-    hold on
-    x = offsets(1,:);
-    if size(rate,1) > 1
-        errorbar(x,mean(squeeze(rate(:,1,:))), ...
-                 std(squeeze(rate(:,1,:)))./sqrt(size(rate,1)), ...
-                 '-','LineWidth',2,'Markersize',25,'Color',lineColor(1,:));
-        errorbar(x,mean(squeeze(rate(:,2,:))), ...
-                 std(squeeze(rate(:,2,:)))./sqrt(size(rate,1)), ...
-                 'k-','LineWidth',2,'Markersize',25);
-        errorbar(x,mean(fa),std(fa)./sqrt(size(fa,1)), ...
-                 '-','Color',[.4 .4 .4],'LineWidth',2);
-    else
-        plot(x,squeeze(rate(:,1,:)),'Color',lineColor(1,:),'LineWidth',2);
-        plot(x,squeeze(rate(:,2,:)),'k','LineWidth',2);
-        plot(x,fa,'-','Color',[.4 .4 .4],'LineWidth',2);
+for i = 1:2
+    ind = fileInd(:,2) == 3 & fileInd(:,1) == i;
+    if sum(ind) > 0
+        [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList(ind), ...
+                                                  fileInd(ind,:));
+        
+        % plot pc
+        figure(1)
+        subplot(4,2,4+i)
+        hold on
+        x = offsets(1,:);
+        if size(rate,1) > 1
+            errorbar(x,mean(squeeze(rate(:,1,:))), ...
+                     std(squeeze(rate(:,1,:)))./sqrt(size(rate,1)), ...
+                     '-','LineWidth',2,'Markersize',25,'Color',lineColor(i,:));
+            errorbar(x,mean(squeeze(rate(:,2,:))), ...
+                     std(squeeze(rate(:,2,:)))./sqrt(size(rate,1)), ...
+                     'k-','LineWidth',2,'Markersize',25);
+            errorbar(x,mean(fa),std(fa)./sqrt(size(fa,1)), ...
+                     '-','Color',[.4 .4 .4],'LineWidth',2);
+        else
+            plot(x,squeeze(rate(:,1,:)),'Color',lineColor(i,:),'LineWidth',2);
+            plot(x,squeeze(rate(:,2,:)),'k','LineWidth',2);
+            plot(x,fa,'-','Color',[.4 .4 .4],'LineWidth',2);
+        end
+        hold off
+        ylabel('p(Response)')
+        xlabel('Offset (s)');
+        xtickangle(90);
+        legend('Threshold','High SNR','FA','Location','East');
+        set(gca,'XTick',x);
+        plotPrefs
+        
+        % plot dprime
+        subplot(4,2,6+i)
+        hold on
+        if size(dp,1) > 1
+            errorbar(x,mean(squeeze(dp(:,1,:))), ...
+                     std(squeeze(dp(:,1,:)))./sqrt(size(dp,1)), ...
+                     '-','LineWidth',2,'Markersize',25,'Color',lineColor(i,:));
+            errorbar(x,mean(squeeze(dp(:,2,:))), ...
+                     std(squeeze(rate(:,2,:)))./sqrt(size(dp,1)), ...
+                     'k-','LineWidth',2,'Markersize',25,'LineWidth',2);
+        else
+            plot(x,squeeze(dp(:,1,:)),'Color',lineColor(i,:),'LineWidth',2);
+            plot(x,squeeze(dp(:,2,:)),'k','LineWidth',2);
+        end
+        hold off
+        ylabel('d-prime')
+        xlabel('Offset (s)');
+        xtickangle(90);
+        legend('Threshold','High SNR','Location','East');
+        set(gca,'XTick',x);
+        plotPrefs
     end
-    hold off
-    ylabel('p(Response)')
-    xlabel('Offset (s)');
-    xtickangle(90);
-    legend('Threshold','High SNR','FA','Location','East');
-    set(gca,'XTick',x);
-    plotPrefs
-    
-    % plot dprime
-    subplot(4,2,7)
-    hold on
-    if size(dp,1) > 1
-        errorbar(x,mean(squeeze(dp(:,1,:))), ...
-                 std(squeeze(dp(:,1,:)))./sqrt(size(dp,1)), ...
-                 '-','LineWidth',2,'Markersize',25,'Color',lineColor(1,:));
-        errorbar(x,mean(squeeze(dp(:,2,:))), ...
-                 std(squeeze(rate(:,2,:)))./sqrt(size(dp,1)), ...
-                 'k-','LineWidth',2,'Markersize',25,'LineWidth',2);
-    else
-        plot(x,squeeze(dp(:,1,:)),'Color',lineColor(1,:),'LineWidth',2);
-        plot(x,squeeze(dp(:,2,:)),'k','LineWidth',2);
-    end
-    hold off
-    ylabel('d-prime')
-    xlabel('Offset (s)');
-    xtickangle(90);
-    legend('Threshold','High SNR','Location','East');
-    set(gca,'XTick',x);
-    plotPrefs
-end
-
-ind = fileInd(:,2) == 3 & fileInd(:,1) == 2;
-if sum(ind) > 0
-    [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList(ind), ...
-                                              fileInd(ind,:));
-    
-    % plot pc
-    figure(1)
-    subplot(4,2,6)
-    hold on
-    x = offsets(1,:);
-    if size(rate,1) > 1
-        errorbar(x,mean(squeeze(rate(:,1,:))), ...
-                 std(squeeze(rate(:,1,:)))./sqrt(size(rate,1)), ...
-                 '-','LineWidth',2,'Markersize',25,'Color',lineColor(2,:));
-        errorbar(x,mean(squeeze(rate(:,2,:))), ...
-                 std(squeeze(rate(:,2,:)))./sqrt(size(rate,1)), ...
-                 'k-','LineWidth',2,'Markersize',25);
-        errorbar(x,mean(fa),std(fa)./sqrt(size(fa,1)), ...
-                 '-','Color',[.4 .4 .4],'LineWidth',2);
-    else
-        plot(x,squeeze(rate(:,1,:)),'Color',lineColor(2,:),'LineWidth',2);
-        plot(x,squeeze(rate(:,2,:)),'k','LineWidth',2);
-        plot(x,fa,'-','Color',[.4 .4 .4],'LineWidth',2);
-    end
-    hold off
-    ylabel('p(Response)')
-    xlabel('Offset (s)');
-    xtickangle(90);
-    legend('Threshold','High SNR','FA','Location','East');
-    set(gca,'XTick',x);
-    plotPrefs
-    
-    % plot dprime
-    subplot(4,2,8)
-    hold on
-    if size(dp,1) > 1
-        errorbar(x,mean(squeeze(dp(:,1,:))), ...
-                 std(squeeze(dp(:,1,:)))./sqrt(size(dp,1)), ...
-                 '-','LineWidth',2,'Markersize',25,'Color',lineColor(2,:));
-        errorbar(x,mean(squeeze(dp(:,2,:))), ...
-                 std(squeeze(rate(:,2,:)))./sqrt(size(dp,1)), ...
-                 'k-','LineWidth',2,'Markersize',25,'LineWidth',2);
-    else
-        plot(x,squeeze(dp(:,1,:)),'Color',lineColor(2,:),'LineWidth',2);
-        plot(x,squeeze(dp(:,2,:)),'k','LineWidth',2);
-    end
-    hold off
-    ylabel('d-prime')
-    xlabel('Offset (s)');
-    xtickangle(90);
-    legend('Threshold','High SNR','Location','East');
-    set(gca,'XTick',x);
-    plotPrefs
 end
 
 set(f1,'PaperPositionMode','auto');         
@@ -263,6 +168,55 @@ print(f1,[ID '-summary'],'-dpdf','-r300');
 
 
 
+
+
+
+
+
+
+
+
+
+
+if 1 == 2
+    clear yf xf
+    % vectorize fits
+    for j = 1:length(fit)
+        yf(j,:) = fit(j).y;
+        xf(j,:) = fit(j).x;
+    end
+    
+    % find xy value for threshold
+    xfit = mean(xf);
+    yfit = mean(yf);
+    [~,tind] = min(abs(xfit-threshold(i)));
+    tx = xfit(tind);
+    ty = yfit(tind);
+    
+    % plot average psychometric performance
+    figure(1);
+    subplot(4,2,3+(i-1))
+    hold on
+    x = snr(1,:);
+    errorbar(x,mean(rate),std(rate)./sqrt(size(rate,1)),'k.',...
+             'Linewidth',2,'MarkerSize',25)
+    errorbar(min(x)-mean(diff(x)),mean(fa),std(fa)./sqrt(length(fa)),'.',...
+             'LineWidth',2,'MarkerSize',25,'Color',[.5 .5 .5])
+    
+    plot(mean(xf),mean(yf),'Color',lineColor(i,:),...
+         'LineWidth',2);
+    plot([tx tx],[0 ty],'k--','LineWidth',2);
+    set(gca,'XTick',[min(x)-mean(diff(x)) x])
+    lbl = cell(1,7);
+    lbl(2:end) = strread(num2str(x),'%s');
+    lbl{1} = 'FA';
+    set(gca,'XTickLabels',lbl)       
+    ylim([0 1]);
+    ylabel('Hit Rate');
+    xlabel('SNR (dB)');
+    plotPrefs;
+    hold off
+end
 
 
 
