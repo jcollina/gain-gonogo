@@ -18,7 +18,7 @@ f1 = figure(1); clf;
 for i = 1:2
     % for lohi
     ind = fileInd(:,2) == 1 & fileInd(:,1) == i;
-    if sum(ind)>0
+    if sum(ind)>1
         [dprime,pcorrect,dpOffset,pcOffset] = ...
             trainingAnalysis(fileList(ind),fileInd(ind,:));
         
@@ -49,7 +49,7 @@ end
 threshold = nan(1,2);
 for i = 1:2
     ind = fileInd(:,2) == 2 & fileInd(:,1) == i;
-    if sum(ind)>0
+    if sum(ind)>1
         f2 = figure(2); clf;
         [rate,fa,dp,nresp,ntrials,threshold(i),fit,snr] = ...
             psychAnalysis(fileList(ind),fileInd(ind,:),.25);
@@ -99,7 +99,7 @@ end
 %% OFFSET ANALYSIS
 for i = 1:2
     ind = fileInd(:,2) == 3 & fileInd(:,1) == i;
-    if sum(ind) > 0
+    if sum(ind) > 1
         [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList(ind), ...
                                                   fileInd(ind,:));
         
