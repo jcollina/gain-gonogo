@@ -101,7 +101,7 @@ for i = 1:2
     ind = fileInd(:,2) == 3 & fileInd(:,1) == i;
     if sum(ind) > 1
         [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList(ind), ...
-                                                  fileInd(ind,:));
+                                                  fileInd(ind,:),.25);
         
         % plot pc
         figure(1)

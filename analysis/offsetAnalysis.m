@@ -1,4 +1,4 @@
-function [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList,fileInd)
+function [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList,fileInd,faCut)
 
 %% analyze each testing session
 % 1. stats
@@ -45,5 +45,10 @@ function [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList,fileInd)
         dp(i,1,:) = norminv(squeeze(rate(i,1,:))') - norminv(fa(i,:));
         dp(i,2,:) = norminv(squeeze(rate(i,2,:))') - norminv(fa(i,:));
     end
-
-
+           
+    ind = ~any(fa > faCut,2);
+    rate = rate(ind,:,:);
+    fa = fa(ind,:);
+    dp = dp(ind,:,:);
+    snr = snr(ind,:);
+    offsets = offsets(ind,:);
