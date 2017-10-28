@@ -11,3 +11,5 @@ end
 if length(threshold) == 4
     save('thresholds.mat','mouseList','threshold')
 end
+
+keyboard
