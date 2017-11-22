@@ -1,4 +1,4 @@
-function threshold = behaviorAnalysis(ID)
+function [threshold, mdp, mrate, mfa] = behaviorAnalysis(ID)
 
 disp(['ANALYZING MOUSE ' ID]);
 
@@ -97,11 +97,21 @@ end
 
 
 %% OFFSET ANALYSIS
+mdp = nan(2,5);
+mrate = nan(2,5);
+mfa = nan(2,5);
 for i = 1:2
     ind = fileInd(:,2) == 3 & fileInd(:,1) == i;
     if sum(ind) > 1
         [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList(ind), ...
-                                                  fileInd(ind,:),.25);
+                                                  fileInd(ind,:), ...
+                                                  .25);
+        
+        % if none of the sessions are better than the current FA
+        % cutoff, continue
+        if isempty(offsets)
+            continue;
+        end
         
         % plot pc
         figure(1)
@@ -151,6 +161,11 @@ for i = 1:2
         legend('Threshold','High SNR','Location','East');
         set(gca,'XTick',x);
         plotPrefs
+        
+        % save out means
+        mdp(i,:) = mean(squeeze(dp(:,1,:)));
+        mrate(i,:) = mean(squeeze(rate(:,1,:)));
+        mfa(i,:) = mean(fa);
     end
 end
 
