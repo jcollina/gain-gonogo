@@ -15,8 +15,8 @@ if params.sd(2) - params.sd(1) > 0
     params.stim = ['D:\stimuli\gainBehavior\170728_trainingLoHiChord-' params.boothID '-dual.mat'];
     params.targetDBShift = 20;
 else
-    params.stim = ['D:\stimuli\gainBehavior\17072_trainingHiLoChord-' params.boothID '-dual.mat'];
-    params.targetDBShift = 15;
+    params.stim = ['D:\stimuli\gainBehavior\171116_trainingHiLoChord-' params.boothID '-dual.mat'];
+    params.targetDBShift = 16;
 end
 [stim, events, params.target, params.targetF] = constructStimChordTraining(params,s);
 rng('shuffle');
