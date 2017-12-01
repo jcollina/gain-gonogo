@@ -160,6 +160,7 @@ for i = 1:2
         xtickangle(90);
         legend('Threshold','High SNR','Location','East');
         set(gca,'XTick',x);
+        ylim([-1 5])
         plotPrefs
         
         % save out means
