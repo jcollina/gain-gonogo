@@ -19,6 +19,9 @@ for i = 1:2
     % for lohi
     ind = fileInd(:,2) == 1 & fileInd(:,1) == i;
     if sum(ind)>1
+        % plot performance with all lick times
+        trainingPlot(fileList(ind),fileInd(ind,:));
+        
         [dprime,pcorrect,dpOffset,pcOffset] = ...
             trainingAnalysis(fileList(ind),fileInd(ind,:));
         
