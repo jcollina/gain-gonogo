@@ -20,6 +20,7 @@ else
 end
 [stim, events, params.target, params.targetF] = constructStimChordTraining(params,s);
 rng('shuffle');
+keyboard
 
 % modify params to reflect actual stimuli used
 
