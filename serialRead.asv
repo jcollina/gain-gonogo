@@ -1,21 +1,17 @@
 function out = serialRead(s,id)
 
-if contains(id,'1')
+if contains(id,'booth1')
     escapeCode = '1!';
-elseif contains(id,'2')
+elseif strcmp(id,'booth2')
     escapeCode = '2@';
-elseif contains(id,'3')
+elseif strcmp(id,'booth3')
     escapeCode = '3#';
-elseif contains(id,'4')
+elseif strcmp(id,'booth4')
     escapeCode = '4$';
-elseif contains(id,'5')
+elseif strcmp(id,'booth5')
     escapeCode = '5%';
-elseif contains(id,'6')
+elseif strcmp(id,'booth6')
     escapeCode = '6^';
-elseif contains(id,'7')
-    escapeCode = '7&';
-elseif contains(id,'8')
-    escapeCode = '8*';
 else
     escapeCode = [];
 end
