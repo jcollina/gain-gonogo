@@ -23,39 +23,10 @@ for i = 1:length(fileList)
     fprintf('\t%i\n',fileInd(i,3));
     offsets = params.noiseD - params.baseNoiseD;
     
-   % remove trials where mouse gave up
-    [response,trialType,goodIdx] = getGoodTrials(response, ...
-                                                 trialType,20,7);
-    t = t(logical(goodIdx));
-    
-    % find window means
-    windows = [offsets; offsets + params.respD];
-    winMeans = mean(windows);
-    
-    % find trials with early licks
-    earlyLicks = [t.RT]' < 0;
-    firstLick = [t.firstLick]';
-        
-    % assign each lick time a probability of falling in each window
-    x = 0:.001:2;
-    clear plick;
-    for j = 1:length(windows)
-        m = offsets(j);
-        sd = mean(diff(offsets));
-        plick(:,j) = normpdf(firstLick(earlyLicks),m,sd);
-        %hold on
-        %plot(x,normpdf(x,m,sd));
-    end
-    [~,lickWindow] = max(plick');
-    
-    % adjust responses so trials with early licks are a response:
-    response(earlyLicks) = 1;
-    
-    % are noise trials:
-    trialType(earlyLicks,1) = false;
-    
-    % and reassign the lick bin accordingly:
-    trialType(earlyLicks,2) = lickWindow;
+    % compute averages and remove early end anding trials
+    [~,~,~,~,goodIdx] = computePerformanceGoNoGo1(response,trialType,t,1,7);
+    response = response(goodIdx==1);
+    trialType = trialType(goodIdx==1,:);  
     
     % compute stats
     [nresp(i,:),ntrials(i,:),rate(i,:),dp(i,:),fa(i)] = ...
