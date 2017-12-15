@@ -1,10 +1,14 @@
-function [t,trialType,response,RT] = parseLog1(fn)
+function [t,trialType,response] = parseLog(fn)
 
 %fn = 'D:\GitHub\gain-gonogo\data\CA046\CA046_1707141235_testing.txt';
 % Open the logfile
 fid = fopen(fn,'r');
 C = textscan(fid,'%s %s %s','headerlines',5);
 fclose(fid);
+
+% load the parameters for computing trial timing
+load([fn(1:end-4) '.mat']);
+offsets = params.noiseD - params.baseNoiseD;
 
 % convert to numeric
 trials = cell2mat(cellfun(@str2num,C{1},'un',0));
@@ -45,16 +49,23 @@ for i = 1:length(tind)-1
                                                        end)')';
         end
         
-        % get time to first lick
-        keyboard
+        % get transition time (event is accurate to the
+        % target time, but the actual target offset is a chord too
+        % early, so it is offset by 20ms)
+        t(i).transition = t(i).respWin(1) - offsets(trialType(i,2))*1e6 ...
+            + params.chordDuration*1e6 - params.rampD*1e6;
         
-        response(i) = any(t(i).lickTimes > t(i).respWin(1) & t(i).lickTimes < t(i).respWin(2));
+        % responses count as any licks AFTER the transition and
+        % during the window
+        response(i) = any(t(i).lickTimes > t(i).transition & t(i).lickTimes < t(i).respWin(2));
         
         % compute reaction time
         if response(i)
-            RT(i) = min(t(i).lickTimes(t(i).lickTimes > t(i).respWin(1)) - t(i).respWin(1))*1e-6;
+            t(i).firstLick = min(t(i).lickTimes(t(i).lickTimes > t(i).transition) - t(i).transition)*1e-6;
+            t(i).RT = min(t(i).lickTimes(t(i).lickTimes > t(i).transition) - t(i).respWin(1))*1e-6;
         else
-            RT(i) = nan;
+            t(i).firstLick = nan;
+            t(i).RT = nan;
         end
     end
 end

@@ -12,8 +12,8 @@ end
 
 % compute averages over mice
 for i = 1:length(mouseList)
-    dpDiff(i,1) = dp(i,1,3) - dp(i,1,1);
-    dpDiff(i,2) = dp(i,2,3) - dp(i,2,1);
+    dpDiff(i,1) = dp(i,1,5) - dp(i,1,1);
+    dpDiff(i,2) = dp(i,2,5) - dp(i,2,1);
 end
 [h,p] = ttest(dpDiff(:,1),dpDiff(:,2)); % paired ttest
 
@@ -41,7 +41,7 @@ m = max(dpDiff(:)) * 1.1;
 plot(x,[m m],'k','LineWidth',2);
 text(1.4,m+.1,sprintf('p = %01.3f',p),...
      'FontSize',16);
-ylabel('d''(250ms) - d''(50ms)');
+ylabel('d''(1000ms) - d''(50ms)');
 set(gca,'XTick',[]);
 set(gca,'XTickLabels',[]);
 set(gca,'TickDir','out');
@@ -49,7 +49,7 @@ set(gca,'FontSize',16);
 set(gca,'LineWidth',2);
 legend(bp,'Low-to-High','High-to-Low','Location','southeast');
 hold off
-saveFigPDF(f3,[530 700],'_allMiceDPdiff.pdf');
+saveFigPDF(f3,[530 700],'_allMiceDPdiff1000.pdf');
 
 
 if length(threshold) == 4

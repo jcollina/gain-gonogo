@@ -1,4 +1,4 @@
-function [hr,fa,dp,pc,goodIdx] = computePerformanceGoNoGo1(resp,ttype,t,offsets,start,crit)
+function [hr,fa,dp,pc,goodIdx] = computePerformanceGoNoGo(resp,ttype)
     
 %% function [hr,fa,dp,pc] = computePerformance(resp,ttype,truncate)
 % 
@@ -10,10 +10,15 @@ function [hr,fa,dp,pc,goodIdx] = computePerformanceGoNoGo1(resp,ttype,t,offsets,
 % the end of the run, by counting the number of responses from the
 % end of the run and stopping when it hits a certain criterion lick
 % count provided by [crit]
-%
-% 11/4/17: fix added to compute FA rate depending from the first
-% lick time
-   
+
+% resize trial type and resp to be in cols
+if size(ttype,2) > size(ttype,1)
+    ttype = ttype';
+end
+if size(resp,2) > size(resp,1)
+    resp = resp';
+end
+    
 % Truncate based on responses to get rid of the end where mice
 % doesn't lick
 if nargin == 4
@@ -26,19 +31,15 @@ if nargin == 4
     goodIdx(startv:endv) = 1;
     
     resp = resp(startv:endv);
-    ttype = ttype(startv:endv);
+    ttype = ttype(startv:endv,1);
 else
     goodIdx = ones(1,length(resp));
 end
 
-% Compute stats
-if any(size(resp) ~= size(ttype))
-    ttype = ttype';
-end
-ttype = ttype(1,:);
+% get only signal vs noise
+ttype = ttype(:,1);
 
-keyboard
-
+% compute stats
 pc = mean(resp == ttype);
 hr = mean(resp(ttype>0));
 fa = mean(resp(ttype==0));

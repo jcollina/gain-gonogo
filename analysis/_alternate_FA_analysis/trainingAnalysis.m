@@ -10,17 +10,47 @@ disp('Analyzing training sessions...');
 for i = 1:length(fileList)
     % load the data
     load(fileList{i})
+    fn = [fileList{i}(1:end-4) '.txt'];
+    [t,trialType,response] = parseLog(fn);
     fprintf('\t%i\n',fileInd(i,3));
+    offsets = params.noiseD - params.baseNoiseD;
     
-    % remove erroneous trials
-    [mn mi] = min([length(tt) length(resp)]);
-    response = resp(1:mn)';
-    trialType = tt(1:mn,:);
+    % remove trials where mouse gave up
+    [response,trialType,goodIdx] = getGoodTrials(response, ...
+                                                 trialType,20,7);
+    t = t(logical(goodIdx));
     
-    % compute averages and remove early end anding trials
-    [~,~,dp,pc,goodIdx] = computePerformanceGoNoGo(response,trialType,20,7);
-    response = response(goodIdx==1);
-    trialType = trialType(goodIdx==1,:);    
+    % find window means
+    windows = [offsets; offsets + params.respD];
+    winMeans = mean(windows);
+    
+    % find trials with early licks
+    earlyLicks = [t.RT]' < 0;
+    firstLick = [t.firstLick]';
+    
+    % assign each lick time a probability of falling in each window
+    x = 0:.001:2;
+    clear plick;
+    for j = 1:length(windows)
+        m = offsets(j);
+        sd = mean(diff(offsets));
+        plick(:,j) = normpdf(firstLick(earlyLicks),m,sd);
+        %hold on
+        %plot(x,normpdf(x,m,sd));
+    end
+    [~,lickWindow] = max(plick');
+    
+    % adjust responses so trials with early licks are a response:
+    response(earlyLicks) = 1;
+    
+    % are noise trials:
+    trialType(earlyLicks,1) = false;
+    
+    % and reassign the lick bin accordingly:
+    trialType(earlyLicks,2) = lickWindow;
+    
+    % compute performance
+    [~,~,dp,pc,~] = computePerformanceGoNoGo(response,trialType);
     
     % compute performance for each offset
     offsets = unique(trialType(:,2));
