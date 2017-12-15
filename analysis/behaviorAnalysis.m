@@ -2,7 +2,7 @@ function [threshold, mdp, mrate, mfa] = behaviorAnalysis(ID)
 
 disp(['ANALYZING MOUSE ' ID]);
 
-baseDir = '~/gits/gain-gonogo/data';
+baseDir = '../data';
 dataDir = [baseDir filesep ID];
 
 taskStr = {'LoHi','HiLo'};

@@ -1,5 +1,8 @@
 function behaviorWrapper(mouseList)
 
+% find psychometric functions
+addpath(genpath('../Palamedes/'));
+
 if ~exist('mouseList','var')
     mouseList = {'CA046','CA047','CA048','CA049','CA051'};
 end
@@ -11,7 +14,7 @@ for i = 1:length(mouseList)
 end
 
 % hard stop for missing data
-if any(isnan(threshold))
+if any(isnan(threshold(:)))
     keyboard
 end
 
