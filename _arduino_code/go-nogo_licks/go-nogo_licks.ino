@@ -89,6 +89,7 @@ void setup() {
 
   // clear out the serial
   Serial.read();
+  Serial.read();
 }
 
 void loop() {
@@ -156,6 +157,9 @@ void loop() {
 
     // WAIT FOR RESPONSE WINDOW
     case 3: {
+                if (Serial.available() > 0) {
+            Serial.println(Serial.read());
+          }
         // check the soundcard input for stim offset
         stimState = digitalRead(audioPin);
 
