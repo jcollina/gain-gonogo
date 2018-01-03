@@ -3,11 +3,7 @@ KbName('UnifyKeyNames');
 delete(instrfindall);
 
 % load the arduino sketch
-if params.inverted
-    hexPath = [params.hex filesep 'go-nogo_licks_inv.ino.hex'];
-else
-    hexPath = [params.hex filesep 'go-nogo_licks.ino.hex'];
-end
+hexPath = [params.hex filesep 'go-nogo_licks.ino.hex'];
 loadArduinoSketch(params.com,hexPath);
 
 % open the serial port
@@ -69,16 +65,16 @@ while cnt < 2000
         
         % determine noise pattern
         tt(cnt,3) = randi(size(stim,3),1);
-                
+        
         % queue stimulus
         sound = [stim{tt(cnt,1)+1,tt(cnt,2),tt(cnt,3)} * params.ampF; ...
-            events{tt(cnt,2)} / 2 * params.ampF]';
-        plot(sound);
+            events{tt(cnt,2)} / 2]';
         queueOutput(s,sound,params.device);
         cnd = sprintf('COND%d%d%d',tt(cnt,:));
         fprintf(fid,'%04d %s\r',cnt,['00000000 ' cnd]);
         fprintf('%04d %s\n',cnt,['00000000 ' cnd]);
     elseif contains(out,'TON')
+        
         
         % play stimulus
         startOutput(s,params.device);

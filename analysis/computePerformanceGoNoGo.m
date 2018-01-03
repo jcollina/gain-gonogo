@@ -17,11 +17,7 @@ if nargin == 4
     startv = start;
     count_back = sum(resp) - cumsum(resp);
     endnum = find(count_back == crit);
-    if isempty(endnum)
-        endv = length(resp);
-    else
-        endv = endnum(1);
-    end
+    endv = endnum(1);
     
     goodIdx = zeros(1,length(resp));
     goodIdx(startv:endv) = 1;
