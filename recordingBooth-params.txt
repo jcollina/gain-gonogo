@@ -1,0 +1,3 @@
+boothID,comport,reward_duration(s),debounce(ms),device,channels,samplerate,filterfile,amplification,inverted
+rec1,COM7,.03,1000,NIDAQ,[0 1],400e3,170815_ephysLeftFilter_3-70k_400k,10,true
+

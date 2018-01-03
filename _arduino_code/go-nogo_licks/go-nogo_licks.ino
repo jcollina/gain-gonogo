@@ -19,7 +19,7 @@ int lickCnt = 0;
 int trialType;
 int trialCnt = 1;
 int cnt = 0;
-char trialStr[6];
+char trialStr[5];
 
 // time variables:
 unsigned long t;                    // master time variable in us
@@ -89,7 +89,6 @@ void setup() {
 
   // clear out the serial
   Serial.read();
-  Serial.read();
 }
 
 void loop() {
@@ -157,9 +156,6 @@ void loop() {
 
     // WAIT FOR RESPONSE WINDOW
     case 3: {
-                if (Serial.available() > 0) {
-            Serial.println(Serial.read());
-          }
         // check the soundcard input for stim offset
         stimState = digitalRead(audioPin);
 

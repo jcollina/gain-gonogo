@@ -1,4 +1,4 @@
-function [t,trialType,response,RT] = parseLog(fn)
+function [t,trialType,response,RT] = parseLog1(fn)
 
 %fn = 'D:\GitHub\gain-gonogo\data\CA046\CA046_1707141235_testing.txt';
 % Open the logfile
