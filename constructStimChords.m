@@ -11,7 +11,7 @@ if ~exist(params.stim,'file')
     for i = 1:params.nNoiseExemplars
         for j = 1:length(offset)
             for k = 1:length(params.targetDBShift)
-            fprintf('Noise patt %02d, offset %1.2f, level %05.2f... ',i,offset(j) - params.baseNoiseD,params.targetDBShift(k));
+            fprintf('Noise patt %02d, offset %1.2f, level %02d... ',i,offset(j) - params.baseNoiseD,params.targetDBShift(k));
             tic
             
             % make the target chord

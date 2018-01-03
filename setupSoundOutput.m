@@ -21,7 +21,7 @@ elseif isNIDAQ
     % setup NIDAQ
     daqreset;
     s = daq.createSession('ni');
-    addAnalogOutputChannel(s,'dev1',ch,'Voltage');
+    addAnalogOutputChannel(s,'dev1',ch,'Voltagee');
     s.Rate = fs;
     realFS = s.Rate;
 elseif isLYNX
