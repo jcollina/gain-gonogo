@@ -19,7 +19,7 @@ int lickCnt = 0;
 int trialType;
 int trialCnt = 1;
 int cnt = 0;
-char trialStr[5];
+char trialStr[6];
 
 // time variables:
 unsigned long t;                    // master time variable in us
@@ -130,7 +130,10 @@ void loop() {
         Serial.print(trialStr);
         Serial.print(t);
         Serial.println(" TON");
-
+        if (Serial.available() > 0) {
+            Serial.read();
+        }
+        
         // next state
         taskState = 2;
         break;
@@ -147,6 +150,9 @@ void loop() {
           Serial.print(trialStr);
           Serial.print(t);
           Serial.println(" STIMON");
+          if (Serial.available() > 0) {
+            Serial.read();
+          }
           delay(10); // delay to let signal go down again
           taskState = 3;
         }
