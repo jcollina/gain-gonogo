@@ -2,7 +2,7 @@ function [threshold, mdp, mrate, mfa] = behaviorAnalysis(ID)
 
 disp(['ANALYZING MOUSE ' ID]);
 
-baseDir = '~/gits/gain-gonogo/data';
+baseDir = '../data';
 dataDir = [baseDir filesep ID];
 
 taskStr = {'LoHi','HiLo'};
@@ -20,7 +20,7 @@ for i = 1:2
     ind = fileInd(:,2) == 1 & fileInd(:,1) == i;
     if sum(ind)>1
         % plot performance with all lick times
-        trainingPlot(fileList(ind),fileInd(ind,:));
+        %trainingPlot(fileList(ind),fileInd(ind,:));
         
         [dprime,pcorrect,dpOffset,pcOffset] = ...
             trainingAnalysis(fileList(ind),fileInd(ind,:));
@@ -55,13 +55,13 @@ for i = 1:2
     if sum(ind)>1
         f2 = figure(2); clf;
         [rate,fa,dp,nresp,ntrials,threshold(i),fit,snr] = ...
-            psychAnalysis(fileList(ind),fileInd(ind,:),.25);
+            psychAnalysis(fileList(ind),fileInd(ind,:),.3);
                 
         % plot average psychometric performance
         figure(1);
         subplot(4,2,2+i)
-        resp = sum(nresp);
-        trials = sum(ntrials);
+        resp = sum(nresp,1);
+        trials = sum(ntrials,1);
         fit = psychometricFit(resp,trials,snr(1,:));
         x = snr(1,:);
         
@@ -108,7 +108,7 @@ for i = 1:2
     if sum(ind) > 1
         [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList(ind), ...
                                                   fileInd(ind,:), ...
-                                                  .25);
+                                                  .3);
         
         % if none of the sessions are better than the current FA
         % cutoff, continue
