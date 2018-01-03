@@ -72,8 +72,7 @@ while cnt < 2000
                 
         % queue stimulus
         sound = [stim{tt(cnt,1)+1,tt(cnt,2),tt(cnt,3)} * params.ampF; ...
-            events{tt(cnt,2)} / 2 * params.ampF]';
-        plot(sound);
+            events{tt(cnt,2)} / 2]';
         queueOutput(s,sound,params.device);
         cnd = sprintf('COND%d%d%d',tt(cnt,:));
         fprintf(fid,'%04d %s\r',cnt,['00000000 ' cnd]);
