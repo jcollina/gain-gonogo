@@ -130,10 +130,7 @@ void loop() {
         Serial.print(trialStr);
         Serial.print(t);
         Serial.println(" TON");
-        if (Serial.available() > 0) {
-            Serial.read();
-        }
-        
+
         // next state
         taskState = 2;
         break;
@@ -150,9 +147,6 @@ void loop() {
           Serial.print(trialStr);
           Serial.print(t);
           Serial.println(" STIMON");
-          if (Serial.available() > 0) {
-            Serial.read();
-          }
           delay(10); // delay to let signal go down again
           taskState = 3;
         }
