@@ -59,8 +59,8 @@ pulseWidth = params.rampD;
 for i = 1:size(stimf,2)
     tmp = zeros(1,length(stimf{1,i,1}));
     tEnd = round((offset(i)-params.chordDuration) * params.fs);
-    tmp(1:pulseWidth*params.fs) = 1;
-    tmp(tEnd:tEnd+(pulseWidth*params.fs)) = 1;
+    tmp(1:pulseWidth*params.fs) = .5;
+    tmp(tEnd:tEnd+(pulseWidth*params.fs)) = .5;
     events{i} = tmp;
     %plot([stimf{2,i,1};events{i}]');
 end
