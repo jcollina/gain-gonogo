@@ -84,8 +84,8 @@ while cnt < 2000
     elseif contains(out,'TOFF')
         % make sure we're ready for the next trial
         if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
-            if s.IsRunning
-                stop(s);
+            if s.ScansQueued > 0
+                wait(s);
             end
         end
         % plot the stuff
