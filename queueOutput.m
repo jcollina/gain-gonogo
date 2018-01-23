@@ -12,7 +12,6 @@ elseif isNIDAQ
     queueOutputData(s,stim);
 elseif isLYNX
     % load stim to DirectSoundDriver
-    stim(:,2) = stim(:,2) / 2;
     queueOutputData(s,stim);
 end
 
