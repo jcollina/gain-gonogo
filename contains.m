@@ -1,17 +1,9 @@
-function tf = contains(s,pattern,varargin)
+function status = contains(a,b)
 
-% for one string
-narginchk(2, inf);
-
-try
-    stringS = string(s);
-    
-    if nargin == 2
-        tf = stringS.contains(pattern);
-    else
-        tf = stringS.contains(pattern, varargin{:});
+if iscell(a)
+    for i = 1:max(size(a))
+        status(i) = ~isempty(strfind(a{i},b));
     end
-    
-catch E
-    throw(E)
+else
+    status = ~isempty(strfind(a,b));
 end
