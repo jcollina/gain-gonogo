@@ -53,6 +53,7 @@ fprintf('PRESS ANY KEY TO START...\n');
 KbWait;
 
 % send params to arduino
+params.timeoutD = 10;
 fprintf(p,'%f %f %f %f %d ',[params.holdD params.respD ...
     params.rewardDuration params.timeoutD params.debounceTime]);
 

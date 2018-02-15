@@ -41,6 +41,8 @@ fid = fopen(fn,'w');
 fprintf('PRESS ANY KEY TO START...\n');
 KbWait;
 
+params.timeoutD = 10;
+
 % send params to arduino
 fprintf(p,'%f %f %f %f %d ',[params.holdD params.respD ...
     params.rewardDuration params.timeoutD params.debounceTime]);
