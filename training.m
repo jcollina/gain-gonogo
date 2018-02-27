@@ -85,7 +85,7 @@ while cnt < 2000
         % make sure we're ready for the next trial
         if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
             if s.ScansQueued > 0
-                wait(s);
+                stop(s);
             end
         end
         % plot the stuff
@@ -94,6 +94,13 @@ while cnt < 2000
     elseif contains(out,'REWARDON') || contains(out,'TOSTART')
         % some response logic
         resp(cnt) = 1;
+        
+        % stop the stimulus if it is a timeout
+        if contains(out,'TOSTART')
+            if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
+                stop(s);
+            end
+        end
     elseif contains(out,'MISS') || contains(out,'CORRECTREJECT')
         resp(cnt) = 0;
     elseif contains(out,'USEREXIT')
