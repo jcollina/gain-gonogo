@@ -29,6 +29,7 @@ end
 params.targetDBShift = [thresh params.targetDBShift];
 disp(['Threshold = ' num2str(thresh)]);
 
+
 % make stimuli
 [stim, events, params.target, params.targetF] = constructStimChords(params);
 rng('shuffle');
