@@ -6,7 +6,7 @@ isASIO = strcmp(device,'ASIO Lynx');
 
 if isASIO
     % start soundcard
-    PsychPortAudio('Start', s, 1)
+    PsychPortAudio('Start', s, 1);
 else
     % start NIDAQ
     startBackground(s);

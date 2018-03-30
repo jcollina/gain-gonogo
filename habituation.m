@@ -3,7 +3,11 @@ KbName('UnifyKeyNames');
 delete(instrfindall);
 
 % load the arduino sketch
-hexPath = [params.hex filesep 'habituation.ino.hex'];
+if params.inverted
+    hexPath = [params.hex filesep 'habituation_inv.ino.hex'];
+else
+    hexPath = [params.hex filesep 'habituation.ino.hex'];
+end
 loadArduinoSketch(params.com,hexPath);
 
 % open the serial port
