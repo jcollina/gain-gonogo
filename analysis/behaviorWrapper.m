@@ -4,7 +4,7 @@ function behaviorWrapper(mouseList)
 addpath(genpath('../Palamedes/'));
 
 if ~exist('mouseList','var')
-    mouseList = {'CA046','CA047','CA048','CA049','CA051'};
+    mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052'};
 end
 
 for i = 1:length(mouseList)

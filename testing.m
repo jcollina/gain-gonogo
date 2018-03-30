@@ -45,6 +45,8 @@ fid = fopen(fn,'w');
 fprintf('PRESS ANY KEY TO START...\n');
 KbWait;
 
+params.timeoutD = 10;
+
 % send params to arduino
 fprintf(p,'%f %f %f %f %d ',[params.holdD params.respD ...
     params.rewardDuration params.timeoutD params.debounceTime]);
@@ -127,6 +129,13 @@ while cnt < 1e6
     elseif contains(out,'REWARDON') || contains(out,'TOSTART')
         % some response logic
         resp(cnt) = 1;
+        
+        % stop the stimulus if it is a timeout
+        if contains(out,'TOSTART')
+            if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
+                stop(s);
+            end
+        end
     elseif contains(out,'MISS') || contains(out,'CORRECTREJECT')
         resp(cnt) = 0;
     elseif contains(out,'USEREXIT')

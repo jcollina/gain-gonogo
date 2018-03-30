@@ -29,6 +29,7 @@ end
 params.targetDBShift = [thresh params.targetDBShift];
 disp(['Threshold = ' num2str(thresh)]);
 
+
 % make stimuli
 [stim, events, params.target, params.targetF] = constructStimChords(params);
 rng('shuffle');
@@ -53,6 +54,7 @@ fprintf('PRESS ANY KEY TO START...\n');
 KbWait;
 
 % send params to arduino
+params.timeoutD = 10;
 fprintf(p,'%f %f %f %f %d ',[params.holdD params.respD ...
     params.rewardDuration params.timeoutD params.debounceTime]);
 
@@ -134,6 +136,13 @@ while cnt < 1e6
     elseif contains(out,'REWARDON') || contains(out,'TOSTART')
         % some response logic
         resp(cnt) = 1;
+        
+        % stop the stimulus if it is a timeout
+        if contains(out,'TOSTART')
+            if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
+                stop(s);
+            end
+        end
     elseif contains(out,'MISS') || contains(out,'CORRECTREJECT')
         resp(cnt) = 0;
     elseif contains(out,'USEREXIT')
