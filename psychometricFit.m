@@ -1,5 +1,7 @@
 function fit = psychometricFit(resps,count,snr)
 
+addpath(genpath('Palamedes'));
+
 % Initial parameters
 PF = @PAL_Gumbel;
 p0 = [mean(snr)+(.4*mean(snr)) .25 .1 .025];
