@@ -33,6 +33,7 @@ else
 end
 
 % Compute stats
+ttype = ttype>1;
 if any(size(resp) ~= size(ttype))
     ttype = ttype';
 end
