@@ -109,7 +109,7 @@ while cnt < 2000
 end
 
 % save matfile
- save(mat,'params','tt','resp');
+save(mat,'params','tt','resp');
 
 delete(instrfindall)
 if strcmp(params.device,'NIDAQ')
