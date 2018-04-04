@@ -32,8 +32,7 @@ else
     goodIdx = ones(1,length(resp));
 end
 
-% Compute stats
-ttype = ttype>1;
+ttype = ttype>0;
 if any(size(resp) ~= size(ttype))
     ttype = ttype';
 end
