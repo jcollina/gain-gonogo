@@ -2,6 +2,7 @@ function [rate,fa,dp,nresp,ntrials,threshold,fit,snr] = ...
     psychAnalysis(fileList,fileInd,faCut)
 
 addpath(genpath('~/chris-lab/code_general/'));
+addpath(genpath('../'));
 
 %% analyze each testing session
 % 1. stats
