@@ -17,6 +17,10 @@ if nargin < 1 || ~exist('ID','var')
     ID = 'CA999';
 end
 
+
+addpath(genpath('Palamedes'));
+addpath(genpath('analysis'));
+
 %% SETUP
 % load parameter file for this computer
 [params fs] = loadParameters(paramFile);
