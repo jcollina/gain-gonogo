@@ -1,7 +1,7 @@
 %% 2nd April 2018 - booth 1
-empty = 0.9969; % g - weight of empty eppendorf
-durations = [15 ]; % ms - duration of solenoid opening
-weights = [1.2069 ]; % weight of eppendorf with water from 100 openings of the valve
+empty = 0.9971; % g - weight of empty eppendorf
+durations = [30 ]; % ms - duration of solenoid opening
+weights = [1.3371]; % weight of eppendorf with water from 100 openings of the valve
 ulPerOpening = (weights - repmat(empty,1,length(weights)))*1000/100;
 
 figure
