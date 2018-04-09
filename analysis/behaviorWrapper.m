@@ -13,6 +13,22 @@ for i = 1:length(mouseList)
 
 end
 
+% mouse averaged dprime
+t = [.05 .1 .25 .5 1];
+nLoHi = mode(sum(~isnan(dp(:,1,:))),3);
+mLoHi = nanmean(dp(:,1,:));
+sLoHi = nanstd(dp(:,1,:)) ./ sqrt(nLoHi);
+nHiLo = mode(sum(~isnan(dp(:,2,:))),3);
+mHiLo = nanmean(dp(:,2,:));
+sHiLo = nanstd(dp(:,2,:)) ./ sqrt(nHiLo);
+
+figure
+hold on
+errorbar(t,squeeze(mLoHi),squeeze(sLoHi),'r','LineWidth',2);
+errorbar(t,squeeze(mHiLo),squeeze(sHiLo),'b','LineWidth',2);
+
+
+
 % hard stop for missing data
 if any(isnan(threshold(:)))
     keyboard
