@@ -1,4 +1,4 @@
-function [threshold, mdp, mrate, mfa] = behaviorAnalysis(ID)
+function [threshold, mdp, mdp1, mrate, mfa] = behaviorAnalysis(ID)
 
 disp(['ANALYZING MOUSE ' ID]);
 
@@ -101,6 +101,7 @@ end
 
 %% OFFSET ANALYSIS
 mdp = nan(2,5);
+mdp1 = nan(2,5);
 mrate = nan(2,5);
 mfa = nan(2,5);
 for i = 1:2
@@ -168,6 +169,7 @@ for i = 1:2
         
         % save out means
         mdp(i,:) = mean(squeeze(dp(:,1,:)));
+        mdp1(i,:) = mean(squeeze(dp(:,2,:)));
         mrate(i,:) = mean(squeeze(rate(:,1,:)));
         mfa(i,:) = mean(fa);
     end
