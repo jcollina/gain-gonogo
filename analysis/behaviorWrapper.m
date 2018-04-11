@@ -13,6 +13,7 @@ for i = 1:length(mouseList)
 
 end
 
+
 % hard stop for missing data
 if any(isnan(threshold(:)))
     keyboard
@@ -146,5 +147,29 @@ set(gca,'LineWidth',2);
 legend(bp,'Low-to-High','High-to-Low','Location','southeast');
 hold off
 saveFigPDF(f5,[530 700],'_allMiceDPdiff-1000.pdf');
+
+% mouse averaged dprime
+t = [.05 .1 .25 .5 1];
+nLoHi = mode(sum(~isnan(dp(:,1,:))),3);
+mLoHi = nanmean(dp(:,1,:));
+sLoHi = nanstd(dp(:,1,:)) ./ sqrt(nLoHi);
+nHiLo = mode(sum(~isnan(dp(:,2,:))),3);
+mHiLo = nanmean(dp(:,2,:));
+sHiLo = nanstd(dp(:,2,:)) ./ sqrt(nHiLo);
+
+f6 = figure(6); clf;
+hold on
+errorbar(t,squeeze(mLoHi),squeeze(sLoHi),'r','LineWidth',2);
+errorbar(t,squeeze(mHiLo),squeeze(sHiLo),'b','LineWidth',2);
+xlim([0 1.05]);
+set(gca,'XTick',t);
+xtickangle(90);
+title(sprintf('n = %d',min([nLoHi nHiLo])));
+xlabel('Time (s)');
+ylabel('d''');
+legend('Low-to-High','High-to-Low','location','southeast');
+plotPrefs;
+hold off
+saveFigPDF(f6,[600 300],'_allMiceDP.pdf');
 
 keyboard

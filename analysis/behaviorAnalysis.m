@@ -64,7 +64,7 @@ for i = 1:2
         trials = sum(ntrials,1);
         fit = psychometricFit(resp,trials,snr(1,:));
         x = snr(1,:);
-        
+                
         [~,tind] = min(abs(fit.x-fit.thresh));
         tx = fit.x(tind);
         ty = fit.y(tind);
@@ -86,7 +86,7 @@ for i = 1:2
         hold off
         
         threshold(i) = fit.thresh;
-        
+                
         % save figure 2
         set(f2,'PaperPositionMode','auto');         
         set(f2,'PaperOrientation','landscape');
