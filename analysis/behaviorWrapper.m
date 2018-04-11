@@ -14,7 +14,7 @@ end
 
 
 % hard stop for missing data
-if any(isnan(threshold(:)))
+if any(isnan(threshold(:))) || size(threshold,1)==1
     keyboard
 end
 
