@@ -41,7 +41,6 @@ for i = 1:length(fileList)
     plotPsychometricSession(snr(i,:),rate(i,:),fa(i),fit(i));
 end
 
-
 ind = fa < faCut;
 rate = rate(ind,:);
 fa = fa(ind);

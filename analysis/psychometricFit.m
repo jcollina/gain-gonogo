@@ -19,8 +19,8 @@ resps(resps == 0) = 1;
 % Set search options
 options = PAL_minimize('options');
 options.TolFun = 1e-10;
-options.MaxIter = 10000;
-options.MaxFunEvals = 10000;
+options.MaxIter = 1e6;
+options.MaxFunEvals = 1e6;
 
 % Maximum likelihood fitting using Palamedes
 [pFit, ll, exitflag, output] = PAL_PFML_Fit(snr,resps,count,p0,pFree,PF,...

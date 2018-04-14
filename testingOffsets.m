@@ -3,7 +3,11 @@ KbName('UnifyKeyNames');
 delete(instrfindall);
 
 % load the arduino sketch
-hexPath = [params.hex filesep 'go-nogo_licks.ino.hex'];
+if params.inverted
+    hexPath = [params.hex filesep 'go-nogo_licks_inv.ino.hex'];
+else
+    hexPath = [params.hex filesep 'go-nogo_licks.ino.hex'];
+end
 loadArduinoSketch(params.com,hexPath);
 
 % open the serial port
