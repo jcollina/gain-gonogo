@@ -8,14 +8,13 @@ if ~exist('mouseList','var')
 end
 
 for i = 1:length(mouseList)
-    [threshold(i,:) dp(i,:,:) rate(i,:,:) fa(i,:,:)] = ...
+    [threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:)] = ...
         behaviorAnalysis(mouseList{i});
-
 end
 
 
 % hard stop for missing data
-if any(isnan(threshold(:)))
+if any(isnan(threshold(:))) || size(threshold,1)==1
     keyboard
 end
 
@@ -171,5 +170,30 @@ legend('Low-to-High','High-to-Low','location','southeast');
 plotPrefs;
 hold off
 saveFigPDF(f6,[600 300],'_allMiceDP.pdf');
+
+% mouse averaged dprime at highest level
+t = [.05 .1 .25 .5 1];
+nLoHi = mode(sum(~isnan(dp1(:,1,:))),3);
+mLoHi = nanmean(dp1(:,1,:));
+sLoHi = nanstd(dp1(:,1,:)) ./ sqrt(nLoHi);
+nHiLo = mode(sum(~isnan(dp1(:,2,:))),3);
+mHiLo = nanmean(dp1(:,2,:));
+sHiLo = nanstd(dp1(:,2,:)) ./ sqrt(nHiLo);
+
+f7 = figure(7); clf;
+hold on
+errorbar(t,squeeze(mLoHi),squeeze(sLoHi),'r','LineWidth',2);
+errorbar(t,squeeze(mHiLo),squeeze(sHiLo),'b','LineWidth',2);
+xlim([0 1.05]);
+set(gca,'XTick',t);
+xtickangle(90);
+title(sprintf('n = %d',min([nLoHi nHiLo])));
+xlabel('Time (s)');
+ylabel('d''');
+legend('Low-to-High','High-to-Low','location','southeast');
+plotPrefs;
+hold off
+saveFigPDF(f7,[600 300],'_allMiceDPhigh.pdf');
+
 
 keyboard
