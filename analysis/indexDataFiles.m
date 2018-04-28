@@ -36,6 +36,9 @@ for i = 1:length(files)
         % add number of trials
         fileInd(cnt,4) = mn;
         
+        % was it a recording session?
+        fileInd(cnt,5) = contains(params.boothID,'rec');
+        
         cnt = cnt + 1;
     end
 end

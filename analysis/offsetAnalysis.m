@@ -18,7 +18,7 @@ function [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList,fileInd,faCut)
         trialType = tt(1:mn,:);
      
         % get good trials
-        [~,~,~,~,goodIdx] = computePerformanceGoNoGo(response,trialType,1,7);
+        [~,~,~,~,goodIdx] = computePerformanceGoNoGo(response,trialType,[],[],.25);
         response = response(goodIdx==1);
         trialType = trialType(goodIdx==1,:);
         

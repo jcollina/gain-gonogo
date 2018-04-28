@@ -38,6 +38,8 @@ if exist('respThresh','var')
     goodIdx = respMean >= respThresh;
 end
 
+goodIdx = logical(goodIdx);
+
 resp = resp(goodIdx);
 ttype = ttype(goodIdx);
 
