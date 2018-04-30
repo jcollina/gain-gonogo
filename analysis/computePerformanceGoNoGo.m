@@ -35,7 +35,7 @@ end
 % remove periods where there were no licks
 if exist('respThresh','var')
     respMean = movmean(resp,15);
-    goodIdx = respMean >= respThresh;
+    goodIdx = respMean > respThresh;
 end
 
 goodIdx = logical(goodIdx);
