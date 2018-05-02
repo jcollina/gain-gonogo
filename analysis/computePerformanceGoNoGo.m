@@ -35,7 +35,7 @@ end
 % remove periods where there were no licks
 if exist('respThresh','var')
     respMean = movmean(resp,15);
-    goodIdx = respMean >= respThresh;
+    goodIdx = respMean > respThresh;
 end
 
 goodIdx = logical(goodIdx);
@@ -51,20 +51,22 @@ pc = mean(resp == ttype);
 hr = mean(resp(ttype>0));
 fa = mean(resp(ttype==0));
 
-% Correct for perfect hr/fa
+% Correct for perfect hr/fa (from: http://www.kangleelab.com/sdt-d-prime-calculation---other-tips.html)
 hr1 = hr;
 fa1 = fa;
+nt = sum(ttype>0);
+nn = sum(ttype==0);
 if hr1 == 1
-    hr1 = .99;
+    hr1 = 1-(1/(2*nt));
 end
 if hr1 == 0
-    hr1 = .01;
+    hr1 = 1/(2*nt);
 end
 if fa1 == 0
-    fa1 = .01;
+    fa1 = 1/(2*nn);
 end
 if fa1 == 1
-    fa1 = .99;
+    fa1 = 1-(1/(2*nn));
 end
 
 dp = norminv(hr1) - norminv(fa1);
