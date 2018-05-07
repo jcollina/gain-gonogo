@@ -4,19 +4,42 @@ function behaviorWrapper(mouseList)
 addpath(genpath('../Palamedes/'));
 
 if ~exist('mouseList','var')
-    mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055'};
+    mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055','CA061'};
 end
 
 for i = 1:length(mouseList)
-    [threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:)] = ...
+    [rpsych(i,:,:) npsych(i,:,:) lvl(i,:,:) threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:)] = ...
         behaviorAnalysis(mouseList{i});
 end
+
+% keyboard
+
+% cols = [0 0 1; 1 0 0];
+% for i = 1:2
+%     resp = squeeze(sum(rpsych(:,i,:),1));
+%     trials = squeeze(sum(npsych(:,i,:),1));
+%     x(i,:) = squeeze(lvl(1,i,:));
+%     fit(i) = psychometricFit(resp,trials,x(i,:));
+%     hold on
+%     plot(x(i,:),resp./trials,'.k');
+%     plot(fit(i).x,fit(i).y,...
+%          'Color',cols(i,:),'LineWidth',2)
+%     hold off
+% end
+    
 
 
 % hard stop for missing data
 if any(isnan(threshold(:))) || size(threshold,1)==1
     keyboard
 end
+
+figure
+hold on
+plot(squeeze(lvl(1,1,:)),squeeze(mean(psych(:,1,2:end))),'b.')
+plot(squeeze(lvl(1,2,:)),squeeze(mean(psych(:,2,2:end))),'r.')
+hold off
+
 
 % save out thresholds
 save('thresholds.mat','mouseList','threshold')

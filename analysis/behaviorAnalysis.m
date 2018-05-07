@@ -1,4 +1,4 @@
-function [threshold, mdp, mdp1, mrate, mfa] = behaviorAnalysis(ID)
+function [rpsych, npsych, lvl, threshold, mdp, mdp1, mrate, mfa] = behaviorAnalysis(ID)
 
 disp(['ANALYZING MOUSE ' ID]);
 
@@ -86,6 +86,9 @@ for i = 1:2
         hold off
         
         threshold(i) = fit.thresh;
+        npsych(i,:) = trials;
+        rpsych(i,:) = resp;
+        lvl(i,:) = x;
                 
         % save figure 2
         set(f2,'PaperPositionMode','auto');         
