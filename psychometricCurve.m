@@ -8,7 +8,7 @@ function psychometricCurve(x,y,l)
 conds = unique(x);
 nConditions = length(unique(x));
 for i = 1:nConditions
-    r(i) = sum(y(x==conds(i)));4
+    r(i) = sum(y(x==conds(i)));
     n(i) = sum(x==conds(i));
     hr(i) = r(i)/n(i);
 end
