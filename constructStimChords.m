@@ -75,7 +75,7 @@ for i = 1:size(stimf,2)
     tmp(1:pulseWidth*params.fs) = .5;
     tmp(tEnd:tEnd+(pulseWidth*params.fs)) = .5;
     events{i} = tmp;
-    figure;
+    %figure;
     %plot([stimf{2,i,1,6};events{i}]');
     %keyboard
 end
