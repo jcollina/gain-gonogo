@@ -22,11 +22,11 @@ load('thresholds2use.mat');
 [~,cond] = min(params.sd);
 thresh = threshold(ind,cond);
 if params.sd(2) - params.sd(1) > 0
-    params.stim = ['D:\stimuli\gainBehavior\180529_offsetsLoHiChord-' ...
+    params.stim = ['D:\stimuli\gainBehavior\180808_offsetsLoHiChord-' ...
         params.boothID '-' params.IDstr '-thresh' num2str(thresh) '-dual.mat'];
     params.targetDBShift = 20;
 else
-    params.stim = ['D:\stimuli\gainBehavior\180529_offsetsHiLoChord-' ...
+    params.stim = ['D:\stimuli\gainBehavior\180808_offsetsHiLoChord-' ...
         params.boothID '-' params.IDstr '-thresh' num2str(thresh) '-dual.mat'];
     params.targetDBShift = 15;
 end
