@@ -16,10 +16,10 @@ p = setupSerialPort(params.com,9600);
 % construct the stimuli
 params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
 if params.sd(2) - params.sd(1) > 0
-    params.stim = ['D:\stimuli\gainBehavior\180529_trainingLoHiChord-' params.boothID '-dual.mat'];
+    params.stim = ['D:\stimuli\gainBehavior\180716_trainingLoHiChord-' params.boothID '-dual.mat'];
     params.targetDBShift = 20;
 else
-    params.stim = ['D:\stimuli\gainBehavior\180529_trainingHiLoChord-' params.boothID '-dual.mat'];
+    params.stim = ['D:\stimuli\gainBehavior\180716_trainingHiLoChord-' params.boothID '-dual.mat'];
     params.targetDBShift = 16;
 end
 [stim, events, params.target, params.targetF] = constructStimChordTraining(params,s);
