@@ -6,12 +6,12 @@ files = dir([dataDir filesep '*.mat']);
 n = 100;
 cnt = 1;
 for i = 1:length(files)
-    load([files(i).folder filesep files(i).name]);
+    load([dataDir filesep files(i).name]);
     % if there are enough trials
     [mn mi] = min([length(tt) length(resp)]);
     if mn >= n
         % add to file list
-        fileList{cnt} = [files(i).folder filesep files(i).name];
+        fileList{cnt} = [dataDir filesep files(i).name];
         % classify by behavioral task type
         if params.sd(1) < params.sd(2)
             fileInd(cnt,1) = 1;

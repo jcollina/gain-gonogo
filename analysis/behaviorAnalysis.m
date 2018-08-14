@@ -50,6 +50,9 @@ end
 %% PSYCHOMETRIC ANALYSIS
 % for lohi
 threshold = nan(1,2);
+npsych = nan(2,6);
+rpsych = nan(2,6);
+lvl = nan(2,6);
 for i = 1:2
     ind = fileInd(:,2) == 2 & fileInd(:,1) == i;
     if sum(ind)>1
@@ -142,7 +145,7 @@ for i = 1:2
         hold off
         ylabel('p(Response)')
         xlabel('Offset (s)');
-        xtickangle(90);
+        set(gca,'XTickLabelRotation',90);
         legend('Threshold','High SNR','FA','Location','ne');
         set(gca,'XTick',x);
         plotPrefs
@@ -164,7 +167,7 @@ for i = 1:2
         hold off
         ylabel('d-prime')
         xlabel('Offset (s)');
-        xtickangle(90);
+        set(gca,'XTickLabelRotation',90);
         legend('Threshold','High SNR','Location','ne');
         set(gca,'XTick',x);
         ylim([-1 5])
