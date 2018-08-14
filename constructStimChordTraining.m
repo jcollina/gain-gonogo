@@ -68,4 +68,4 @@ for i = 1:size(stimf,2)
     %keyboard
 end
 
-rng(round(rand*1e6));
+rand("seed",(round(rand*1e6)));

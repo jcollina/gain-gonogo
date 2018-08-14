@@ -23,7 +23,7 @@ else
     params.targetDBShift = 16;
 end
 [stim, event, params.target, params.targetF] = constructStimChordTraining(params,s);
-rng('shuffle');
+rand('seed','reset');
 
 % modify params to reflect actual stimuli used
 
@@ -83,7 +83,8 @@ while cnt < 2000
         startOutput(s,params.device);
     elseif contains(out,'TOFF')
         % make sure we're ready for the next trial
-        if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
+        if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44') ...
+          && ~contains(params.device,'OPTB')
             if s.ScansQueued > 0
                 stop(s);
             end

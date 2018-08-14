@@ -48,7 +48,7 @@ elseif isOPTB
     id = d(ind).DeviceIndex;
     
     % open and determine real framerate
-    s = PsychPortAudio('Open', id, 1, 3, fs, ch);
+    s = PsychPortAudio('Open', id, 1, 3, fs, length(ch));
     status = PsychPortAudio('GetStatus', s);
     realFS = status.SampleRate;
     

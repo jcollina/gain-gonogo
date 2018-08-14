@@ -4,6 +4,8 @@ close all
 %delete(instrfindall)
 %dbstop if error
 debug_on_error(true);
+page_output_immediately(1);
+page_screen_output(0);
 
 if nargin < 4 || ~exist('condition','var')
     condition = 'hilo';
@@ -19,8 +21,8 @@ if nargin < 1 || ~exist('ID','var')
 end
 
 
-addpath(genpath('Palamedes'));
-addpath(genpath('analysis'));
+addpath(genpath('.\Palamedes'));
+addpath(genpath('.\analysis'));
 
 %% SETUP
 % load parameter file for this computer
