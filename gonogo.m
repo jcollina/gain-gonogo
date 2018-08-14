@@ -1,8 +1,9 @@
 function gonogo(ID,STAGE,paramFile,condition)
 close all
-clearvars -except ID STAGE paramFile condition
-delete(instrfindall)
-dbstop if error
+%clearvars -except ID STAGE paramFile condition
+%delete(instrfindall)
+%dbstop if error
+debug_on_error(true);
 
 if nargin < 4 || ~exist('condition','var')
     condition = 'hilo';
@@ -36,7 +37,7 @@ params.data     = [pwd filesep 'data' filesep params.IDstr];
 params.hex      = [pwd filesep '_hex'];
 params.stage    = STAGE;
 params.fn       = [params.data filesep params.IDsess];
-params.filtdir  = 'D:\GitHub\filters';
+params.filtdir  = '..\filters';
 if ~exist(params.data,'dir')
     mkdir(params.data);
 end

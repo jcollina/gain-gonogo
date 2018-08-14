@@ -8,7 +8,7 @@ end
 
 
 % Close open serial objects
-delete(instrfindall)
+%delete(instrfindall)
 fprintf('OPENING SERIAL PORT %s, BAUD %g\n\n',port,baud);
 s = serial(port);
 set(s,'BaudRate',baud);

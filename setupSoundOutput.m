@@ -1,8 +1,10 @@
 function [s,realFS] = setupSoundOutput(fs,device,ch)
 
+isOPTB  = contains(device,'OPTB');
 isNIDAQ = strcmp(device,'NIDAQ');
-isLYNX = contains(device,'Lynx E44');
+isLYNX = contains(device,'Lynx E44') && ~isOPTB;
 isASIO = strcmp(device,'ASIO Lynx');
+
 
 if isASIO
     % setup ASIO soundcard
@@ -34,5 +36,21 @@ elseif isLYNX
     ch = addAudioOutputChannel(s,dev.ID,ch);
     s.Rate = fs;
     realFS = s.Rate;
+elseif isOPTB
+    % Initialize PTB Audio
+    InitializePsychSound(1);
+    
+    % Find available speakers. We expect the device string in the param
+    % file to be 'OPTB name'. Thus, we compare starting at the 6th 
+    % character in the string.
+    d = findPTBLynxSpeakers();
+    ind = find(strcmp({d.DeviceName}, device(6:end)));
+    id = d(ind).DeviceIndex;
+    
+    % open and determine real framerate
+    s = PsychPortAudio('Open', id, 1, 3, fs, ch);
+    status = PsychPortAudio('GetStatus', s);
+    realFS = status.SampleRate;
+    
 end
     

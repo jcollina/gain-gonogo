@@ -22,15 +22,22 @@ end
 esc = {'ESCAPE', escapeCode};
 
 while 1
-    if s.BytesAvailable
-        out = fscanf(s);
-        break
-    end
+%    if s.BytesAvailable
+%        out = fscanf(s);
+%        break
+%    end
     [~,~,keyCode] = KbCheck;
     if sum(keyCode) == 2
         if all(strcmp(KbName(keyCode),esc))
             out = '0000 999999 USEREXIT';
             break
         end
+    end
+    
+    out = serialReadOctave(s,1);
+    if all(int8(out) == 1)
+        continue
+    else
+        break
     end
 end

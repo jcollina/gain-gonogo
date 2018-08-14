@@ -1,6 +1,6 @@
 function training(s,params)
 KbName('UnifyKeyNames');
-delete(instrfindall);
+%delete(instrfindall);
 
 % load the arduino sketch
 if params.inverted
@@ -22,7 +22,7 @@ else
     params.stim = ['D:\stimuli\gainBehavior\180716_trainingHiLoChord-' params.boothID '-dual.mat'];
     params.targetDBShift = 16;
 end
-[stim, events, params.target, params.targetF] = constructStimChordTraining(params,s);
+[stim, event, params.target, params.targetF] = constructStimChordTraining(params,s);
 rng('shuffle');
 
 % modify params to reflect actual stimuli used
@@ -39,8 +39,8 @@ fprintf('PRESS ANY KEY TO START...\n');
 KbWait;
 
 % send params to arduino
-fprintf(p,'%f %f %f %f %d ',[params.holdD params.respD ...
-    params.rewardDuration params.timeoutD params.debounceTime]);
+srl_write(p,sprintf('%f %f %f %f %d ',[params.holdD params.respD ...
+    params.rewardDuration params.timeoutD params.debounceTime]));
 
 tt = [];
 cnt = 1;
@@ -62,7 +62,7 @@ while cnt < 2000
         end
         
         % send trial type to arduino
-        fprintf(p,'%d',tt(cnt,1));
+        srl_write(p,sprintf('%d',tt(cnt,1)));
         
         % determine offset
         tt(cnt,2) = randi(size(stim,2),1);
@@ -72,7 +72,7 @@ while cnt < 2000
                 
         % queue stimulus
         sound = [stim{tt(cnt,1)+1,tt(cnt,2),tt(cnt,3)} * params.ampF; ...
-            events{tt(cnt,2)} * params.ampF]';
+            event{tt(cnt,2)} * params.ampF]';
         queueOutput(s,sound,params.device);
         cnd = sprintf('COND%d%d%d',tt(cnt,:));
         fprintf(fid,'%04d %s\r',cnt,['00000000 ' cnd]);
