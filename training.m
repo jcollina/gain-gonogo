@@ -98,7 +98,8 @@ while cnt < 2000
         
         % stop the stimulus if it is a timeout
         if contains(out,'TOSTART')
-            if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
+            if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44') ...
+              && ~contains(params.device,'OPTB')
                 stop(s);
             end
         end
@@ -112,7 +113,7 @@ end
 % save matfile
 save(mat,'params','tt','resp');
 
-delete(instrfindall)
+%delete(instrfindall)
 if strcmp(params.device,'NIDAQ')
     stop(s);
 end
