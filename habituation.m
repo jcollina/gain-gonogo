@@ -1,6 +1,6 @@
 function habituation(params)
 KbName('UnifyKeyNames');
-delete(instrfindall);
+%delete(instrfindall);
 
 % load the arduino sketch
 if params.inverted
@@ -23,7 +23,7 @@ while cnt < 1e6
     if ~isempty(regexp(out,'STARTING', 'once'))
         % send setup variables to the arduino
         varvect = [params.holdD params.rewardDuration params.debounceTime];
-        fprintf(p,'%f %f %d ',varvect);
+        srl_write(p,sprintf('%f %f %d ',varvect));
     elseif ~isempty(regexp(out,'USEREXIT', 'once'))
         break;
     end
@@ -31,7 +31,8 @@ while cnt < 1e6
     cnt = cnt + 1;
 end
 
-delete(p);
+fclose(p);
+clear p
 
 % load a blank arduino sketch
 hexPath = [params.hex filesep 'blank.ino.hex'];

@@ -2,7 +2,7 @@ function [stimf, events, target, targetF] = constructStimChordTraining(params,s)
 
 offset = params.noiseD;
 
-rng(params.seed); % (to make the same stimulus each time)
+rand('seed',params.seed); % (to make the same stimulus each time)
 
 % Samples in ramps and chords
 rs = params.rampD * params.fs;

@@ -61,10 +61,12 @@ if ~exist(params.stim,'file')
     save(params.stim,'params','stimf','target','targetF','amps','ampsT');
 else
     % load it
+    tic
     fprintf('Loading %s...', params.stim);
     load(params.stim);
     clear a;
-    fprintf(' done\n');
+    fprintf(' done... ');
+    toc
 end
 
 % make events

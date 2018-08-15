@@ -1,6 +1,6 @@
 function testingOffsets(s,params)
 KbName('UnifyKeyNames');
-delete(instrfindall);
+%delete(instrfindall);
 
 % load the arduino sketch
 if params.inverted
@@ -14,7 +14,7 @@ loadArduinoSketch(params.com,hexPath);
 p = setupSerialPort(params.com,9600);
 
 params.noiseD = params.baseNoiseD + [.05 .1 .25 .5 1];
-rng(params.seed); % (to make the same stimulus each time)
+rand("seed",params.seed); % (to make the same stimulus each time)
 
 % extract threshold from file
 load('thresholds2use.mat');
@@ -35,8 +35,8 @@ disp(['Threshold = ' num2str(thresh)]);
 
 
 % make stimuli
-[stim, events, params.target, params.targetF] = constructStimChords(params);
-rng('shuffle');
+[stim, event, params.target, params.targetF] = constructStimChords(params);
+rand("seed",'reset');
 
 % modify params to reflect actual stimuli used
 % add modifications here
@@ -59,8 +59,8 @@ KbWait;
 
 % send params to arduino
 params.timeoutD = 10;
-fprintf(p,'%f %f %f %f %d ',[params.holdD params.respD ...
-    params.rewardDuration params.timeoutD params.debounceTime]);
+srl_write(p,sprintf('%f %f %f %f %d ',[params.holdD params.respD ...
+    params.rewardDuration params.timeoutD params.debounceTime]));
 
 tt = [];
 cnt = 1;
@@ -78,11 +78,12 @@ while cnt < 1e6
         
         % choose offset
         intd = [0 cumsum(params.offsetP)];
-        d = discretize(num,intd,'IncludedEdge','right');
+        %d = discretize(num,intd,'IncludedEdge','right');
+        [~,d] = histc(num,intd);
         
         % choose target intensity
         intl = [intd(d) intd(d) + (params.offsetP(d).*cumsum(params.dbP))];
-        l = discretize(num,intl,'IncludedEdge','right');
+        [~,l] = histc(num,intl);
                 
         % signal or noise
         tt(cnt,1) = l - 1;
@@ -109,7 +110,7 @@ while cnt < 1e6
         tt(cnt,3) = randi(size(stim,3),1);
         
         % send trial type to arduino
-        fprintf(p,'%d',double(tt(cnt,1)>0));
+        srl_write(p,sprintf('%d',double(tt(cnt,1)>0)));
                 
         % queue stimulus
         % NOTE TO FIX*** GENERATES RANDOM AMPLITUDES PER TRIAL ****
@@ -119,7 +120,7 @@ while cnt < 1e6
             lvl = tt(cnt,1);
         end
         sound = [stim{(tt(cnt,1)>0)+1,tt(cnt,2),tt(cnt,3),lvl} * params.ampF; ...
-            events{tt(cnt,2)} * params.ampF]';
+            event{tt(cnt,2)} * params.ampF]';
         queueOutput(s,sound,params.device);
         cnd = sprintf('COND%d%d%d',tt(cnt,:));
         fprintf(fid,'%04d %s\r',cnt,['00000000 ' cnd]);
@@ -129,7 +130,8 @@ while cnt < 1e6
         startOutput(s,params.device);
     elseif contains(out,'TOFF')
         % make sure we're ready for the next trial
-        if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
+        if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44') ...
+                && ~contains(params.device,'OPTB')
             if s.IsRunning
                 stop(s);
             end
@@ -143,7 +145,8 @@ while cnt < 1e6
         
         % stop the stimulus if it is a timeout
         if contains(out,'TOSTART')
-            if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
+            if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44') ...
+                && ~contains(params.device,'OPTB')
                 stop(s);
             end
         end
@@ -158,12 +161,14 @@ end
 save(mat,'params','tt','resp');
 
 % close everything
-delete(instrfindall)
+%delete(instrfindall)
 if strcmp(params.device,'NIDAQ')
     stop(s);
 end
-fclose('all');
-delete(p);
+%fclose('all');
+%delete(p);
+fclose(p);
+clear p;
 
 % load the arduino sketch
 hexPath = [params.hex filesep 'blank.ino.hex'];
