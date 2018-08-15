@@ -24,7 +24,8 @@ else
 end
 [stim, event, params.target, params.targetF] = constructStimChordTraining(params,s);
 rand('seed','reset');
-
+figure;
+plot(event{1});
 % modify params to reflect actual stimuli used
 
 % graph title
@@ -72,7 +73,7 @@ while cnt < 2000
                 
         % queue stimulus
         sound = [stim{tt(cnt,1)+1,tt(cnt,2),tt(cnt,3)} * params.ampF; ...
-            event{tt(cnt,2)} * params.ampF]';
+            event{tt(cnt,2)} * 10]';%params.ampF]';
         queueOutput(s,sound,params.device);
         cnd = sprintf('COND%d%d%d',tt(cnt,:));
         fprintf(fid,'%04d %s\r',cnt,['00000000 ' cnd]);

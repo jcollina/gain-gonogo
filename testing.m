@@ -23,7 +23,7 @@ else
     params.stim = ['D:\stimuli\gainBehavior\180808_testingHiLoChord-' params.boothID '-dual.mat'];
     params.targetDBShift =linspace(-4,16,6);
 end
-[stim, events, params.target, params.targetF] = constructStimChords(params);
+[stim, event, params.target, params.targetF] = constructStimChords(params);
 rand('seed','reset');
 
 % modify params to reflect actual stimuli used
@@ -108,7 +108,7 @@ while cnt < 1e6
             lvl = tt(cnt,1);
         end
         sound = [stim{(tt(cnt,1)>0)+1,tt(cnt,2),tt(cnt,3),lvl} * params.ampF; ...
-            events{tt(cnt,2)} * params.ampF]';
+            event{tt(cnt,2)} * params.ampF]';
         queueOutput(s,sound,params.device);
         cnd = sprintf('COND%d%d%d',tt(cnt,:));
         fprintf(fid,'%04d %s\r',cnt,['00000000 ' cnd]);

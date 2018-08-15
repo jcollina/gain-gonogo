@@ -1,4 +1,4 @@
-function [stimf, events, target, targetF] = constructStimChords(params)
+function [stimf, event, target, targetF] = constructStimChords(params)
 offset = params.noiseD;
 
 % Samples in ramps and chords
@@ -58,7 +58,7 @@ if ~exist(params.stim,'file')
         end
     end
     fprintf('Saving stimuli as %s\n', params.stim);
-    save(params.stim,'params','stimf','target','targetF','amps','ampsT');
+    save('-6',params.stim,'params','stimf','target','targetF','amps','ampsT');
 else
     % load it
     tic
@@ -76,7 +76,7 @@ for i = 1:size(stimf,2)
     tEnd = round((offset(i)) * params.fs);
     tmp(1:pulseWidth*params.fs) = .5;
     tmp(tEnd:tEnd+(pulseWidth*params.fs)) = .5;
-    events{i} = tmp;
+    event{i} = tmp;
     %figure;
     %plot([stimf{2,i,1,6};events{i}]');
     %keyboard

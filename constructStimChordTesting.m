@@ -1,4 +1,4 @@
-function [stimf, events, target, targetF] = constructStimChordTraining(params,s)
+function [stimf, event, target, targetF] = constructStimChordTraining(params,s)
 
 offset = params.noiseD;
 
@@ -46,7 +46,7 @@ if ~exist(params.stim,'file')
         end
     end
     fprintf('Saving stimuli as %s\n', params.stim);
-    save(params.stim,'params','stimf','target','targetF','amps','ampsT');
+    save('-v6',params.stim,'params','stimf','target','targetF','amps','ampsT');
 else
     % load it
     fprintf('Loading %s...', params.stim);
@@ -62,7 +62,7 @@ for i = 1:size(stimf,2)
     tEnd = round((offset(i)-params.chordDuration) * params.fs);
     tmp(1:pulseWidth*params.fs) = 1;
     tmp(tEnd:tEnd+(pulseWidth*params.fs)) = 1;
-    events{i} = tmp;
+    event{i} = tmp;
     %plot([stimf{2,i,1};events{i}]');
 end
 
