@@ -21,8 +21,8 @@ if nargin < 1 || ~exist('ID','var')
 end
 
 
-addpath(genpath('.\Palamedes'));
-addpath(genpath('.\analysis'));
+addpath(genpath(fullfile(pwd,'Palamedes')));
+addpath(genpath(fullfile(pwd,'analysis')));
 
 %% SETUP
 % load parameter file for this computer
