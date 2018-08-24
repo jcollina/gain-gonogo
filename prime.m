@@ -1,4 +1,5 @@
 function prime(params)
+KbName('UnifyKeyNames');
 
 % load the arduino sketch
 if params.inverted
