@@ -74,6 +74,9 @@ params.timeoutD = 7.0;
 cnt = 1;
 while cnt <= length(STAGE)
     switch STAGE(cnt)
+        case -1
+            disp('RUNNING LICK TUBE PRIMING')
+            prime(params);
         case 0
             disp('RUNNING HABITUATION');
             habituation(params);
