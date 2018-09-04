@@ -45,6 +45,7 @@ if length(tt) > avg + 1
     grid on
     
     drawnow
+    pause(0.05);
 end
         
     

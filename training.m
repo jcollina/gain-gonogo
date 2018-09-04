@@ -24,8 +24,8 @@ else
 end
 [stim, event, params.target, params.targetF] = constructStimChordTraining(params,s);
 rand('seed','reset');
-figure;
-plot(event{1});
+%figure;
+%plot(event{1});
 % modify params to reflect actual stimuli used
 
 % graph title
@@ -43,6 +43,12 @@ KbWait;
 srl_write(p,sprintf('%f %f %f %f %d ',[params.holdD params.respD ...
     params.rewardDuration params.timeoutD params.debounceTime]));
 
+% PLay silence because there was an issue where the first event was not the correct 
+% voltage.
+queueOutput(s,zeros(params.fs,2),params.device)
+startOutput(s,params.device);    
+pause(1);
+    
 tt = [];
 cnt = 1;
 runningAverage = 20;
@@ -73,7 +79,8 @@ while cnt < 2000
                 
         % queue stimulus
         sound = [stim{tt(cnt,1)+1,tt(cnt,2),tt(cnt,3)} * params.ampF; ...
-            event{tt(cnt,2)} * 10]';%params.ampF]';
+            event{tt(cnt,2)} * params.ampF]';
+        
         queueOutput(s,sound,params.device);
         cnd = sprintf('COND%d%d%d',tt(cnt,:));
         fprintf(fid,'%04d %s\r',cnt,['00000000 ' cnd]);

@@ -62,6 +62,12 @@ params.timeoutD = 10;
 srl_write(p,sprintf('%f %f %f %f %d ',[params.holdD params.respD ...
     params.rewardDuration params.timeoutD params.debounceTime]));
 
+% PLay silence because there was an issue where the first event was not the correct 
+% voltage.
+queueOutput(s,zeros(params.fs,2),params.device)
+startOutput(s,params.device);    
+pause(1);
+
 tt = [];
 cnt = 1;
 runningAverage = 20;
@@ -87,6 +93,7 @@ while cnt < 1e6
                 
         % signal or noise
         tt(cnt,1) = l - 1;
+%        keyboard
         
         % make sure there aren't too many repeats of signal or noise
         if cnt > 3 
@@ -94,7 +101,8 @@ while cnt < 1e6
                 % if they're all noise, make next trial a signal trial
                 % according to the signal probabilities
                 intl = [0 cumsum(params.dbP(2:end)) / sum(params.dbP(2:end))];
-                l = discretize(rand,intl,'IncludedEdge','right');
+%                l = discretize(rand,intl,'IncludedEdge','right');
+                [~,l] = histc(rand,intl);
                 tt(cnt,1) = l;
             end
             if all(tt(end-3:end-1,1) > 0)
