@@ -12,5 +12,6 @@ end
 fprintf('OPENING SERIAL PORT %s, BAUD %g\n\n',port,baud);
 s = serial(port);
 set(s,'BaudRate',baud);
+%set(s,'TimeOut',10);
 fopen(s);
 

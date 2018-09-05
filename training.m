@@ -96,6 +96,9 @@ while cnt < 2000
             if s.ScansQueued > 0
                 stop(s);
             end
+        elseif contains(params.device,'OPTB')
+            PsychPortAudio('Stop',s,2);
+            
         end
         % plot the stuff
         plotOnline(tt,resp,runningAverage,tstr);
@@ -109,6 +112,8 @@ while cnt < 2000
             if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44') ...
               && ~contains(params.device,'OPTB')
                 stop(s);
+            elseif contains(params.device,'OPTB')
+                PsychPortAudio('Stop',s,2);
             end
         end
     elseif contains(out,'MISS') || contains(out,'CORRECTREJECT')
@@ -125,8 +130,9 @@ save(mat,'params','tt','resp');
 if strcmp(params.device,'NIDAQ')
     stop(s);
 end
-fclose('all');
-delete(p);
+fclose(p);
+clear p;
+%delete(p);
 % load the arduino sketch
 hexPath = [params.hex filesep 'blank.ino.hex'];
 loadArduinoSketch(params.com,hexPath);

@@ -130,6 +130,8 @@ while cnt < 1e6
             if s.IsRunning
                 stop(s);
             end
+        elseif contains(params.device,'OPTB')
+            PsychPortAudio('Stop',s,2);
         end
         % plot the stuff
         plotOnline(tt,resp,runningAverage,tstr);
@@ -143,6 +145,8 @@ while cnt < 1e6
             if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44') ...
                   && ~contains(params.device,'OPTB')
                 stop(s);
+            elseif contains(params.device,'OPTB')
+                PsychPortAudio('Stop',s,2);
             end
         end
     elseif contains(out,'MISS') || contains(out,'CORRECTREJECT')
@@ -156,7 +160,7 @@ end
 save(mat,'params','tt','resp');
 
 % close everything
-%delete(instrfindall)
+% delete(instrfindall)
 if strcmp(params.device,'NIDAQ')
     stop(s);
 end
