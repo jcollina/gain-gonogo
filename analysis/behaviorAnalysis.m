@@ -2,7 +2,7 @@ function [rpsych, npsych, lvl, threshold, mdp, mdp1, mrate, mfa] = behaviorAnaly
 
 disp(['ANALYZING MOUSE ' ID]);
 
-baseDir = '../data';
+baseDir = '..\data';
 dataDir = [baseDir filesep ID];
 
 taskStr = {'LoHi','HiLo'};
@@ -58,8 +58,7 @@ for i = 1:2
     if sum(ind)>1
         f2 = figure(2); clf;
         [rate,fa,dp,nresp,ntrials,threshold(i),fit,snr] = ...
-            psychAnalysis(fileList(ind),fileInd(ind,:),.25);
-        keyboard
+            psychAnalysis(fileList(ind),fileInd(ind,:),.3);
                 
         % plot average psychometric performance
         figure(1);
