@@ -1,3 +1,3 @@
 boothID,comport,reward_duration(s),debounce(ms),device,channels,samplerate,filterfile,amplification,inverted
-bluerec1,COM6,.055,100,NIDAQ,[0 1],200e3,180529_blueEbooth_NIDAQ_3k-80k_fs200k,10,true
+bluerec1,COM6,.06,100,NIDAQ,[0 1],200e3,180529_blueEbooth_NIDAQ_3k-80k_fs200k,10,true
 
