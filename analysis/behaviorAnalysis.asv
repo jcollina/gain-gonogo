@@ -67,21 +67,24 @@ for i = 1:2
         trials = sum(ntrials,1);
         fit = psychometricFit(resp,trials,snr(1,:),mean(fa));
         x = snr(1,:);
+        
+        keyboard
+        hit15 = 2*erfc((1.5+norminv(mean(fa)))/-sqrt(2));
                 
-        % for shallow fits, make an exception, and use the SNR
-        % corresponding to 1.5 dprime accuracy given FA rate
+        % for shallow fits, make an exception
         if i == 1
             % high contrast
             if fit.thresh < 11 || fit.thresh > 18
-                fit.thresh = fit.thresh15d;
+                fit.thresh = fit.thresh70;
             end
         elseif i == 2
             % low contrast
             if fit.thresh < 4 || fit.thresh > 15
-                fit.thresh = fit.thresh15d;
+                fit.thresh = fit.thresh70;
             end
         end
-                
+        
+        
         [~,tind] = min(abs(fit.x-fit.thresh));
         tx = fit.x(tind);
         ty = fit.y(tind);
