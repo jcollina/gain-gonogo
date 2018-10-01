@@ -2,7 +2,7 @@ function [rpsych, npsych, lvl, threshold, mdp, mdp1, mrate, mfa] = behaviorAnaly
 
 disp(['ANALYZING MOUSE ' ID]);
 
-baseDir = '../data';
+baseDir = '..\data';
 dataDir = [baseDir filesep ID];
 
 taskStr = {'LoHi','HiLo'};
@@ -59,14 +59,28 @@ for i = 1:2
         f2 = figure(2); clf;
         [rate,fa,dp,nresp,ntrials,threshold(i),fit,snr] = ...
             psychAnalysis(fileList(ind),fileInd(ind,:),.3);
-                
+        
         % plot average psychometric performance
         figure(1);
         subplot(4,2,2+i)
         resp = sum(nresp,1);
         trials = sum(ntrials,1);
-        fit = psychometricFit(resp,trials,snr(1,:));
+        fit = psychometricFit(resp,trials,snr(1,:),mean(fa));
         x = snr(1,:);
+                
+        % for shallow fits, make an exception, and use the SNR
+        % corresponding to 1.5 dprime accuracy given FA rate
+        if i == 1
+            % high contrast
+            if fit.thresh < 11 || fit.thresh > 18
+                fit.thresh = fit.thresh15d;
+            end
+        elseif i == 2
+            % low contrast
+            if fit.thresh < 4 || fit.thresh > 15
+                fit.thresh = fit.thresh15d;
+            end
+        end
                 
         [~,tind] = min(abs(fit.x-fit.thresh));
         tx = fit.x(tind);

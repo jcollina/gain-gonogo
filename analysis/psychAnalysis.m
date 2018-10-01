@@ -34,7 +34,7 @@ for i = 1:length(fileList)
     % compute stats
     [nresp(i,:),ntrials(i,:),rate(i,:),dp(i,:),fa(i)] = ...
         psychometricPerformanceGoNoGo(trialType,response);
-    fit(i) = psychometricFit(nresp(i,:),ntrials(i,:),snr(i,:));
+    fit(i) = psychometricFit(nresp(i,:),ntrials(i,:),snr(i,:),fa(i));
     
     % plot psychometric curves
     subplot(1,length(fileList),i)
