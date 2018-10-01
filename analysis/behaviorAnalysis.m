@@ -58,7 +58,8 @@ for i = 1:2
     if sum(ind)>1
         f2 = figure(2); clf;
         [rate,fa,dp,nresp,ntrials,threshold(i),fit,snr] = ...
-            psychAnalysis(fileList(ind),fileInd(ind,:),.3);
+            psychAnalysis(fileList(ind),fileInd(ind,:),.25);
+        keyboard
                 
         % plot average psychometric performance
         figure(1);
