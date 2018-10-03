@@ -178,8 +178,8 @@ print(f1,sprintf('%s_offsetTesting_performance.png',params.fn),'-dpng','-r300');
 % and psychometric performance
 f2 = figure(2);
 l = params.targetDBShift;
-psychometricCurve(trialType(:,1),response,l);
-title(sprintf('%s Psychometric Curve',params.IDsess));
+plotOffsetSession(trialType,response);
+title(sprintf('%s Offset Curve',params.IDsess));
 print(f2,sprintf('%s_offsetTesting_curve.png',params.fn),'-dpng','-r300');
 
 % compute percent correct and reward count
