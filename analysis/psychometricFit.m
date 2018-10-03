@@ -39,5 +39,8 @@ fit.thresh = fit.params(1);
 
 % get threshold for dprime of 1.5 and 70% hit rate
 fit.thresh70 = PAL_Gumbel(fit.params,.70,'inverse');
-hit15 = erfc((1.5+norminv(fa))/-sqrt(2)) / 2;
-fit.thresh15d = PAL_Gumbel(fit.params,hit15,'inverse');
+
+if exist('fa','var')
+    hit15 = erfc((1.5+norminv(fa))/-sqrt(2)) / 2;
+    fit.thresh15d = PAL_Gumbel(fit.params,hit15,'inverse');
+end
