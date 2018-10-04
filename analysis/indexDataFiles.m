@@ -32,12 +32,16 @@ for i = 1:length(files)
         tmp = strfind(fileList{cnt},'_');
         dateStr = str2num(fileList{cnt}(tmp(1)+1:tmp(2)-1));
         fileInd(cnt,3) = floor(dateStr/10000);
+        keyboard
         
         % add number of trials
         fileInd(cnt,4) = mn;
         
         % was it a recording session?
         fileInd(cnt,5) = contains(params.boothID,'rec');
+        
+        % add the full dateStr to the end
+        fileInd(cnt,6) = dateStr;
         
         cnt = cnt + 1;
     end
