@@ -39,6 +39,9 @@ for i = 1:length(files)
         % was it a recording session?
         fileInd(cnt,5) = contains(params.boothID,'rec');
         
+        % add the full dateStr to the end
+        fileInd(cnt,6) = dateStr;
+        
         cnt = cnt + 1;
     end
 end
