@@ -32,7 +32,6 @@ for i = 1:length(files)
         tmp = strfind(fileList{cnt},'_');
         dateStr = str2num(fileList{cnt}(tmp(1)+1:tmp(2)-1));
         fileInd(cnt,3) = floor(dateStr/10000);
-        keyboard
         
         % add number of trials
         fileInd(cnt,4) = mn;
