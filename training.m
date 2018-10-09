@@ -90,7 +90,7 @@ while cnt < 2000
             end
         end
         % plot the stuff
-        plotOnline(tt,resp,runningAverage,tstr);
+        plotOnline1(tt,resp,runningAverage,tstr);
         cnt = cnt + 1;
     elseif contains(out,'REWARDON') || contains(out,'TOSTART')
         % some response logic

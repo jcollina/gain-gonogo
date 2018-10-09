@@ -14,21 +14,22 @@ if length(tt) > avg + 1
         'FontSize',15);
     plot([0 length(tt)],[.5 .5],'k--','LineWidth',1);
     plot(1:length(meanCorrect),meanCorrect,'Color',[0 0 0],'LineWidth',2);
-    for i = 1:length(meanCorrect)
-        if tt(i) == 1
-            if resp(i) == 1
-                h(1) = scatter(i,meanCorrect(i),'o','g','LineWidth',2);
-            else
-                h(2) = scatter(i,meanCorrect(i),'x','r','LineWidth',2);
-            end
-        else
-            if resp(i) == 1
-                h(3) = scatter(i,meanCorrect(i),'*','m','LineWidth',2);
-            else
-                h(4) = scatter(i,meanCorrect(i),'^','c','LineWidth',2);
-            end
-        end
-    end
+    
+    % plot hits
+    hInd = find(tt == 1 & resp == 1);
+    h(1) = scatter(hInd,meanCorrect(hInd),'o','g','LineWidth',2);
+    
+    % plot CRs
+    cInd = find(tt == 0 & resp == 0);
+    h(2) = scatter(cInd,meanCorrect(cInd),'^','c','LineWidth',2);
+    
+    % plot misses
+    mInd = find(tt == 1 & resp == 0);
+    h(3) = scatter(mInd,meanCorrect(mInd),'x','r','LineWidth',2);
+    
+    % plot FAs
+    fInd = find(tt == 0 & resp == 1);
+    h(4) = scatter(fInd,meanCorrect(fInd),'*','m','LineWidth',2);
     
     % initialize legend entries
     h(1) = scatter(1,2,'o','g','LineWidth',2);
