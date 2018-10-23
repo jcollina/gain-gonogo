@@ -96,6 +96,7 @@ while cnt < 2000
         % some response logic
         resp(cnt) = 1;
         
+        
         % stop the stimulus if it is a timeout
         if contains(out,'TOSTART')
             if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
