@@ -68,7 +68,7 @@ params.postTargetTime = 1;
 % task parameters
 params.holdD    = 1.5;
 params.respD    = 1.2;
-params.timeoutD = 7.0;
+params.timeoutD = 10.0;
 
 % go into task sequence
 cnt = 1;
