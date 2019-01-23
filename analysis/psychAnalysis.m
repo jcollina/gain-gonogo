@@ -1,4 +1,4 @@
-function [rate,fa,dp,nresp,ntrials,threshold,fit,snr] = ...
+function [rate,fa,dp,nresp,ntrials,threshold,f,snr] = ...
     psychAnalysis(fileList,fileInd,faCut)
 
 addpath(genpath('~/chris-lab/code_general/'));
@@ -34,21 +34,14 @@ for i = 1:length(fileList)
     % compute stats
     [nresp(i,:),ntrials(i,:),rate(i,:),dp(i,:),fa(i)] = ...
         psychometricPerformanceGoNoGo(trialType,response);
-    fit(i) = psychometricFit(nresp(i,:),ntrials(i,:),snr(i,:),fa(i));
+    f(i) = psychometricFit(nresp(i,:),ntrials(i,:),snr(i,:),fa(i));
     
     % plot psychometric curves
     subplot(1,length(fileList),i)
-    plotPsychometricSession(snr(i,:),rate(i,:),fa(i),fit(i));
+    plotPsychometricSession(snr(i,:),rate(i,:),fa(i),f(i));
 end
 
-ind = fa < faCut;
-rate = rate(ind,:);
-fa = fa(ind);
-dp = dp(ind,:);
-nresp = nresp(ind,:);
-ntrials = ntrials(ind,:);
-fit = fit(ind);
-snr = snr(ind,:);
+
 
 % get threshold
-threshold = mean([fit.thresh]);
+threshold = mean([f.thresh]);

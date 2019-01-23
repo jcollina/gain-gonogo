@@ -121,8 +121,8 @@ for i = 1:2
         tx = f.x(tind);
         ty = f.y(tind);
         hold on
-        plot([tx tx], [0 ty],'k--','LineWidth',1.5);
-        plot(f.x,f.y,'Color',lineColor(i,:),'LineWidth',1.5)
+        plot([tx tx], [0 ty],'k--','LineWidth',2);
+        plot(f.x,f.y,'Color',lineColor(i,:),'LineWidth',2)
         plot(x,resp./trials,'k.','LineWidth',2,'Markersize',25);
         plot(min(x) - mean(diff(x)),mean(fa),'.','Color',[.5 .5 .5], ...
              'LineWidth',2,'MarkerSize',25);
@@ -161,24 +161,28 @@ mrate = nan(2,5);
 mfa = nan(2,5);
 
 dat.offset.date = [];
-dat.offset.dprime = [];
-dat.offset.hr = [];
-dat.offset.fa = [];
+dat.psych.dprime = [];
+dat.psych.hr = [];
+dat.psych.fa = [];
 for i = 1:2
     ind = fileInd(:,2) == 3 & fileInd(:,1) == i;
     if sum(ind) > 1
         [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList(ind), ...
                                                   fileInd(ind,:));
         
+        keyboard
                                               
         % save out all data
-        idx = find(ind);
+        idx = find(ind)
         for j = 1:length(idx)
             dat.offset.date(end+1) = fileInd(idx(j),3);
             dat.offset.dprime(:,:,end+1) = dp(j,:,:);
-            dat.offset.hr(:,:,end+1) = rate(j,:,:);
-            dat.offset.fa(:,end+1) = fa(j,:);
-        end                                             
+        end
+         = [dat.psych.date; fileInd(ind,3)];
+        dat.psych.dprime = [dat.psych.dprime; dp];
+        dat.psych.hr = [dat.psych.hr; rate];
+        dat.psych.fa = [dat.psych.fa; fa];
+                                              
                                               
         % remove bad data
         ind = mean(fa,2) < .3;
@@ -208,16 +212,16 @@ for i = 1:2
         if size(rate,1) > 1
             errorbar(x,nanmean(squeeze(rate(:,1,:))), ...
                      nanstd(squeeze(rate(:,1,:)))./sqrt(size(rate,1)), ...
-                     '-','LineWidth',1.5,'Markersize',25,'Color',lineColor(i,:));
+                     '-','LineWidth',2,'Markersize',25,'Color',lineColor(i,:));
             errorbar(x,nanmean(squeeze(rate(:,2,:))), ...
                      nanstd(squeeze(rate(:,2,:)))./sqrt(size(rate,1)), ...
-                     'k-','LineWidth',1.5,'Markersize',25);
+                     'k-','LineWidth',2,'Markersize',25);
             errorbar(x,nanmean(fa),nanstd(fa)./sqrt(size(fa,1)), ...
-                     '-','Color',[.4 .4 .4],'LineWidth',1.5);
+                     '-','Color',[.4 .4 .4],'LineWidth',2);
         else
             plot(x,squeeze(rate(:,1,:)),'Color',lineColor(i,:),'LineWidth',2);
-            plot(x,squeeze(rate(:,2,:)),'k','LineWidth',1.5);
-            plot(x,fa,'-','Color',[.4 .4 .4],'LineWidth',1.5);
+            plot(x,squeeze(rate(:,2,:)),'k','LineWidth',2);
+            plot(x,fa,'-','Color',[.4 .4 .4],'LineWidth',2);
         end
         hold off
         ylabel('p(Response)')
@@ -233,13 +237,13 @@ for i = 1:2
         if size(dp,1) > 1
             errorbar(x,nanmean(squeeze(dp(:,1,:))), ...
                      nanstd(squeeze(dp(:,1,:)))./sqrt(size(dp,1)), ...
-                     '-','LineWidth',1.5,'Markersize',25,'Color',lineColor(i,:));
+                     '-','LineWidth',2,'Markersize',25,'Color',lineColor(i,:));
             errorbar(x,nanmean(squeeze(dp(:,2,:))), ...
                      nanstd(squeeze(rate(:,2,:)))./sqrt(size(dp,1)), ...
-                     'k-','LineWidth',1.5,'Markersize',25,'LineWidth',1.5);
+                     'k-','LineWidth',2,'Markersize',25,'LineWidth',2);
         else
-            plot(x,squeeze(dp(:,1,:)),'Color',lineColor(i,:),'LineWidth',1.5);
-            plot(x,squeeze(dp(:,2,:)),'k','LineWidth',1.5);
+            plot(x,squeeze(dp(:,1,:)),'Color',lineColor(i,:),'LineWidth',2);
+            plot(x,squeeze(dp(:,2,:)),'k','LineWidth',2);
         end
         hold off
         ylabel('d-prime')

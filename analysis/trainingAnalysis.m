@@ -1,4 +1,4 @@
-function [dprime,pcorrect,dpOffset,pcOffset] = ...
+function [dprime,pcorrect,dpOffset,pcOffset,day,hitrate,farate] = ...
     trainingAnalysis(fileList,fileInd)
 
 %% analyze each training session
@@ -18,7 +18,7 @@ for i = 1:length(fileList)
     trialType = tt(1:mn,:);
     
     % compute averages and remove early end anding trials
-    [~,~,dp,pc,goodIdx] = computePerformanceGoNoGo(response,trialType,20,7);
+    [hr,fa,dp,pc,goodIdx] = computePerformanceGoNoGo(response,trialType,20,7);
     response = response(goodIdx==1);
     trialType = trialType(goodIdx==1,:);    
     
@@ -31,6 +31,8 @@ for i = 1:length(fileList)
     end
     
     % save for each session
+    hitrate(i)    = hr;
+    farate(i)     = fa;
     dprime(i)     = dp;
     pcorrect(i)   = pc;
     dpOffset(i,:) = dpo;
@@ -42,6 +44,10 @@ day = fileInd(:,3);
 sames = find(diff(day) == 0,1,'first');
 
 while ~isempty(sames)
+    hitrate(sames) = mean(hitrate(sames:sames+1));
+    hitrate(sames+1) = [];
+    farate(sames) = mean(farate(sames:sames+1));
+    farate(sames+1) = [];
     dprime(sames) = mean(dprime(sames:sames+1));
     dprime(sames+1) = [];
     pcorrect(sames) = mean(pcorrect(sames:sames+1));
