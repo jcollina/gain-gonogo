@@ -80,8 +80,17 @@ for i = 1:length(list)
     end
 end
 
-
-keyboard
+% save a threshold matrix for these mice, using the most recent
+% estimate
+if 1 == 2
+    clear threshold;
+    mouseList = mouseList(list);
+    for i = 1:length(mouseList1)
+        threshold(i,1) = thresh70{i,1}(end);
+        threshold(i,2) = thresh70{i,2}(end);
+    end
+    save('thresholds.mat','mouseList','threshold');
+end
 
 % keyboard
 
