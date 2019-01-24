@@ -1,8 +1,8 @@
-function [rpsych, npsych, lvl, threshold, mdp, mdp1, mrate, mfa] = behaviorAnalysis(ID)
+function [rpsych, npsych, lvl, threshold, mdp, mdp1, mrate, mfa, dat] = behaviorAnalysis(ID)
 
 disp(['ANALYZING MOUSE ' ID]);
 
-baseDir = '..\data';
+baseDir = ['..' filesep 'data'];
 dataDir = [baseDir filesep ID];
 
 taskStr = {'LoHi','HiLo'};
@@ -19,6 +19,7 @@ dat.training.date = [];
 dat.training.dprime = [];
 dat.training.hr = [];
 dat.training.fa = [];
+dat.training.contrast = [];
 for i = 1:2
     % for lohi
     ind = fileInd(:,2) == 1 & fileInd(:,1) == i;
@@ -34,6 +35,8 @@ for i = 1:2
         dat.training.dprime = [dat.training.dprime; dprime'];
         dat.training.hr = [dat.training.hr; hr'];
         dat.training.fa = [dat.training.fa; fa'];
+        dat.training.contrast = [dat.training.contrast; ...
+                            ones(sum(ind),1)*i];
         
         % plot d' over time
         subplot(4,2,0+i)
@@ -69,6 +72,8 @@ dat.psych.dprime = [];
 dat.psych.hr = [];
 dat.psych.fa = [];
 dat.psych.thresh = [];
+dat.psych.snr = [];
+dat.psych.contrast = [];
 for i = 1:2
     ind = fileInd(:,2) == 2 & fileInd(:,1) == i;
     if sum(ind)>1
@@ -84,6 +89,9 @@ for i = 1:2
         dat.psych.hr = [dat.psych.hr; rate];
         dat.psych.fa = [dat.psych.fa; fa'];
         dat.psych.thresh = [dat.psych.thresh; [f.thresh]'];
+        dat.psych.snr = [dat.psych.snr; snr];
+        dat.psych.contrast = [dat.psych.contrast; ...
+                            ones(sum(ind),1)*i];
         
         % remove data above false alarm cutoff
         ind = fa < .3;
@@ -164,6 +172,8 @@ dat.offset.date = [];
 dat.offset.dprime = [];
 dat.offset.hr = [];
 dat.offset.fa = [];
+dat.offset.contrast = [];
+dat.offset.snr = [];
 for i = 1:2
     ind = fileInd(:,2) == 3 & fileInd(:,1) == i;
     if sum(ind) > 1
@@ -178,6 +188,8 @@ for i = 1:2
             dat.offset.dprime(:,:,end+1) = dp(j,:,:);
             dat.offset.hr(:,:,end+1) = rate(j,:,:);
             dat.offset.fa(:,end+1) = fa(j,:);
+            dat.offset.contrast(end+1) = i;
+            dat.offset.snr(:,end+1) = snr(j,:);
         end                                             
                                               
         % remove bad data

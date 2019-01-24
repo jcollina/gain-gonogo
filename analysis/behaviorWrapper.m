@@ -8,9 +8,80 @@ if ~exist('mouseList','var')
 end
 
 for i = 1:length(mouseList)
-    [rpsych(i,:,:) npsych(i,:,:) lvl(i,:,:) threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:)] = ...
+    [rpsych(i,:,:) npsych(i,:,:) lvl(i,:,:) threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:),dat(i)] = ...
         behaviorAnalysis(mouseList{i});
 end
+
+
+% for CA070,73,74, compute thresholds from clusters of sessions
+list = [9 11 12];
+for i = 1:length(list)
+    for j = 1:2
+        
+        % split out dates for this contrast
+        ind = dat(list(i)).psych.contrast == j;
+        dates = dat(list(i)).psych.date(ind);
+        dt = datetime(num2str(dates),'InputFormat','yyMMdd');
+        %weeks = days(dt - dt(1))
+                
+        % split dates biweekly
+        splits = find(days(diff(dt))>=14);
+        clust = ones(size(dates));
+        if length(splits) > 0
+            
+            start = 1;
+            last = splits(1);
+            for k = 1:length(splits)+1
+                
+                if k == 1
+                    clust(1:splits(k)) = k;
+                elseif k < length(splits)+1
+                    clust(splits(k-1)+1:splits(k)) = k;
+                elseif k == length(splits)+1
+                    clust(splits(k-1)+1:end) = k;
+                end
+                
+            end
+            
+        end
+    
+        % for each cluster of sessions, compute the threshold over
+        % the summed trials
+        
+        uClust = unique(clust);
+        clear f;
+        for k = 1:length(uClust)
+            
+            % index the cluster dates in the master data structure
+            clustDates = dates(clust == uClust(k));
+            I = ismember(dat(list(i)).psych.date,clustDates);
+            
+            % use the index to get the number of responses, trials
+            nresp = sum(dat(list(i)).psych.nresp(I,:),1);
+            ntrials = sum(dat(list(i)).psych.ntrials(I,:),1);
+            mfa = mean(dat(list(i)).psych.fa(I),1);
+            SNR = mode(dat(list(i)).psych.snr(I,:),1);
+            
+            % psychometric fit
+            f(k) = psychometricFit(nresp,ntrials,SNR,mfa);
+            
+            % plot 
+            subplot(1,length(uClust),k);
+            plot(SNR,nresp./ntrials,'k');
+            ylim([0 1]);
+            
+            
+        end
+        
+        threshB{i,j} = [f.thresh];
+        thresh70{i,j} = [f.thresh70];
+        thresh15d{i,j} = [f.thresh15d];
+            
+    end
+end
+
+
+keyboard
 
 % keyboard
 
