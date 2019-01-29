@@ -17,10 +17,10 @@ params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
 %[.05 .1 .25 .5 1];
 rng(params.seed); % (to make the same stimulus each time)
 if params.sd(2) - params.sd(1) > 0
-    params.stim = ['D:\stimuli\gainBehavior\180808_testingLoHiChord-' params.boothID '-dual.mat'];
+    params.stim = ['D:\stimuli\gainBehavior\190129_testingLoHiChord-' params.boothID '-dual.mat'];
     params.targetDBShift = linspace(8,20,6);
 else
-    params.stim = ['D:\stimuli\gainBehavior\180808_testingHiLoChord-' params.boothID '-dual.mat'];
+    params.stim = ['D:\stimuli\gainBehavior\190129_testingHiLoChord-' params.boothID '-dual.mat'];
     params.targetDBShift =linspace(-4,16,6);
 end
 [stim, events, params.target, params.targetF] = constructStimChords(params);
@@ -101,13 +101,7 @@ while cnt < 1e6
         fprintf(p,'%d',double(tt(cnt,1)>0));
                 
         % queue stimulus
-        % NOTE TO FIX*** GENERATES RANDOM AMPLITUDES PER TRIAL ****
-        if tt(cnt,1) == 0
-            lvl = randi(size(stim,1));
-        else
-            lvl = tt(cnt,1);
-        end
-        sound = [stim{(tt(cnt,1)>0)+1,tt(cnt,2),tt(cnt,3),lvl} * params.ampF; ...
+        sound = [stim{tt(cnt,1)+1,tt(cnt,2),tt(cnt,3)} * params.ampF; ...
             events{tt(cnt,2)} * params.ampF]';
         queueOutput(s,sound,params.device);
         cnd = sprintf('COND%d%d%d',tt(cnt,:));

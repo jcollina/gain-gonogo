@@ -112,13 +112,7 @@ while cnt < 1e6
         fprintf(p,'%d',double(tt(cnt,1)>0));
                 
         % queue stimulus
-        % NOTE TO FIX*** GENERATES RANDOM AMPLITUDES PER TRIAL ****
-        if tt(cnt,1) == 0
-            lvl = randi(size(stim,1));
-        else
-            lvl = tt(cnt,1);
-        end
-        sound = [stim{(tt(cnt,1)>0)+1,tt(cnt,2),tt(cnt,3),lvl} * params.ampF; ...
+        sound = [stim{tt(cnt,1)+1,tt(cnt,2),tt(cnt,3)} * params.ampF; ...
             events{tt(cnt,2)} * params.ampF]';
         queueOutput(s,sound,params.device);
         cnd = sprintf('COND%d%d%d',tt(cnt,:));

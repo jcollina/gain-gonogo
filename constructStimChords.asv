@@ -12,7 +12,7 @@ if ~exist(params.stim,'file')
     
     % vector to indicate possible trial level conditions (0 = noise, >0 =
     % target)
-    lvls = [nan params.targetDBShift];
+    lvls = [0 params.targetDBShift];
     
 
     %% make stim
@@ -37,13 +37,10 @@ if ~exist(params.stim,'file')
                 tic
                 
                 % shorten noise to include only 1 second after the target
-                nsamps = round([params.noiseD(j) + params.postTargetTime] ...
-                    / params.chordDuration);
-                tmpamp = amps(:,1:nsamps);
-                tmpdbs = db(:,1:nsamps);
+                tmpamp = amps(1:
                 
                 % make the stimulus
-                if ~isnan(lvls(k))
+                if lvls(k) > 0
                     % if a target trial, add target to background noise
                     
                     % target offset amplitude
@@ -53,31 +50,30 @@ if ~exist(params.stim,'file')
                     ind = round((offset(j)+params.chordDuration) / params.chordDuration);
                     
                     % add target to noise
+                    tmpdbs = db;
+                    tmpamp = amps;
                     tmpamp(:,ind) = amps(:,ind) + (target' .* chordoff);
                     tmpdbs(:,ind) = db(:,ind) + (target' .* lvls(k));
                 end
                                     
                 % make stimulus
                 stim = makeContrastBlocks(params.fs,rs,cs,...
-                    nsamps*params.chordDuration,params.freqs,tmpamp);
+                    sum(blockSamps)*params.chordDuration,params.freqs,tmpamp);
                 stimf{k,j,i} = conv(stim,params.filt,'same');
                 DB{k,j,i} = tmpdbs;
                 AMPS{k,j,i} = tmpamp;
                 
                 
-                subplot(3,1,1)
-                [s,f,t] = spectrogram(stim,2048,512,params.freqs,params.fs,'yaxis');
-                imagesc(t,f,abs(s));
-                set(gca,'ydir','normal')
-                subplot(3,1,2)
-                imagesc(tmpamp)
-                set(gca,'ydir','normal')
-                subplot(3,1,3)
-                ts = (1:length(stimf{k,j,i}))/params.fs;
-                plot(ts,stimf{k,j,i})
-                axis tight
-                drawnow
-                pause(.1)
+%                 subplot(3,1,1)
+%                 [s,f,t] = spectrogram(stim,2048,512,params.freqs,params.fs,'yaxis');
+%                 imagesc(t,f,abs(s));
+%                 set(gca,'ydir','normal')
+%                 subplot(3,1,2)
+%                 imagesc(tmpamp)
+%                 set(gca,'ydir','normal')
+%                 subplot(3,1,3)
+%                 ts = (1:length(stimf{k,j,i}))/params.fs;
+%                 plot(ts,stimf{k,j,i})
 
                 toc
             end
@@ -101,7 +97,7 @@ for i = 1:size(stimf,2)
     tmp(1:pulseWidth*params.fs) = .5;
     tmp(tEnd:tEnd+(pulseWidth*params.fs)) = .5;
     events{i} = tmp;
-%     figure;
-%     plot([stimf{end,i,5};events{i}]');
-%     keyboard
+    figure;
+    plot([stimf{end,i,5};events{i}]');
+    keyboard
 end
