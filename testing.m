@@ -107,7 +107,6 @@ while cnt < 1e6
         else
             lvl = tt(cnt,1);
         end
-        keyboard
         level(cnt) = lvl;
         sound = [stim{(tt(cnt,1)>0)+1,tt(cnt,2),tt(cnt,3),lvl} * params.ampF; ...
             events{tt(cnt,2)} * params.ampF]';
