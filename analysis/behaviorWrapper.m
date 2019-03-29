@@ -2,7 +2,9 @@ function behaviorWrapper(mouseList)
 
 % find psychometric functions
 addpath(genpath('../Palamedes/'));
+addpath(genpath('~/chris-lab/code_general'));
 
+%% process all mice
 if ~exist('mouseList','var')
     mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055','CA061','CA070','CA072','CA073','CA074','CA075'};
 end
@@ -11,6 +13,53 @@ for i = 1:length(mouseList)
     [rpsych(i,:,:) npsych(i,:,:) lvl(i,:,:) threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:),dat(i)] = ...
         behaviorAnalysis(mouseList{i});
 end
+
+taskStr = {'LoHi','HiLo'};
+lineColor = [1 0 0; 0 0 1];
+
+
+
+
+%% training figures
+f1 = figure(1); clf;
+plotTrainingData(dat);
+saveFigPDF(f1,[1000 700],'_training_summary.pdf');
+
+
+
+end
+   
+    % index to include only the initial contrast condition they were
+    % trained on
+    ind = 1:find(diff(dat(i).training.contrast)~=0);
+    contrast(i) = mode(dat(i).training.contrast(ind));
+
+    % days from first training day
+    dt = datetime(num2str(dat(i).training.date(ind,:)),'InputFormat', ...
+                  'yyMMdd');
+    nDays{i} = daysact(dt(1)-1,dt);
+
+    % training performance
+    hrt{i} = dat(i).training.hr(ind);
+    fat{i} = dat(i).training.fa(ind);
+    dpt{i} = dat(i).training.dprime(ind);
+    
+    % plot d prime
+    if contrast(i) == 2
+        subplot(2,1,1)
+        hold on
+        plot(nDays{i},dpt{i},'b')
+    else
+        subplot(2,1,2)
+        hold on
+        plot(nDays{i},dpt{i},'r')
+    end
+
+end
+
+
+
+keyboard
 
 
 % for CA070,73,74, compute thresholds from clusters of sessions
