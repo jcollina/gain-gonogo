@@ -23,123 +23,91 @@ lineColor = [1 0 0; 0 0 1];
 %% training figures
 f1 = figure(1); clf;
 plotTrainingData(dat);
-saveFigPDF(f1,[1000 700],'_training_summary.pdf');
-
-
-
-end
-   
-    % index to include only the initial contrast condition they were
-    % trained on
-    ind = 1:find(diff(dat(i).training.contrast)~=0);
-    contrast(i) = mode(dat(i).training.contrast(ind));
-
-    % days from first training day
-    dt = datetime(num2str(dat(i).training.date(ind,:)),'InputFormat', ...
-                  'yyMMdd');
-    nDays{i} = daysact(dt(1)-1,dt);
-
-    % training performance
-    hrt{i} = dat(i).training.hr(ind);
-    fat{i} = dat(i).training.fa(ind);
-    dpt{i} = dat(i).training.dprime(ind);
-    
-    % plot d prime
-    if contrast(i) == 2
-        subplot(2,1,1)
-        hold on
-        plot(nDays{i},dpt{i},'b')
-    else
-        subplot(2,1,2)
-        hold on
-        plot(nDays{i},dpt{i},'r')
-    end
-
-end
+saveFigPDF(f1,[1000 700],'_training_summary.pdf')
 
 
 
 keyboard
 
 
-% for CA070,73,74, compute thresholds from clusters of sessions
-list = [9 11 12];
-for i = 1:length(list)
-    for j = 1:2
-        
-        % split out dates for this contrast
-        ind = dat(list(i)).psych.contrast == j;
-        dates = dat(list(i)).psych.date(ind);
-        dt = datetime(num2str(dates),'InputFormat','yyMMdd');
-        %weeks = days(dt - dt(1))
-                
-        % split dates biweekly
-        splits = find(days(diff(dt))>=14);
-        clust = ones(size(dates));
-        if length(splits) > 0
-            
-            start = 1;
-            last = splits(1);
-            for k = 1:length(splits)+1
-                
-                if k == 1
-                    clust(1:splits(k)) = k;
-                elseif k < length(splits)+1
-                    clust(splits(k-1)+1:splits(k)) = k;
-                elseif k == length(splits)+1
-                    clust(splits(k-1)+1:end) = k;
-                end
-                
-            end
-            
-        end
-    
-        % for each cluster of sessions, compute the threshold over
-        % the summed trials
-        
-        uClust = unique(clust);
-        clear f;
-        for k = 1:length(uClust)
-            
-            % index the cluster dates in the master data structure
-            clustDates = dates(clust == uClust(k));
-            I = ismember(dat(list(i)).psych.date,clustDates);
-            
-            % use the index to get the number of responses, trials
-            nresp = sum(dat(list(i)).psych.nresp(I,:),1);
-            ntrials = sum(dat(list(i)).psych.ntrials(I,:),1);
-            mfa = mean(dat(list(i)).psych.fa(I),1);
-            SNR = mode(dat(list(i)).psych.snr(I,:),1);
-            
-            % psychometric fit
-            f(k) = psychometricFit(nresp,ntrials,SNR,mfa);
-            
-            % plot 
-            subplot(1,length(uClust),k);
-            plot(SNR,nresp./ntrials,'k');
-            ylim([0 1]);
-            
-            
-        end
-        
-        threshB{i,j} = [f.thresh];
-        thresh70{i,j} = [f.thresh70];
-        thresh15d{i,j} = [f.thresh15d];
-            
-    end
-end
-
-% save a threshold matrix for these mice, using the most recent
-% estimate
-if 1 == 2
-    clear threshold;
-    mouseList = mouseList(list);
-    for i = 1:length(mouseList1)
-        threshold(i,1) = thresh70{i,1}(end);
-        threshold(i,2) = thresh70{i,2}(end);
-    end
-    save('thresholds.mat','mouseList','threshold');
-end
+% % for CA070,73,74, compute thresholds from clusters of sessions
+% list = [9 11 12];
+% for i = 1:length(list)
+%     for j = 1:2
+%         
+%         % split out dates for this contrast
+%         ind = dat(list(i)).psych.contrast == j;
+%         dates = dat(list(i)).psych.date(ind);
+%         dt = datetime(num2str(dates),'InputFormat','yyMMdd');
+%         %weeks = days(dt - dt(1))
+%                 
+%         % split dates biweekly
+%         splits = find(days(diff(dt))>=14);
+%         clust = ones(size(dates));
+%         if length(splits) > 0
+%             
+%             start = 1;
+%             last = splits(1);
+%             for k = 1:length(splits)+1
+%                 
+%                 if k == 1
+%                     clust(1:splits(k)) = k;
+%                 elseif k < length(splits)+1
+%                     clust(splits(k-1)+1:splits(k)) = k;
+%                 elseif k == length(splits)+1
+%                     clust(splits(k-1)+1:end) = k;
+%                 end
+%                 
+%             end
+%             
+%         end
+%     
+%         % for each cluster of sessions, compute the threshold over
+%         % the summed trials
+%         
+%         uClust = unique(clust);
+%         clear f;
+%         for k = 1:length(uClust)
+%             
+%             % index the cluster dates in the master data structure
+%             clustDates = dates(clust == uClust(k));
+%             I = ismember(dat(list(i)).psych.date,clustDates);
+%             
+%             % use the index to get the number of responses, trials
+%             nresp = sum(dat(list(i)).psych.nresp(I,:),1);
+%             ntrials = sum(dat(list(i)).psych.ntrials(I,:),1);
+%             mfa = mean(dat(list(i)).psych.fa(I),1);
+%             SNR = mode(dat(list(i)).psych.snr(I,:),1);
+%             
+%             % psychometric fit
+%             f(k) = psychometricFit(nresp,ntrials,SNR,mfa);
+%             
+%             % plot 
+%             subplot(1,length(uClust),k);
+%             plot(SNR,nresp./ntrials,'k');
+%             ylim([0 1]);
+%             
+%             
+%         end
+%         
+%         threshB{i,j} = [f.thresh];
+%         thresh70{i,j} = [f.thresh70];
+%         thresh15d{i,j} = [f.thresh15d];
+%             
+%     end
+% end
+% 
+% % save a threshold matrix for these mice, using the most recent
+% % estimate
+% if 1 == 2
+%     clear threshold;
+%     mouseList = mouseList(list);
+%     for i = 1:length(mouseList1)
+%         threshold(i,1) = thresh70{i,1}(end);
+%         threshold(i,2) = thresh70{i,2}(end);
+%     end
+%     save('thresholds.mat','mouseList','threshold');
+% end
 
 % keyboard
 
