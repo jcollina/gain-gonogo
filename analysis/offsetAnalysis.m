@@ -46,13 +46,3 @@ function [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList,fileInd,faCut)
         dp(i,2,:) = norminv(squeeze(rate(i,2,:))') - norminv(fa(i,:));
     end
            
-    %ind = ~any(fa > faCut,2);
-    ind = ~(mean(fa,2) > faCut)
-    if sum(ind) == 0
-        keyboard;
-    end
-    rate = rate(ind,:,:);
-    fa = fa(ind,:);
-    dp = dp(ind,:,:);
-    snr = snr(ind,:);
-    offsets = offsets(ind,:);

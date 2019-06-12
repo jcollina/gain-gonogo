@@ -27,6 +27,8 @@ if ~exist(params.stim,'file')
                 stim = makeContrastBlocks(params.fs,rs,cs,...
                     sum(blockSamps)*params.chordDuration,params.freqs,amps);
                 stimf{1,j,i,k} = conv(stim,params.filt,'same');
+                DB{1,j,i,k} = db;
+                AMPS{1,j,i,k} = amps;
                 
                 % add target to noise
                 chordoff = params.amp70 .* ...
@@ -34,11 +36,16 @@ if ~exist(params.stim,'file')
                 ind = round((offset(j)+params.chordDuration) / params.chordDuration);
                 ampsT = amps;
                 ampsT(:,ind) = amps(:,ind) + (target' .* chordoff);
+                dbT = db;
+                dbT(:,ind) = db(:,ind) + (target' .* params.targetDBShift(k));
                 
                 % make target stim
                 stim = makeContrastBlocks(params.fs,rs,cs,...
                     sum(blockSamps)*params.chordDuration,params.freqs,ampsT);
                 stimf{2,j,i,k} = conv(stim,params.filt,'same');
+                DB{2,j,i,k} = dbT;
+                AMPS{2,j,i,k} = ampsT;
+                
                 
 %                 if k == 6
 %                     %ts = (1:length(stimf{2,j,i,k}))/params.fs;
@@ -58,7 +65,7 @@ if ~exist(params.stim,'file')
         end
     end
     fprintf('Saving stimuli as %s\n', params.stim);
-    save(params.stim,'params','stimf','target','targetF','amps','ampsT');
+    save(params.stim,'params','stimf','target','targetF','DB','AMPS');
 else
     % load it
     fprintf('Loading %s...', params.stim);

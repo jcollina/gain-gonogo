@@ -24,7 +24,7 @@ else
     params.targetDBShift =linspace(-4,16,6);
 end
 [stim, events, params.target, params.targetF] = constructStimChords(params);
-rng('shuffle');
+params.rngState = rng('shuffle');
 
 % modify params to reflect actual stimuli used
 % add modifications here
@@ -107,6 +107,8 @@ while cnt < 1e6
         else
             lvl = tt(cnt,1);
         end
+        keyboard
+        level(cnt) = lvl;
         sound = [stim{(tt(cnt,1)>0)+1,tt(cnt,2),tt(cnt,3),lvl} * params.ampF; ...
             events{tt(cnt,2)} * params.ampF]';
         queueOutput(s,sound,params.device);
@@ -144,7 +146,7 @@ while cnt < 1e6
 end
 
 % save matfile
-save(mat,'params','tt','resp');
+save(mat,'params','tt','resp','level');
 
 % close everything
 delete(instrfindall)

@@ -2,6 +2,7 @@ function [fileList fileInd] = indexDataFiles(dataDir)
 
 files = dir([dataDir filesep '*.mat']);
 
+
 % make a file list and index
 n = 100;
 cnt = 1;

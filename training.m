@@ -24,7 +24,7 @@ else
     params.targetDBShift = 16;
 end
 [stim, events, params.target, params.targetF] = constructStimChordTraining(params,s);
-rng('shuffle');
+params.rngState = rng('shuffle');
 
 % modify params to reflect actual stimuli used
 
