@@ -18,6 +18,7 @@ if ~exist(params.stim,'file')
                 tic
                 
                 % make the amplitudes
+                rng(i); % this ensures a fixed noise pattern for each exemplar
                 blockSamps = round([params.baseNoiseD params.noiseD(j) - params.baseNoiseD + params.postTargetTime] ...
                     / params.chordDuration);
                 [amps, db] = makeDRCAmps(length(blockSamps),params.mu,params.sd,params.nTones,...

@@ -44,7 +44,7 @@ params.rngState = rng('shuffle');
 % presentation probabilities
 params.offsetP = [.2 .2 .2 .2 .2 .2];
 %[.2 .2 .2 .2 .2];
-params.dbP = [.3 .3 .4];
+params.dbP = [.4 .2 .4];
 
 % graph title
 tstr = [params.boothID ': ' params.IDstr];

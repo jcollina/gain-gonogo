@@ -17,10 +17,10 @@ params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
 %[.05 .1 .25 .5 1];
 rng(params.seed); % (to make the same stimulus each time)
 if params.sd(2) - params.sd(1) > 0
-    params.stim = ['D:\stimuli\gainBehavior\180808_testingLoHiChord-' params.boothID '-dual.mat'];
+    params.stim = ['D:\stimuli\gainBehavior\190801_testingLoHiChord-' params.boothID '-dual.mat'];
     params.targetDBShift = linspace(8,20,6);
 else
-    params.stim = ['D:\stimuli\gainBehavior\180808_testingHiLoChord-' params.boothID '-dual.mat'];
+    params.stim = ['D:\stimuli\gainBehavior\190801_testingHiLoChord-' params.boothID '-dual.mat'];
     params.targetDBShift =linspace(-4,16,6);
 end
 [stim, events, params.target, params.targetF] = constructStimChords(params);
