@@ -32,14 +32,23 @@ params.rngState = rng('shuffle');
 % presentation probabilities
 params.offsetP = [.25 .25 .25 .25];
 %[.2 .2 .2 .2 .2];
-params.dbP = [.4 .05 .05 .05 .05 .2 .2];
+%params.dbP = [.4 .05 .05 .05 .05 .2 .2];
+params.dbP = [.3 .1 .1 .1 .1 .15 .15];
 
 % graph title
 tstr = [params.boothID ': ' params.IDstr];
 
 % open data file
+params.IDsess   = [params.IDstr '_' datestr(now,'yymmddHHMM')];
+params.fn       = [params.data filesep params.IDsess];
 fn = [params.fn '_testing.txt'];
 mat = [params.fn '_testing.mat'];
+
+% check for open file
+if exist(fn,'file')
+    warning(sprintf('File %s already exists!',fn));
+    keyboard
+end
 fid = fopen(fn,'w');
 
 fprintf('PRESS ANY KEY TO START...\n');
@@ -101,7 +110,6 @@ while cnt < 1e6
         fprintf(p,'%d',double(tt(cnt,1)>0));
                 
         % queue stimulus
-        % NOTE TO FIX*** GENERATES RANDOM AMPLITUDES PER TRIAL ****
         if tt(cnt,1) == 0
             lvl = randi(size(stim,1));
         else
@@ -145,6 +153,11 @@ while cnt < 1e6
 end
 
 % save matfile
+if ~exist('resp','var')
+    resp = [];
+elseif ~exist('level','var')
+    level = [];
+end
 save(mat,'params','tt','resp','level');
 
 % close everything

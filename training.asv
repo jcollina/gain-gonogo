@@ -121,9 +121,6 @@ end
 % save matfile
 if ~exist('resp','var')
     resp = [];
-elseif ~exist('level','var')
-    level = [];
-end
 save(mat,'params','tt','resp');
 
 delete(instrfindall)

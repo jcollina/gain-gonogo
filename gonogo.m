@@ -30,12 +30,10 @@ addpath(genpath('analysis'));
 
 % directory stuff:
 params.IDstr    = ID;
-params.IDsess   = [params.IDstr '_' datestr(now,'yymmddHHMM')];
 params.base     = pwd;
 params.data     = [pwd filesep 'data' filesep params.IDstr];
 params.hex      = [pwd filesep '_hex'];
 params.stage    = STAGE;
-params.fn       = [params.data filesep params.IDsess];
 params.filtdir  = 'D:\GitHub\filters';
 if ~exist(params.data,'dir')
     mkdir(params.data);
