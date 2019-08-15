@@ -10,18 +10,8 @@ end
 %mouseList = {'CA070','CA072','CA073','CA074','CA075'};
 
 for i = 1:length(mouseList)
-    dat_w(i) = behaviorAnalysis_earlyLicks(mouseList{i}, ...
-                                                  true);
-    dat_wo(i) = behaviorAnalysis_earlyLicks(mouseList{i}, ...
-                                                  false);
-    
-    dpwit(:,:,i) = dat_w(i).offset.meanDPthresh;
-    dpwitout(:,:,i) = dat_wo(i).offset.meanDPthresh;
-    
-    thresh(1,i) = mean(dat_w(i).offset.snr(1,dat_w(i).offset.contrast ...
-                                           == 1));
-    thresh(2,i) = mean(dat_w(i).offset.snr(1,dat_w(i).offset.contrast ...
-                                           == 2));
+    dat(i) = behaviorAnalysis_earlyLicks(mouseList{i},true);
+    keyboard
 end
 
 % replace missing data with nans
@@ -123,6 +113,13 @@ ylabel('Threshold (dB SNR)');
 title(sprintf('n = %d',size(dpwit,3)))
 fn = './_threshold_analysis.pdf';
 saveFigPDF(f3,[300 300],fn);
+
+
+
+
+
+
+
 
 
 function [dat] = behaviorAnalysis_earlyLicks(ID,includeEarlyLicks)

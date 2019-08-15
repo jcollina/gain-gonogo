@@ -1,4 +1,4 @@
-function [rpsych, npsych, lvl, threshold, mdp, mdp1, mrate, mfa, dat] = behaviorAnalysis(ID)
+function [dat, rpsych, npsych, lvl, threshold, mdp, mdp1, mrate, mfa] = behaviorAnalysis(ID)
 
 disp(['ANALYZING MOUSE ' ID]);
 
