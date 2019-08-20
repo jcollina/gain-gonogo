@@ -51,8 +51,10 @@ params.toneF        = 15e3;
 params.baseNoiseD   = 3;
 params.amp70        = .1;
 params.rampD        = .005;
-params.nTones       = 34;
-params.freqs        = 4e3 * (2 .^ (([0:params.nTones-1])/10)); % this is n freqs spaced 1/6 octave apart
+%params.nTones       = 34;
+%params.freqs        = 4e3 * (2 .^ (([0:params.nTones-1])/10)); % this is n freqs spaced 1/6 octave apart
+params.nTones       = 33;
+params.freqs        = 4e3 * (2 .^ (([0:params.nTones-1])/8));
 params.mu           = 50;
 if strcmp(condition,'lohi')
     params.sd = [5 15];
