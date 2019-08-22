@@ -1,16 +1,14 @@
-function behaviorWrapper(mouseList)
 
 % find psychometric functions
 addpath(genpath('../Palamedes/'));
 addpath(genpath('~/chris-lab/code_general'));
 
 %% process all mice
-if ~exist('mouseList','var')
-    mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055','CA061','CA070','CA072','CA073','CA074','CA075'};
-end
+mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055',...
+             'CA061','CA070','CA072','CA073','CA074','CA075','CA102'};
 
 for i = 1:length(mouseList)
-    [rpsych(i,:,:) npsych(i,:,:) lvl(i,:,:) threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:),dat(i)] = ...
+    [dat(i),rpsych(i,:,:) npsych(i,:,:) lvl(i,:,:) threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:)] = ...
         behaviorAnalysis(mouseList{i});
 end
 
@@ -21,115 +19,17 @@ lineColor = [1 0 0; 0 0 1];
 
 
 %% training figures
-f1 = figure(1); clf;
-plotTrainingData(dat);
-saveFigPDF(f1,[1000 700],'_training_summary.pdf')
-
-
-
-keyboard
-
-
-% % for CA070,73,74, compute thresholds from clusters of sessions
-% list = [9 11 12];
-% for i = 1:length(list)
-%     for j = 1:2
-%         
-%         % split out dates for this contrast
-%         ind = dat(list(i)).psych.contrast == j;
-%         dates = dat(list(i)).psych.date(ind);
-%         dt = datetime(num2str(dates),'InputFormat','yyMMdd');
-%         %weeks = days(dt - dt(1))
-%                 
-%         % split dates biweekly
-%         splits = find(days(diff(dt))>=14);
-%         clust = ones(size(dates));
-%         if length(splits) > 0
-%             
-%             start = 1;
-%             last = splits(1);
-%             for k = 1:length(splits)+1
-%                 
-%                 if k == 1
-%                     clust(1:splits(k)) = k;
-%                 elseif k < length(splits)+1
-%                     clust(splits(k-1)+1:splits(k)) = k;
-%                 elseif k == length(splits)+1
-%                     clust(splits(k-1)+1:end) = k;
-%                 end
-%                 
-%             end
-%             
-%         end
-%     
-%         % for each cluster of sessions, compute the threshold over
-%         % the summed trials
-%         
-%         uClust = unique(clust);
-%         clear f;
-%         for k = 1:length(uClust)
-%             
-%             % index the cluster dates in the master data structure
-%             clustDates = dates(clust == uClust(k));
-%             I = ismember(dat(list(i)).psych.date,clustDates);
-%             
-%             % use the index to get the number of responses, trials
-%             nresp = sum(dat(list(i)).psych.nresp(I,:),1);
-%             ntrials = sum(dat(list(i)).psych.ntrials(I,:),1);
-%             mfa = mean(dat(list(i)).psych.fa(I),1);
-%             SNR = mode(dat(list(i)).psych.snr(I,:),1);
-%             
-%             % psychometric fit
-%             f(k) = psychometricFit(nresp,ntrials,SNR,mfa);
-%             
-%             % plot 
-%             subplot(1,length(uClust),k);
-%             plot(SNR,nresp./ntrials,'k');
-%             ylim([0 1]);
-%             
-%             
-%         end
-%         
-%         threshB{i,j} = [f.thresh];
-%         thresh70{i,j} = [f.thresh70];
-%         thresh15d{i,j} = [f.thresh15d];
-%             
-%     end
-% end
-% 
-% % save a threshold matrix for these mice, using the most recent
-% % estimate
-% if 1 == 2
-%     clear threshold;
-%     mouseList = mouseList(list);
-%     for i = 1:length(mouseList1)
-%         threshold(i,1) = thresh70{i,1}(end);
-%         threshold(i,2) = thresh70{i,2}(end);
-%     end
-%     save('thresholds.mat','mouseList','threshold');
-% end
-
-% keyboard
-
-% cols = [0 0 1; 1 0 0];
-% for i = 1:2
-%     resp = squeeze(sum(rpsych(:,i,:),1));
-%     trials = squeeze(sum(npsych(:,i,:),1));
-%     x(i,:) = squeeze(lvl(1,i,:));
-%     fit(i) = psychometricFit(resp,trials,x(i,:));
-%     hold on
-%     plot(x(i,:),resp./trials,'.k');
-%     plot(fit(i).x,fit(i).y,...
-%          'Color',cols(i,:),'LineWidth',2)
-%     hold off
-% end
+%f1 = figure(1); clf;
+%plotTrainingData(dat);
+%saveFigPDF(f1,[1000 700],'_training_summary.pdf')
     
-
 
 % hard stop for missing data
 if any(isnan(threshold(:))) || size(threshold,1)==1
     keyboard
 end
+
+keyboard
 
 figure
 hold on
@@ -317,3 +217,104 @@ saveFigPDF(f7,[600 300],'_allMiceDPhigh.pdf');
 
 
 keyboard
+
+
+
+
+
+
+
+
+% % for CA070,73,74, compute thresholds from clusters of sessions
+% list = [9 11 12];
+% for i = 1:length(list)
+%     for j = 1:2
+%         
+%         % split out dates for this contrast
+%         ind = dat(list(i)).psych.contrast == j;
+%         dates = dat(list(i)).psych.date(ind);
+%         dt = datetime(num2str(dates),'InputFormat','yyMMdd');
+%         %weeks = days(dt - dt(1))
+%                 
+%         % split dates biweekly
+%         splits = find(days(diff(dt))>=14);
+%         clust = ones(size(dates));
+%         if length(splits) > 0
+%             
+%             start = 1;
+%             last = splits(1);
+%             for k = 1:length(splits)+1
+%                 
+%                 if k == 1
+%                     clust(1:splits(k)) = k;
+%                 elseif k < length(splits)+1
+%                     clust(splits(k-1)+1:splits(k)) = k;
+%                 elseif k == length(splits)+1
+%                     clust(splits(k-1)+1:end) = k;
+%                 end
+%                 
+%             end
+%             
+%         end
+%     
+%         % for each cluster of sessions, compute the threshold over
+%         % the summed trials
+%         
+%         uClust = unique(clust);
+%         clear f;
+%         for k = 1:length(uClust)
+%             
+%             % index the cluster dates in the master data structure
+%             clustDates = dates(clust == uClust(k));
+%             I = ismember(dat(list(i)).psych.date,clustDates);
+%             
+%             % use the index to get the number of responses, trials
+%             nresp = sum(dat(list(i)).psych.nresp(I,:),1);
+%             ntrials = sum(dat(list(i)).psych.ntrials(I,:),1);
+%             mfa = mean(dat(list(i)).psych.fa(I),1);
+%             SNR = mode(dat(list(i)).psych.snr(I,:),1);
+%             
+%             % psychometric fit
+%             f(k) = psychometricFit(nresp,ntrials,SNR,mfa);
+%             
+%             % plot 
+%             subplot(1,length(uClust),k);
+%             plot(SNR,nresp./ntrials,'k');
+%             ylim([0 1]);
+%             
+%             
+%         end
+%         
+%         threshB{i,j} = [f.thresh];
+%         thresh70{i,j} = [f.thresh70];
+%         thresh15d{i,j} = [f.thresh15d];
+%             
+%     end
+% end
+% 
+% % save a threshold matrix for these mice, using the most recent
+% % estimate
+% if 1 == 2
+%     clear threshold;
+%     mouseList = mouseList(list);
+%     for i = 1:length(mouseList1)
+%         threshold(i,1) = thresh70{i,1}(end);
+%         threshold(i,2) = thresh70{i,2}(end);
+%     end
+%     save('thresholds.mat','mouseList','threshold');
+% end
+
+% keyboard
+
+% cols = [0 0 1; 1 0 0];
+% for i = 1:2
+%     resp = squeeze(sum(rpsych(:,i,:),1));
+%     trials = squeeze(sum(npsych(:,i,:),1));
+%     x(i,:) = squeeze(lvl(1,i,:));
+%     fit(i) = psychometricFit(resp,trials,x(i,:));
+%     hold on
+%     plot(x(i,:),resp./trials,'.k');
+%     plot(fit(i).x,fit(i).y,...
+%          'Color',cols(i,:),'LineWidth',2)
+%     hold off
+% end

@@ -112,6 +112,19 @@ fn = './_dp_over_time_analysis.pdf';
 saveFigPDF(f2,[500 300],fn);
 
 
+
+f3 = figure(3); clf; hold on
+barWithError(flipud(thresh)',{'High to Low','Low to High'},[0 0 1; 1 0 0]);
+l = line([ones(1,length(thresh))*2; ones(1,length(thresh))*1], ...
+         [thresh(1,:); thresh(2,:)],...
+         'Color',[0 0 0],'Marker','o');
+plotPrefs;
+ylabel('Threshold (dB SNR)');
+title(sprintf('n = %d',size(dpwit,3)))
+fn = './_threshold_analysis.pdf';
+saveFigPDF(f3,[300 300],fn);
+
+
 function [dat] = behaviorAnalysis_earlyLicks(ID,includeEarlyLicks)
 
     % ID = 'CA070';
