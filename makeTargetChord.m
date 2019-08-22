@@ -3,7 +3,7 @@ function [target, targetF] = makeTargetChord(params)
 % make a target chord by choosing several values between each
 % octave
 octs = [4*1e3 .* 2 .^ (0:3) max(params.freqs)];
-nchoices = [5 5 5 2];
+nchoices = [4 4 4 4];
 target = zeros(1,length(params.freqs));
 for k = 1:length(nchoices)
     % choose n between each bound

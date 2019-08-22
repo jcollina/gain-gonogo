@@ -18,6 +18,9 @@ params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
 rng(params.seed); % (to make the same stimulus each time)
 if params.sd(2) - params.sd(1) > 0
     params.stim = ['D:\stimuli\gainBehavior\190801_testingLoHiChord-' params.boothID '-dual.mat'];
+    if strcmp(params.IDstr,'CA107')
+        params.stim = ['D:\stimuli\gainBehavior\190820_testingLoHiChord-' params.boothID '-dual.mat'];
+    end
     params.targetDBShift = linspace(8,20,6);
 else
     params.stim = ['D:\stimuli\gainBehavior\190801_testingHiLoChord-' params.boothID '-dual.mat'];
