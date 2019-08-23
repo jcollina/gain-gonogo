@@ -17,20 +17,20 @@ params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
 %[.05 .1 .25 .5 1];
 rng(params.seed); % (to make the same stimulus each time)
 if params.sd(2) - params.sd(1) > 0
-    params.stim = ['D:\stimuli\gainBehavior\190801_testingLoHiChord-' params.boothID '-dual.mat'];
-    if strcmp(params.IDstr,'CA107')
-        params.stim = ['D:\stimuli\gainBehavior\190820_testingLoHiChord-' params.boothID '-dual.mat'];
-    end
     params.targetDBShift = linspace(8,20,6);
 else
-    params.stim = ['D:\stimuli\gainBehavior\190801_testingHiLoChord-' params.boothID '-dual.mat'];
     params.targetDBShift =linspace(-4,16,6);
 end
+params.stim = fullfile('D:\stimuli\gainBehavior',...
+    sprintf('%s_testing%sChord-%s-dual.mat',...
+    params.stimVersion,...
+    params.contrastCondition,...
+    params.boothID));
 [stim, events, params.target, params.targetF] = constructStimChords(params);
-params.rngState = rng('shuffle');
 
-% modify params to reflect actual stimuli used
-% add modifications here
+% shuffle the seed to make the trials random each time, but save the state
+% to ensure we can reconstruct trial order if all else fails
+params.rngState = rng('shuffle');
 
 % presentation probabilities
 params.offsetP = [.25 .25 .25 .25];
@@ -38,14 +38,18 @@ params.offsetP = [.25 .25 .25 .25];
 %params.dbP = [.4 .05 .05 .05 .05 .2 .2];
 params.dbP = [.3 .1 .1 .1 .1 .15 .15];
 
-% graph title
-tstr = [params.boothID ': ' params.IDstr];
-
 % open data file
-params.IDsess   = [params.IDstr '_' datestr(now,'yymmddHHMM')];
+dt = datestr(now,'yymmddHHMM');
+params.IDsess   = [params.IDstr '_' dt];
 params.fn       = [params.data filesep params.IDsess];
 fn = [params.fn '_testing.txt'];
 mat = [params.fn '_testing.mat'];
+
+% graph title
+tstr = sprintf('Mouse %s (%s)\n%s Psychometric Testing Performance',...
+    params.IDstr, ...
+    params.boothID, ...
+    dt);
 
 % check for open file
 if exist(fn,'file')

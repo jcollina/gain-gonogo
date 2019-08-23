@@ -22,28 +22,21 @@ else
     params.targetDBShift = 16;
 end
 params.stim = fullfile('D:\stimuli\gainBehavior',...
-    sprintf('%s_training%sChord-%s-dual.mat',...
-    params.stimVersion,...
-    params.contrastCondition,...
-    params.boothID));
+    sprintf('%s_training_%sChord-%s-dual.mat',params.boothID));
 [stim, events, params.target, params.targetF] = constructStimChords(params);
 
 % shuffle the seed to make the trials random each time, but save the state
 % to ensure we can reconstruct trial order if all else fails
 params.rngState = rng('shuffle');
 
+% graph title
+tstr = sprintf('Mouse %s: %s',params.IDstr params.boothID ': ' params.IDstr];
+
 % open data file
-dt = datestr(now,'yymmddHHMM');
-params.IDsess   = [params.IDstr '_' dt];
+params.IDsess   = [params.IDstr '_' datestr(now,'yymmddHHMM')];
 params.fn       = [params.data filesep params.IDsess];
 fn = [params.fn '_training.txt'];
 mat = [params.fn '_training.mat'];
-
-% graph title
-tstr = sprintf('Mouse %s (%s)\n%s Training Performance',...
-    params.IDstr, ...
-    params.boothID, ...
-    dt);
 
 % check for open file
 if exist(fn,'file')

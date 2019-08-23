@@ -61,6 +61,8 @@ if strcmp(condition,'lohi')
 elseif strcmp(condition,'hilo')
     params.sd = [15 5];
 end
+params.contrastCondition = condition;
+params.stimVersion = '190820';
 params.chordDuration = .025;
 params.nNoiseExemplars = 5;
 params.postTargetTime = 1;
