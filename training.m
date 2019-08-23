@@ -17,31 +17,33 @@ p = setupSerialPort(params.com,9600);
 params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
 
 if params.sd(2) - params.sd(1) > 0
-    params.stim = ['D:\stimuli\gainBehavior\190801_trainingLoHiChord-' params.boothID '-dual.mat'];
-    if strcmp(params.IDstr,'CA107')
-        params.stim = ['D:\stimuli\gainBehavior\190820_trainingLoHiChord-' params.boothID '-dual.mat'];
-    end
     params.targetDBShift = 20;
 else
-    params.stim = ['D:\stimuli\gainBehavior\190801_trainingHiLoChord-' params.boothID '-dual.mat'];
-    if strcmp(params.IDstr,'CA107')
-        params.stim = ['D:\stimuli\gainBehavior\190820_trainingHiLoChord-' params.boothID '-dual.mat'];
-    end
     params.targetDBShift = 16;
 end
+params.stim = fullfile('D:\stimuli\gainBehavior',...
+    sprintf('%s_training%sChord-%s-dual.mat',...
+    params.stimVersion,...
+    params.contrastCondition,...
+    params.boothID));
 [stim, events, params.target, params.targetF] = constructStimChords(params);
+
+% shuffle the seed to make the trials random each time, but save the state
+% to ensure we can reconstruct trial order if all else fails
 params.rngState = rng('shuffle');
 
-% modify params to reflect actual stimuli used
-
-% graph title
-tstr = [params.boothID ': ' params.IDstr];
-
 % open data file
-params.IDsess   = [params.IDstr '_' datestr(now,'yymmddHHMM')];
+dt = datestr(now,'yymmddHHMM');
+params.IDsess   = [params.IDstr '_' dt];
 params.fn       = [params.data filesep params.IDsess];
 fn = [params.fn '_training.txt'];
 mat = [params.fn '_training.mat'];
+
+% graph title
+tstr = sprintf('Mouse %s (%s): %s Training Performance',...
+    params.IDstr, ...
+    params.boothID, ...
+    dt);
 
 % check for open file
 if exist(fn,'file')

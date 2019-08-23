@@ -22,8 +22,6 @@ load('thresholds2use.mat');
 [~,cond] = min(params.sd);
 thresh = threshold(ind,cond);
 if params.sd(2) - params.sd(1) > 0
-    params.stim = ['D:\stimuli\gainBehavior\190801_offsetsLoHiChord-' ...
-        params.boothID '-' params.IDstr '-thresh' num2str(thresh) '-dual.mat'];
     params.targetDBShift = 20;
 else
     params.stim = ['D:\stimuli\gainBehavior\190801_offsetsHiLoChord-' ...
@@ -33,27 +31,36 @@ end
 params.targetDBShift = [thresh params.targetDBShift];
 disp(['Threshold = ' num2str(thresh)]);
 
-
 % make stimuli
+params.stim = fullfile('D:\stimuli\gainBehavior',...
+    sprintf('%s_offsets%sChord-%s-thresh%s-dual.mat',...
+    params.stimVersion,...
+    params.contrastCondition,...
+    params.boothID,...
+    num2str(thresh)));
 [stim, events, params.target, params.targetF] = constructStimChords(params);
-params.rngState = rng('shuffle');
 
-% modify params to reflect actual stimuli used
-% add modifications here
+% shuffle the seed to make the trials random each time, but save the state
+% to ensure we can reconstruct trial order if all else fails
+params.rngState = rng('shuffle');
 
 % presentation probabilities
 params.offsetP = [.2 .2 .2 .2 .2 .2];
 %[.2 .2 .2 .2 .2];
 params.dbP = [.3 .3 .4];
 
-% graph title
-tstr = [params.boothID ': ' params.IDstr];
-
 % open data file
-params.IDsess   = [params.IDstr '_' datestr(now,'yymmddHHMM')];
+dt = datestr(now,'yymmddHHMM');
+params.IDsess   = [params.IDstr '_' dt];
 params.fn       = [params.data filesep params.IDsess];
 fn = [params.fn '_offsetTesting.txt'];
 mat = [params.fn '_offsetTesting.mat'];
+
+% graph title
+tstr = sprintf('Mouse %s (%s): %s Offset Performance (thresh = %s)',...
+    params.IDstr, ...
+    params.boothID, ...
+    dt,num2str(thresh));
 
 % check for open file
 if exist(fn,'file')
