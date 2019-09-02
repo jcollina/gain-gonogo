@@ -46,10 +46,11 @@ fn = [params.fn '_testing.txt'];
 mat = [params.fn '_testing.mat'];
 
 % graph title
-tstr = sprintf('Mouse %s (%s)\n%s Psychometric Testing Performance',...
+tstr = sprintf('%s - %s (%s)\n %s Psychometric Performance',...
     params.IDstr, ...
+    dt, ...
     params.boothID, ...
-    dt);
+    params.contrastCondition);
 
 % check for open file
 if exist(fn,'file')
@@ -188,7 +189,7 @@ print(f1,sprintf('%s_testing_performance.png',params.fn),'-dpng','-r300');
 % and psychometric performance
 f2 = figure(2);
 l = params.targetDBShift;
-psychometricCurve(trialType(:,1),response,l);
+psychometricCurve(trialType(:,1),response,l,params);
 title(sprintf('%s Psychometric Curve',params.IDsess));
 print(f2,sprintf('%s_testing_curve.png',params.fn),'-dpng','-r300');
 
