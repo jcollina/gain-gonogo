@@ -15,13 +15,49 @@ end
 taskStr = {'LoHi','HiLo'};
 lineColor = [1 0 0; 0 0 1];
 
+keyboard
+
 
 
 
 %% training figures
-%f1 = figure(1); clf;
-%plotTrainingData(dat);
-%saveFigPDF(f1,[1000 700],'_training_summary.pdf')
+f1 = figure(1); clf;
+plotTrainingData(dat);
+saveFigPDF(f1,[1000 700],'_training_summary.pdf')
+
+
+%% psychometric figures
+f2 = figure(2); clf; hold on;
+
+% exclusion criteria
+faCutoff = .3;
+
+psychRate = nan(2,6,length(dat));
+psychFA = nan(2,length(dat));
+for i = 1:length(dat)
+    
+    % for each contrast
+    for j = 1:2
+        
+        % exlude high FA sessions, and include current contrast
+        ind = (dat(i).psych.fa < faCutoff) & ...
+              (dat(i).psych.contrast == j);
+        
+        psychRate(j,:,i) = mean(dat(i).psych.hr(ind,:));
+        psychFA(j,i) = mean(dat(i).psych.fa(ind));
+        
+        plot(squeeze(lvl(i,j,:)),psychRate(j,i),...
+             'Color',linecolor(j,:));
+        
+    end
+    
+end
+
+SNRS = repmat(
+plot(
+
+
+
     
 
 % hard stop for missing data
