@@ -17,9 +17,9 @@ params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
 %[.05 .1 .25 .5 1];
 rng(params.seed); % (to make the same stimulus each time)
 if params.sd(2) - params.sd(1) > 0
-    params.targetDBShift = linspace(8,20,6);
+    params.targetDBShift = linspace(-5,25,6);
 else
-    params.targetDBShift =linspace(-4,16,6);
+    params.targetDBShift =linspace(0,20,6);
 end
 params.stim = fullfile('D:\stimuli\gainBehavior',...
     sprintf('%s_testing%sChord-%s-dual.mat',...
