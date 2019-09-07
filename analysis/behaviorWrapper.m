@@ -32,6 +32,7 @@ f2 = figure(2); clf; hold on;
 % exclusion criteria
 faCutoff = .3;
 
+subplot(1,2,1)
 psychRate = nan(2,6,length(dat));
 psychFA = nan(2,length(dat));
 for i = 1:length(dat)
@@ -46,15 +47,31 @@ for i = 1:length(dat)
         psychRate(j,:,i) = mean(dat(i).psych.hr(ind,:));
         psychFA(j,i) = mean(dat(i).psych.fa(ind));
         
-        plot(squeeze(lvl(i,j,:)),psychRate(j,i),...
-             'Color',linecolor(j,:));
+        if ~any(isnan(psychRate(j,:,i)))
+            plot(squeeze(lvl(i,j,:)),psychRate(j,:,i),...
+                 'Color',lineColor(j,:),'LineWidth',1);
+        end
         
     end
     
 end
 
-SNRS = repmat(
-plot(
+errorbar(-5.5,nanmean(psychFA(1,:)),nanstd(psychFA(1,:)),...
+         'o','Color',lineColor(1,:),'LineWidth',1);
+errorbar(-6,nanmean(psychFA(2,:)),nanstd(psychFA(2,:)),...
+         'o','Color',lineColor(2,:),'LineWidth',1);
+xlabel('Target SNR (dB)');
+ylabel('Response Rate');
+plotPrefs;
+
+subplot(1,2,2)
+
+% get unique level combinations for each contrast
+for i = 1:2
+    
+    uLvl = unique(squeeze(lvl(:,i,:)),'rows');
+
+nanmean(
 
 
 
