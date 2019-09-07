@@ -44,8 +44,8 @@ for i = 1:2
         %p = plot(dpOffset);
         %cols = repmat(linspace(.8,.2,4),3,1)';
         %for j = 1:length(p)
-        %    p(j).Color = cols(j,:);
-        %end
+%    p(j).Color = cols(j,:);
+%end
         plot(dprime,'k','LineWidth',1.5);
         axis tight
         ylabel('d-prime');
