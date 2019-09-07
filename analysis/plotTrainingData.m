@@ -13,16 +13,21 @@ for i = 1:length(dat)
     % find the contrast switches
     switches = find(diff(contrast)~=0);
     
-    % exclude early switches (possible mistakes)
-    if switches(1) < 10
-        switches(1) = [];
-    end
-    
-    % check for erroneous switches after the first
-    errSwitch = find(diff(switches) < 3);
-    while any(errSwitch)
-        switches(errSwitch(1):errSwitch(1)+1) = [];
+    % if there are switches
+    if ~isempty(switches)
+        
+        % exclude early switches (possible mistakes)
+        if switches(1) < 10
+            switches(1) = [];
+        end
+        
+        % check for erroneous switches after the first
         errSwitch = find(diff(switches) < 3);
+        while any(errSwitch)
+            switches(errSwitch(1):errSwitch(1)+1) = [];
+            errSwitch = find(diff(switches) < 3);
+        end
+        
     end
     
     % if there are no more switches, just use the last element
