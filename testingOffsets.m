@@ -22,11 +22,11 @@ load('thresholds2use.mat');
 [~,cond] = min(params.sd);
 thresh = threshold(ind,cond);
 if params.sd(2) - params.sd(1) > 0
-    params.targetDBShift = 20;
+    params.targetDBShift = 25;
 else
     params.stim = ['D:\stimuli\gainBehavior\190801_offsetsHiLoChord-' ...
         params.boothID '-' params.IDstr '-thresh' num2str(thresh) '-dual.mat'];
-    params.targetDBShift = 15;
+    params.targetDBShift = 20;
 end
 params.targetDBShift = [thresh params.targetDBShift];
 disp(['Threshold = ' num2str(thresh)]);
@@ -57,10 +57,11 @@ fn = [params.fn '_offsetTesting.txt'];
 mat = [params.fn '_offsetTesting.mat'];
 
 % graph title
-tstr = sprintf('Mouse %s (%s)\n%s Offset Performance (thresh = %s)',...
+tstr = sprintf('%s - %s (%s)\nOffset Performance (thresh = %s)',...
     params.IDstr, ...
+    dt, ...
     params.boothID, ...
-    dt,num2str(thresh));
+    num2str(thresh));
 
 % check for open file
 if exist(fn,'file')

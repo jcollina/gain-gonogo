@@ -17,9 +17,9 @@ p = setupSerialPort(params.com,9600);
 params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
 
 if params.sd(2) - params.sd(1) > 0
-    params.targetDBShift = 20;
+    params.targetDBShift = 25;
 else
-    params.targetDBShift = 16;
+    params.targetDBShift = 20;
 end
 params.stim = fullfile('D:\stimuli\gainBehavior',...
     sprintf('%s_training%sChord-%s-dual.mat',...
@@ -40,10 +40,11 @@ fn = [params.fn '_training.txt'];
 mat = [params.fn '_training.mat'];
 
 % graph title
-tstr = sprintf('Mouse %s (%s)\n%s Training Performance',...
+tstr = sprintf('%s - %s (%s)\n %s Training Performance',...
     params.IDstr, ...
+    dt, ...
     params.boothID, ...
-    dt);
+    params.contrastCondition);
 
 % check for open file
 if exist(fn,'file')

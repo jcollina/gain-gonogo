@@ -15,13 +15,66 @@ end
 taskStr = {'LoHi','HiLo'};
 lineColor = [1 0 0; 0 0 1];
 
+keyboard
+
 
 
 
 %% training figures
-%f1 = figure(1); clf;
-%plotTrainingData(dat);
-%saveFigPDF(f1,[1000 700],'_training_summary.pdf')
+f1 = figure(1); clf;
+plotTrainingData(dat);
+saveFigPDF(f1,[1000 700],'_training_summary.pdf')
+
+
+%% psychometric figures
+f2 = figure(2); clf; hold on;
+
+% exclusion criteria
+faCutoff = .3;
+
+subplot(1,2,1)
+psychRate = nan(2,6,length(dat));
+psychFA = nan(2,length(dat));
+for i = 1:length(dat)
+    
+    % for each contrast
+    for j = 1:2
+        
+        % exlude high FA sessions, and include current contrast
+        ind = (dat(i).psych.fa < faCutoff) & ...
+              (dat(i).psych.contrast == j);
+        
+        psychRate(j,:,i) = mean(dat(i).psych.hr(ind,:));
+        psychFA(j,i) = mean(dat(i).psych.fa(ind));
+        
+        if ~any(isnan(psychRate(j,:,i)))
+            plot(squeeze(lvl(i,j,:)),psychRate(j,:,i),...
+                 'Color',lineColor(j,:),'LineWidth',1);
+        end
+        
+    end
+    
+end
+
+errorbar(-5.5,nanmean(psychFA(1,:)),nanstd(psychFA(1,:)),...
+         'o','Color',lineColor(1,:),'LineWidth',1);
+errorbar(-6,nanmean(psychFA(2,:)),nanstd(psychFA(2,:)),...
+         'o','Color',lineColor(2,:),'LineWidth',1);
+xlabel('Target SNR (dB)');
+ylabel('Response Rate');
+plotPrefs;
+
+subplot(1,2,2)
+
+% get unique level combinations for each contrast
+for i = 1:2
+    
+    uLvl = unique(squeeze(lvl(:,i,:)),'rows');
+
+nanmean(
+
+
+
     
 
 % hard stop for missing data

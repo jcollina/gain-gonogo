@@ -17,9 +17,9 @@ params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
 %[.05 .1 .25 .5 1];
 rng(params.seed); % (to make the same stimulus each time)
 if params.sd(2) - params.sd(1) > 0
-    params.targetDBShift = linspace(8,20,6);
+    params.targetDBShift = linspace(0,25,6);
 else
-    params.targetDBShift =linspace(-4,16,6);
+    params.targetDBShift = linspace(-5,20,6);
 end
 params.stim = fullfile('D:\stimuli\gainBehavior',...
     sprintf('%s_testing%sChord-%s-dual.mat',...
@@ -46,10 +46,11 @@ fn = [params.fn '_testing.txt'];
 mat = [params.fn '_testing.mat'];
 
 % graph title
-tstr = sprintf('Mouse %s (%s)\n%s Psychometric Testing Performance',...
+tstr = sprintf('%s - %s (%s)\n %s Psychometric Performance',...
     params.IDstr, ...
+    dt, ...
     params.boothID, ...
-    dt);
+    params.contrastCondition);
 
 % check for open file
 if exist(fn,'file')
@@ -188,7 +189,7 @@ print(f1,sprintf('%s_testing_performance.png',params.fn),'-dpng','-r300');
 % and psychometric performance
 f2 = figure(2);
 l = params.targetDBShift;
-psychometricCurve(trialType(:,1),response,l);
+psychometricCurve(trialType(:,1),response,l,params);
 title(sprintf('%s Psychometric Curve',params.IDsess));
 print(f2,sprintf('%s_testing_curve.png',params.fn),'-dpng','-r300');
 
