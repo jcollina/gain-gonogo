@@ -34,5 +34,5 @@ plot(l,hr(2:end),'.k','MarkerSize',30);
 xlabel('dbSteps');
 ylabel('pHit');
 ylim([0 1]);
-xlim(XLimits);
+xlim(xLimits);
 set(gca,'XTick',l);
