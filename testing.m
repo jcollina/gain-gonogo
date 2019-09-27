@@ -35,8 +35,8 @@ params.rngState = rng('shuffle');
 % presentation probabilities
 params.offsetP = [.25 .25 .25 .25];
 %[.2 .2 .2 .2 .2];
-%params.dbP = [.4 .05 .05 .05 .05 .2 .2];
-params.dbP = [.3 .1 .1 .1 .1 .15 .15];
+params.dbP = [.4 .05 .05 .05 .05 .2 .2];
+%params.dbP = [.3 .1 .1 .1 .1 .15 .15];
 
 % open data file
 dt = datestr(now,'yymmddHHMM');
