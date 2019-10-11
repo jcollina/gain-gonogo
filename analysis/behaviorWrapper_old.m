@@ -7,7 +7,7 @@ addpath(genpath('~/chris-lab/code_general'));
 %% process all mice
 if ~exist('mouseList','var')
     mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055','CA061','CA070','CA072','CA073','CA074','CA075','CA104'};
-    mouseList = {'CA102'};
+    mouseList = {'CA107'};
 end
 
 for i = 1:length(mouseList)

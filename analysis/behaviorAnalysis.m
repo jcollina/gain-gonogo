@@ -108,30 +108,21 @@ for i = 1:2
         subplot(4,2,2+i)
         resp = sum(nresp,1);
         trials = sum(ntrials,1);
-        f = psychometricFit(resp,trials,snr(1,:),mean(fa));
         x = snr(1,:);
-                
-        % for shallow fits, make an exception, and use the SNR
-        % corresponding to 1.5 dprime accuracy given FA rate
-        if i == 1
-            % high contrast
-            if f.thresh < 11 || f.thresh > 18
-                f.thresh = f.thresh15d;
-            end
-        elseif i == 2
-            % low contrast
-            if f.thresh < 4 || f.thresh > 15
-                f.thresh = f.thresh15d;
-            end
-        end
-                
-        [~,tind] = min(abs(f.x-f.thresh));
-        tx = f.x(tind);
-        ty = f.y(tind);
+        y = resp ./ trials;
+        
+        %f = psychometricFit(resp,trials,snr(1,:),mean(fa));
+        [params,mdl,fthresh,sensitivity,FIT] = fitLogistic(x,y);
+                   
+        fx = linspace(min(x),max(x),100);
+        fy = mdl(params,fx);
+        [~,tind] = min(abs(fx-fthresh));
+        tx = fx(tind);
+        ty = fy(tind);
         hold on
         plot([tx tx], [0 ty],'k--','LineWidth',1.5);
-        plot(f.x,f.y,'Color',lineColor(i,:),'LineWidth',1.5)
-        plot(x,resp./trials,'k.','LineWidth',2,'Markersize',25);
+        plot(fx,fy,'Color',lineColor(i,:),'LineWidth',1.5)
+        plot(x,y,'k.','LineWidth',2,'Markersize',25);
         plot(min(x) - mean(diff(x)),mean(fa),'.','Color',[.5 .5 .5], ...
              'LineWidth',2,'MarkerSize',25);
         set(gca,'XTick',[min(x)-mean(diff(x)) x])
@@ -144,7 +135,7 @@ for i = 1:2
         xlabel('SNR (dB)');
         plotPrefs;
         hold off
-        
+                
         threshold(i) = f.thresh;
         npsych(i,:) = trials;
         rpsych(i,:) = resp;
