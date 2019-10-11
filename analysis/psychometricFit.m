@@ -18,7 +18,7 @@ resps(resps == 0) = 1;
 
 % Set search options
 options = PAL_minimize('options');
-options.TolFun = 1e-10;
+options.TolFun = 1e-15;
 options.MaxIter = 1e6;
 options.MaxFunEvals = 1e6;
 

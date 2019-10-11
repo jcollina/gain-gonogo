@@ -49,11 +49,11 @@ q.normalizePdf = 1;
 dt = datestr(now,'yymmddHHMM');
 params.IDsess   = [params.IDstr '_' dt];
 params.fn       = [params.data filesep params.IDsess];
-fn = [params.fn '_testing.txt'];
-mat = [params.fn '_testing.mat'];
+fn = [params.fn '_staircase.txt'];
+mat = [params.fn '_staircase.mat'];
 
 % graph title
-tstr = sprintf('%s - %s (%s)\n %s Psychometric Performance',...
+tstr = sprintf('%s - %s (%s)\n %s Staircase Performance',...
     params.IDstr, ...
     dt, ...
     params.boothID, ...
@@ -233,14 +233,14 @@ loadArduinoSketch(params.com,hexPath);
 f1 = figure(1);
 [~,trialType,response,~] = parseLog(fn);
 plotOnline(trialType(:,1),response,runningAverage,tstr);
-print(f1,sprintf('%s_testing_performance.png',params.fn),'-dpng','-r300');
+print(f1,sprintf('%s_staircase_performance.png',params.fn),'-dpng','-r300');
 
 % and psychometric performance
 f2 = figure(2);
 l = params.targetDBShift;
 psychometricCurve(trialType(:,1),response,l,params);
-title(sprintf('%s Psychometric Curve',params.IDsess));
-print(f2,sprintf('%s_testing_curve.png',params.fn),'-dpng','-r300');
+title(sprintf('%s Staircase Curve',params.IDsess));
+print(f2,sprintf('%s_staircase_curve.png',params.fn),'-dpng','-r300');
 
 % compute percent correct and reward count
 if length(resp)==length(tt)
