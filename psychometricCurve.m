@@ -30,7 +30,7 @@ plot(min(l)-5, hr(1),'.','Color',[.5 .5 .5],'MarkerSize',30);
 xLimits = xlim;
 plot([xLimits(1) fit.thresh],[.5 .5],'--k');
 plot([fit.thresh fit.thresh],[0 .5],'--k');
-plot(l,hr(2:end),'.k','MarkerSize',30);
+plot(conds(2:end),hr(2:end),'.k','MarkerSize',30);
 xlabel('dbSteps');
 ylabel('pHit');
 ylim([0 1]);

@@ -91,6 +91,9 @@ while cnt <= length(STAGE)
         case 3
             disp('RUNNING OFFSET TESTING');
             testingOffsets(s,params);
+        case 4
+            disp('RUNNING STAIRCASE');
+            staircase(s,params);
     end
     cnt = cnt + 1;
 end

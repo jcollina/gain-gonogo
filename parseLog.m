@@ -33,9 +33,14 @@ for i = 1:length(tind)-1
         t(i).toStart = [tmpTimes(strcmp(tmpEvents,'TOSTART'))
             tmpTimes(strcmp(tmpEvents,'TOEND'))];
         t(i).condition = tmpEvents(contains(tmpEvents,'COND'));
-        
+                
         % important variables
-        trialType(i,:) = str2num(t(i).condition{1}(end-2:end)')';
+        if contains(t(i).condition{1},'-')
+            tmp = strsplit(t(i).condition{1},'-');
+            trialType(i,:) = cell2mat(cellfun(@str2num,tmp(2:end),'un',0));
+        else
+            trialType(i,:) = str2num(t(i).condition{1}(end-2:end)')';
+        end
         response(i) = any(t(i).lickTimes > t(i).respWin(1) & t(i).lickTimes < t(i).respWin(2));
         
         % compute reaction time
