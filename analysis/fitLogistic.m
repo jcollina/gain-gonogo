@@ -40,7 +40,7 @@ p0 = [mean(x) ...
 lb = [min(x) 0 0 0];
 ub = [max(x) inf 1 1];
 [params,fval,exitflag,output] = fmincon(...
-    @(p) norm(y-mdl(p,x)),p0,[],[],[],[],lb,ub,[],options);
+    @(p) norm(y-mdl(p,x))5,p0,[],[],[],[],lb,ub,[],options);
 
 threshold = params(1)/params(2);
 sensitivity = params(2);
