@@ -45,7 +45,7 @@ params.stim = fullfile('D:\stimuli\gainBehavior',...
 params.rngState = rng('shuffle');
 
 % presentation probabilities
-params.offsetP = [.2 .2 .2 .2 .2 .2];
+params.offsetP = [1/6 1/6 1/6 1/6 1/6 1/6];
 %[.2 .2 .2 .2 .2];
 params.dbP = [.3 .3 .4];
 
