@@ -5,7 +5,8 @@ addpath(genpath('~/chris-lab/code_general'));
 
 %% process all mice
 mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055',...
-             'CA061','CA070','CA072','CA073','CA074','CA075','CA102'};
+             'CA061','CA070','CA072','CA073','CA074','CA075','CA102',...
+             'CA104','CA106','CA107'};
 
 for i = 1:length(mouseList)
     [dat(i),rpsych(i,:,:) npsych(i,:,:) lvl(i,:,:) threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:)] = ...
@@ -14,8 +15,6 @@ end
 
 taskStr = {'LoHi','HiLo'};
 lineColor = [1 0 0; 0 0 1];
-
-keyboard
 
 
 
@@ -28,71 +27,11 @@ saveFigPDF(f1,[1000 700],'_training_summary.pdf')
 
 %% psychometric figures
 f2 = figure(2); clf; hold on;
-
-% exclusion criteria
 faCutoff = .3;
-
-subplot(1,2,1)
-psychRate = nan(2,6,length(dat));
-psychFA = nan(2,length(dat));
-for i = 1:length(dat)
-    
-    % for each contrast
-    for j = 1:2
-        
-        % exlude high FA sessions, and include current contrast
-        ind = (dat(i).psych.fa < faCutoff) & ...
-              (dat(i).psych.contrast == j);
-        
-        psychRate(j,:,i) = mean(dat(i).psych.hr(ind,:));
-        psychFA(j,i) = mean(dat(i).psych.fa(ind));
-        
-        if ~any(isnan(psychRate(j,:,i)))
-            plot(squeeze(lvl(i,j,:)),psychRate(j,:,i),...
-                 'Color',lineColor(j,:),'LineWidth',1);
-        end
-        
-    end
-    
-end
-
-errorbar(-5.5,nanmean(psychFA(1,:)),nanstd(psychFA(1,:)),...
-         'o','Color',lineColor(1,:),'LineWidth',1);
-errorbar(-6,nanmean(psychFA(2,:)),nanstd(psychFA(2,:)),...
-         'o','Color',lineColor(2,:),'LineWidth',1);
-xlabel('Target SNR (dB)');
-ylabel('Response Rate');
-plotPrefs;
-
-subplot(1,2,2)
-
-% get unique level combinations for each contrast
-for i = 1:2
-    
-    uLvl = unique(squeeze(lvl(:,i,:)),'rows');
-
-nanmean(
+subplot(1,4,1:2)
+plotPsychometricData(dat,faCutoff,lineColor);
 
 
-
-    
-
-% hard stop for missing data
-if any(isnan(threshold(:))) || size(threshold,1)==1
-    keyboard
-end
-
-keyboard
-
-figure
-hold on
-plot(squeeze(lvl(1,1,:)),squeeze(mean(psych(:,1,2:end))),'b.')
-plot(squeeze(lvl(1,2,:)),squeeze(mean(psych(:,2,2:end))),'r.')
-hold off
-
-
-% save out thresholds
-save('thresholds.mat','mouseList','threshold')
 
 % n mice
 n = size(dp,1);
@@ -114,11 +53,11 @@ for i = 1:2
 %     '.k','LineWidth',2);
 end
 xlim([.9 2.1])
-plot(repmat(x,n,1)',threshold','-k');
-plot(repmat(x,n,1)',threshold','.',...
+plot(repmat(x,length(threshold),1)',threshold','-k');
+plot(repmat(x,length(threshold),1)',threshold','.',...
      'MarkerSize',20,...
      'Color',[.75 .75 .75]);
-plot(repmat(x,n,1)',threshold','ok',...
+plot(repmat(x,length(threshold),1)',threshold','ok',...
      'MarkerSize',7);
 m = max(threshold(:)) * 1.1;
 plot(x,[m m],'k','LineWidth',2);
@@ -268,6 +207,16 @@ plotPrefs;
 hold off
 saveFigPDF(f7,[600 300],'_allMiceDPhigh.pdf');
 
+
+
+% hard stop for missing data
+if any(isnan(threshold(:))) || size(threshold,1)==1
+    keyboard
+end
+
+
+% save out thresholds
+save('thresholds.mat','mouseList','threshold')
 
 keyboard
 

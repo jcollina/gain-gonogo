@@ -41,11 +41,6 @@ for i = 1:2
         % plot d' over time
         subplot(4,2,0+i)
         hold on
-        %p = plot(dpOffset);
-        %cols = repmat(linspace(.8,.2,4),3,1)';
-        %for j = 1:length(p)
-%    p(j).Color = cols(j,:);
-%end
         plot(dprime,'k','LineWidth',1.5);
         axis tight
         ylabel('d-prime');
@@ -136,7 +131,7 @@ for i = 1:2
         plotPrefs;
         hold off
                 
-        threshold(i) = f.thresh;
+        threshold(i) = fthresh;
         npsych(i,:) = trials;
         rpsych(i,:) = resp;
         lvl(i,:) = x;
@@ -168,6 +163,7 @@ dat.offset.snr = [];
 for i = 1:2
     ind = fileInd(:,2) == 3 & fileInd(:,1) == i;
     if sum(ind) > 1
+        clear rate;
         [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList(ind), ...
                                                   fileInd(ind,:));
         
@@ -209,6 +205,9 @@ for i = 1:2
         hold on
         x = offsets(1,:);
         if size(rate,1) > 1
+            if size(rate,3) ~= length(x)
+                x = x(1:5);
+            end
             errorbar(x,nanmean(squeeze(rate(:,1,:))), ...
                      nanstd(squeeze(rate(:,1,:)))./sqrt(size(rate,1)), ...
                      '-','LineWidth',1.5,'Markersize',25,'Color',lineColor(i,:));
@@ -266,7 +265,7 @@ set(f1,'PaperOrientation','landscape');
 set(f1,'PaperUnits','points');
 set(f1,'PaperSize',[900 1200]);
 set(f1,'Position',[0 0 900 1200]);
-print(f1,[ID '-summary'],'-dpdf','-r300');
+print(f1,['_plots/' ID '-summary'],'-dpdf','-r300');
 
 
 
@@ -324,17 +323,3 @@ if 1 == 2
     plotPrefs;
     hold off
 end
-
-
-
-
-
-
-
-
-
-function plotPrefs
-
-set(gca,'FontSize',14)
-set(gca,'LineWidth',1)
-set(gca,'TickDir','out');

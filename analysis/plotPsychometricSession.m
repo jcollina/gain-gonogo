@@ -1,4 +1,4 @@
-function plotPsychometricSession(db,hr,fa,fit);
+function plotPsychometricSession(db,hr,fa,fit)
 
 hold on
 % plot performance
@@ -8,8 +8,9 @@ plot(min(db) - mean(diff(db)),fa,'.','Color',[.5 .5 .5],'MarkerSize',25);
 % plot threshold and fit
 x = fit.thresh;
 y = fit.func(fit.params,fit.thresh);
+xfine = db(1):.01:db(end);
 plot([x x], [0 y],'--k','LineWidth',2);
-plot(fit.x,fit.y,'r','LineWidth',2);
+plot(xfine,fit.func(fit.params,xfine),'r','LineWidth',2);
 
 % options
 hold off

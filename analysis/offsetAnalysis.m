@@ -21,7 +21,7 @@ function [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList,fileInd,faCut)
         [~,~,~,~,goodIdx] = computePerformanceGoNoGo(response,trialType,[],[],.25);
         response = response(goodIdx==1);
         trialType = trialType(goodIdx==1,:);
-        
+                
         % compute stats
         lvls = unique(trialType(:,1));
         offs = unique(trialType(:,2));
