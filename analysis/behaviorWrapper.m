@@ -31,46 +31,12 @@ faCutoff = .3;
 subplot(1,4,1:2)
 plotPsychometricData(dat,faCutoff,lineColor);
 
-
-
 % n mice
 n = size(dp,1);
 
-%% changes in thresholds across conditions
-[hthresh,pthresh] = ttest(threshold(:,1),threshold(:,2));
+subplot(1,4,3)
+plotThresholds;
 
-% plot them
-f3 = figure(3); clf
-cols = [1 .25 .25; .25 .25 1];
-hold on
-x = [1.25 1.75];
-for i = 1:2
-    bp(i) = bar(x(i),nanmean(threshold(:,i)))
-    bp(i).FaceColor = cols(i,:);
-    bp(i).BarWidth = .5;
-    %errorbar(x(i),nanmean(dpDiff(:,i)),...
-%     nanstd(dpDiff(:,i)) ./ sqrt(sum(~isnan(dpDiff(:,i)))),...
-%     '.k','LineWidth',2);
-end
-xlim([.9 2.1])
-plot(repmat(x,length(threshold),1)',threshold','-k');
-plot(repmat(x,length(threshold),1)',threshold','.',...
-     'MarkerSize',20,...
-     'Color',[.75 .75 .75]);
-plot(repmat(x,length(threshold),1)',threshold','ok',...
-     'MarkerSize',7);
-m = max(threshold(:)) * 1.1;
-plot(x,[m m],'k','LineWidth',2);
-text(1.4,m+.5,sprintf('p = %01.3f',pthresh),...
-     'FontSize',16);
-ylabel('Threshold SNR (dB)');
-set(gca,'XTick',[]);
-set(gca,'XTickLabels',[]);
-set(gca,'TickDir','out');
-set(gca,'FontSize',16);
-set(gca,'LineWidth',2);
-legend(bp,'Low-to-High','High-to-Low','Location','southeast');
-hold off
 saveFigPDF(f3,[530 700],'_allMiceThresh.pdf');
 
 
@@ -174,7 +140,7 @@ errorbar(t,squeeze(mLoHi),squeeze(sLoHi),'r','LineWidth',2);
 errorbar(t,squeeze(mHiLo),squeeze(sHiLo),'b','LineWidth',2);
 xlim([0 1.05]);
 set(gca,'XTick',t);
-xtickangle(90);
+%xtickangle(90);
 title(sprintf('n = %d',min([nLoHi nHiLo])));
 xlabel('Time (s)');
 ylabel('d''');

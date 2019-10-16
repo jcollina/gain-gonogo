@@ -56,14 +56,16 @@ for i = 1:2
     [p,mdl,threshold,sensitivity] = fitLogistic(meanSNR,meanPerf);
     xfine = meanSNR(1):.01:meanSNR(end);
     
-    plot(meanSNR,meanPerf,'.','Color',lineColor(i,:));
-    plot(xfine,mdl(p,xfine),'Color',lineColor(i,:),'LineWidth',2);
+    plot(meanSNR,meanPerf,'.','Color',lineColor(i,:),'MarkerSize',10);
+    plot(xfine,mdl(p,xfine),'Color',lineColor(i,:),'LineWidth',1.5);
+    plot([threshold threshold],[0 mdl(p,threshold)],'--',...
+        'Color',lineColor(i,:),'LineWidth',1)
     
     mFA = mean(faMat(contrastI==i));
     stdFA = std(grpstats(faMat(contrastI==i),mouseI(contrastI==i)))./...
         sqrt(length(unique(mouseI(contrastI==i))));
     plot([20 20]+i-1,[mFA-stdFA mFA+stdFA],'Color',lineColor(i,:),'LineWidth',1.5)
-    plot(20+i-1,mFA,'.','MarkerSize',10,'Color',lineColor(i,:))
+    plot(20+i-1,mFA,'o','MarkerSize',5,'Color',lineColor(i,:))
 end
 
 xlabel('Target SNR (dB)');
