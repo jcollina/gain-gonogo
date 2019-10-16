@@ -1,0 +1,80 @@
+% mouse averaged dprime
+t = [.05 .1 .25 .5 1];
+nLoHi = mode(sum(~isnan(dp(:,1,:))),3);
+mLoHi = nanmean(dp(:,1,:));
+sLoHi = nanstd(dp(:,1,:)) ./ sqrt(nLoHi);
+nHiLo = mode(sum(~isnan(dp(:,2,:))),3);
+mHiLo = nanmean(dp(:,2,:));
+sHiLo = nanstd(dp(:,2,:)) ./ sqrt(nHiLo);
+
+subplot(2,2,1)
+hold on
+p(1) = errorbar(t,squeeze(mLoHi),squeeze(sLoHi),'r','LineWidth',1);
+plot(t,squeeze(mLoHi),'.r','MarkerSize',10)
+p(2) = errorbar(t,squeeze(mHiLo),squeeze(sHiLo),'b','LineWidth',1);
+plot(t,squeeze(mHiLo),'.b','MarkerSize',10)
+xlim([0 1.05]);
+set(gca,'XTick',t);
+title(sprintf('Threshold SNR (n = %d)',min([nLoHi nHiLo])));
+xlabel('Time (s)');
+ylabel('d''');
+legend(p,'Low-to-High','High-to-Low','location','southeast');
+plotPrefs;
+hold off
+
+% mouse averaged dprime at highest level
+t = [.05 .1 .25 .5 1];
+nLoHi = mode(sum(~isnan(dp1(:,1,:))),3);
+mLoHi = nanmean(dp1(:,1,:));
+sLoHi = nanstd(dp1(:,1,:)) ./ sqrt(nLoHi);
+nHiLo = mode(sum(~isnan(dp1(:,2,:))),3);
+mHiLo = nanmean(dp1(:,2,:));
+sHiLo = nanstd(dp1(:,2,:)) ./ sqrt(nHiLo);
+
+subplot(2,2,2)
+hold on
+p(1) = errorbar(t,squeeze(mLoHi),squeeze(sLoHi),'r','LineWidth',1);
+plot(t,squeeze(mLoHi),'.r','MarkerSize',10)
+p(2) = errorbar(t,squeeze(mHiLo),squeeze(sHiLo),'b','LineWidth',1);
+plot(t,squeeze(mHiLo),'.b','MarkerSize',10)
+xlim([0 1.05]);
+set(gca,'XTick',t);
+title('High SNR');
+xlabel('Time (s)');
+ylabel('d''');
+legend(p,'Low-to-High','High-to-Low','location','southeast');
+plotPrefs;
+hold off
+
+% mouse averaged hit rate at threshold
+t = [.05 .1 .25 .5 1];
+nLoHi = mode(sum(~isnan(rate(:,1,:))),3);
+mLoHi = nanmean(rate(:,1,:));
+sLoHi = nanstd(rate(:,1,:)) ./ sqrt(nLoHi);
+nHiLo = mode(sum(~isnan(rate(:,2,:))),3);
+mHiLo = nanmean(rate(:,2,:));
+sHiLo = nanstd(rate(:,2,:)) ./ sqrt(nHiLo);
+
+nfaLoHi = mode(sum(~isnan(fa(:,1,:))),3);
+mfaLoHi = nanmean(fa(:,1,:));
+sfaLoHi = nanstd(fa(:,1,:)) ./ sqrt(nfaLoHi);
+nfaHiLo = mode(sum(~isnan(fa(:,2,:))),3);
+mfaHiLo = nanmean(fa(:,2,:));
+sfaHiLo = nanstd(fa(:,2,:)) ./ sqrt(nfaHiLo);
+
+
+subplot(2,2,3)
+hold on
+p(1) = errorbar(t,squeeze(mLoHi),squeeze(sLoHi),'r','LineWidth',1);
+plot(t,squeeze(mLoHi),'.r','MarkerSize',10)
+p(2) = errorbar(t,squeeze(mHiLo),squeeze(sHiLo),'b','LineWidth',1);
+plot(t,squeeze(mHiLo),'.b','MarkerSize',10)
+xlim([0 1.05]);
+set(gca,'XTick',t);
+title(sprintf('Threshold SNR (n = %d)',min([nLoHi nHiLo])));
+xlabel('Time (s)');
+ylabel('Hit Rate');
+legend(p,'Low-to-High','High-to-Low','location','southeast');
+plotPrefs;
+hold off
+
