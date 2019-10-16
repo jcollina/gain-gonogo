@@ -159,9 +159,9 @@ while cnt < 1e6
         
         % stop the stimulus if it is a timeout
         if contains(out,'TOSTART')
-            if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
-                stop(s);
-            end
+%             if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
+%                 stop(s);
+%             end
         end
     elseif contains(out,'MISS') || contains(out,'CORRECTREJECT')
         resp(cnt) = 0;
