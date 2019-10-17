@@ -3,16 +3,55 @@ function plotPsychometricData(dat,faCutoff,lineColor)
 % construct a big matrix of values for each session, indexed by mouse
 cnt = 0;
 for i = 1:length(dat)
+    
+    % get first day of training
+    dt0 = datetime(num2str(min(dat(i).training.date)),...
+                  'InputFormat','yyMMdd');
+    
     for j = 1:length(dat(i).psych.date)
         cnt = cnt + 1;
         perfMat(cnt,:) = dat(i).psych.hr(j,:);
         faMat(cnt) = dat(i).psych.fa(j);
         snrMat(cnt,:) = dat(i).psych.snr(j,:);
         contrastI(cnt) = dat(i).psych.contrast(j);
+        days(cnt) =  day(datetime(num2str(dat(i).psych.date(j)),...
+                  'InputFormat','yyMMdd') - dt0);
+        [~,~,thresh(cnt),~] = fitLogistic(snrMat(cnt,:),perfMat(cnt,:));
         mouseI(cnt) = i;
     end
 end
 
+
+
+
+
+
+
+
+
+
+subplot(1,4,4); hold on
+% remove outliers
+I = thresh < 2*std(thresh) & thresh > 0; %& faMat < .3;
+mn = min(days(I));
+mx = max(days(I));
+xfine = mn:1:mx;
+for i = 1:2
+    scatter(days(contrastI==i&I),thresh(contrastI==i&I),...
+            10,lineColor(i,:));
+    [b,bint,~,~,stats] = regress(thresh(contrastI==i&I)',...
+                                 [ones(size(days(contrastI==i&I)')) ...
+                        days(contrastI==i&I)'])
+    plot(xfine,[ones(size(xfine)); xfine]' * b,...
+         'Color',lineColor(i,:),'LineWidth',1)
+    text(170,1+i,sprintf('p=%03.2f',stats(3)),'Color',lineColor(i,:))
+end
+xlabel('Task Exposure (days)');
+ylabel('Threshold (dB SNR)');
+plotPrefs;
+    
+
+subplot(1,4,1:2)
 hold on
 % for each mouse
 cnt = 1;
