@@ -30,18 +30,21 @@ saveFigPDF(f1,[1000 700],'_training_summary.pdf')
 %% psychometric figures
 f2 = figure(2); clf; hold on;
 faCutoff = .3;
-subplot(1,4,1:2)
 plotPsychometricData(dat,faCutoff,lineColor);
 
 
 subplot(1,4,3)
 plotThresholds;
 
-saveFigPDF(f3,[530 700],'_allMiceThresh.pdf');
+saveFigPDF(f2,[1000 300],'_psychometricSummary.pdf');
 
 %% plot offsets
 f3 = figure(3); clf; hold on;
 plotOffsets;
+
+saveFigPDF(f3,[1000 500],'_offsetSummary.pdf');
+
+
 
 
 % hard stop for missing data
