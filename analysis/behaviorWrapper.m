@@ -7,6 +7,7 @@ addpath(genpath('~/chris-lab/code_general'));
 mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055',...
              'CA061','CA070','CA072','CA073','CA074','CA075','CA102',...
              'CA104','CA106','CA107'};
+mouseList = {'CA102','CA104','CA106','CA107'};
 
 for i = 1:length(mouseList)
     [dat(i),rpsych(i,:,:) npsych(i,:,:) lvl(i,:,:) threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:)] = ...
@@ -45,7 +46,7 @@ plotOffsets;
 saveFigPDF(f3,[1000 500],'_offsetSummary.pdf');
 
 
-
+keyboard
 
 % hard stop for missing data
 if any(isnan(threshold(:))) || size(threshold,1)==1
@@ -56,7 +57,7 @@ end
 % save out thresholds
 save('thresholds.mat','mouseList','threshold')
 
-keyboard
+
 
 
 

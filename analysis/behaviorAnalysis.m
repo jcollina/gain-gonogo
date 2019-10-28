@@ -149,10 +149,10 @@ end
 
 
 %% OFFSET ANALYSIS
-mdp = nan(2,5);
-mdp1 = nan(2,5);
-mrate = nan(2,5);
-mfa = nan(2,5);
+mdp = nan(2,6);
+mdp1 = nan(2,6);
+mrate = nan(2,6);
+mfa = nan(2,6);
 
 dat.offset.date = [];
 dat.offset.dprime = [];
@@ -180,7 +180,7 @@ for i = 1:2
         end                                             
                                               
         % remove bad data
-        ind = mean(fa,2) < .3;
+        ind = nanmean(fa,2) < .3;
         if sum(ind) == 0
             keyboard;
         end
@@ -196,6 +196,7 @@ for i = 1:2
         % if none of the sessions are better than the current FA
         % cutoff, continue
         if isempty(offsets)
+            fprintf('** NO GOOD SESSIONS FOUND ** \n');
             continue;
         end
         
@@ -203,7 +204,7 @@ for i = 1:2
         figure(1)
         subplot(4,2,4+i)
         hold on
-        x = offsets(1,:);
+        x = nanmean(offsets,1);
         if size(rate,1) > 1
             if size(rate,3) ~= length(x)
                 x = x(1:5);
@@ -226,7 +227,7 @@ for i = 1:2
         xlabel('Offset (s)');
         set(gca,'XTickLabelRotation',90);
         legend('Threshold','High SNR','FA','Location','ne');
-        set(gca,'XTick',x);
+        set(gca,'XTick',x(~isnan(x)));
         plotPrefs
         
         % plot dprime
@@ -248,7 +249,7 @@ for i = 1:2
         xlabel('Offset (s)');
         set(gca,'XTickLabelRotation',90);
         legend('Threshold','High SNR','Location','ne');
-        set(gca,'XTick',x);
+        set(gca,'XTick',x(~isnan(x)));
         ylim([-1 5])
         plotPrefs
         
