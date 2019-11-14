@@ -1,4 +1,4 @@
-function [dat, rpsych, npsych, lvl, threshold, mdp, mdp1, mrate, mfa] = behaviorAnalysis(ID)
+function [dat, rpsych, npsych, lvl, threshold, mdp, mdp1, mrate, mfa] = behaviorAnalysis(ID,faCut)
 
 disp(['ANALYZING MOUSE ' ID]);
 
@@ -70,11 +70,16 @@ dat.psych.thresh = [];
 dat.psych.snr = [];
 dat.psych.contrast = [];
 for i = 1:2
-    ind = fileInd(:,2) == 2 & fileInd(:,1) == i;
-    if sum(ind)>1
+    I = fileInd(:,2) == 2 & fileInd(:,1) == i;
+    if sum(I)>1
         f2 = figure(2); clf;
         [rate,fa,dp,nresp,ntrials,threshold(i),f,snr] = ...
-            psychAnalysis(fileList(ind),fileInd(ind,:));
+            psychAnalysis(fileList(I),fileInd(I,:));
+        
+        ind = fa < faCut;
+        if sum(ind) == 0
+            continue;
+        end
         
         % save out all data
         dat.psych.date = [dat.psych.date; fileInd(ind,3)];
@@ -89,7 +94,6 @@ for i = 1:2
                             ones(sum(ind),1)*i];
         
         % remove data above false alarm cutoff
-        ind = fa < .3;
         rate = rate(ind,:);
         fa = fa(ind);
         dp = dp(ind,:);
@@ -142,7 +146,7 @@ for i = 1:2
         set(f2,'PaperUnits','points');
         set(f2,'PaperSize',[2500 400]);
         set(f2,'Position',[0 0 2500 400]);
-        print(f2,[ID '-gumbalfits-' taskStr{i}],'-dpdf','-r300');
+        print(f2,['_plots/' ID '-gumbalfits-' taskStr{i}],'-dpdf','-r300');
     end
 end
 
@@ -180,7 +184,7 @@ for i = 1:2
         end                                             
                                               
         % remove bad data
-        ind = nanmean(fa,2) < .3;
+        ind = nanmean(fa,2) < faCut;
         if sum(ind) == 0
             keyboard;
         end

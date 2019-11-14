@@ -42,7 +42,5 @@ for i = 1:length(fileList)
     plotPsychometricSession(snr(i,:),rate(i,:),fa(i),f(i));
 end
 
-
-
 % get threshold
 threshold = mean([f.thresh]);

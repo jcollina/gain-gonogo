@@ -7,11 +7,11 @@ addpath(genpath('~/chris-lab/code_general'));
 mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055',...
              'CA061','CA070','CA072','CA073','CA074','CA075','CA102',...
              'CA104','CA106','CA107'};
-mouseList = {'CA102','CA104','CA106','CA107'};
+%mouseList = {'CA102','CA104','CA106','CA107'};
 
 for i = 1:length(mouseList)
     [dat(i),rpsych(i,:,:) npsych(i,:,:) lvl(i,:,:) threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:)] = ...
-        behaviorAnalysis(mouseList{i});
+        behaviorAnalysis(mouseList{i},.5);
 end
 
 taskStr = {'LoHi','HiLo'};
