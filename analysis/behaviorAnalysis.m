@@ -1,4 +1,4 @@
-function [dat, rpsych, npsych, lvl, threshold, mdp, mdp1, mrate, mfa] = behaviorAnalysis(ID,faCut)
+function [dat, threshold] = behaviorAnalysis(ID,faCut)
 
 disp(['ANALYZING MOUSE ' ID]);
 
@@ -55,10 +55,6 @@ end
 
 %% PSYCHOMETRIC ANALYSIS
 % for lohi
-threshold = nan(1,2);
-npsych = nan(2,6);
-rpsych = nan(2,6);
-lvl = nan(2,6);
 
 dat.psych.date = [];
 dat.psych.nresp = [];
@@ -75,7 +71,7 @@ for i = 1:2
         f2 = figure(2); clf;
         [rate,fa,dp,nresp,ntrials,threshold(i),f,snr] = ...
             psychAnalysis(fileList(I),fileInd(I,:));
-        
+
         ind = fa < faCut;
         if sum(ind) == 0
             continue;
@@ -102,14 +98,20 @@ for i = 1:2
         f = f(ind);
         snr = snr(ind,:);
         
+        % restructure to average over different SNRs
+        [uSNR,~,iSNR] = unique(snr,'rows');
+        for j = 1:size(uSNR,1)
+            I = iSNR == j;
+            nRESP(j,:,:) = sum(nresp(I,:),1);
+            nTRIAL(j,:) = sum(ntrials(I,:),1);
+        end
+        
         % plot average psychometric performance
         figure(1);
         subplot(4,2,2+i)
-        resp = sum(nresp,1);
-        trials = sum(ntrials,1);
-        x = snr(1,:);
-        y = resp ./ trials;
-        
+        x = snr(:);
+        y = nresp(:) ./ ntrials(:);
+                
         %f = psychometricFit(resp,trials,snr(1,:),mean(fa));
         [params,mdl,fthresh,sensitivity,FIT] = fitLogistic(x,y);
                    
@@ -120,15 +122,15 @@ for i = 1:2
         ty = fy(tind);
         hold on
         plot([tx tx], [0 ty],'k--','LineWidth',1.5);
+        scatter(x,y,10,[0 0 0],'filled');
         plot(fx,fy,'Color',lineColor(i,:),'LineWidth',1.5)
-        plot(x,y,'k.','LineWidth',2,'Markersize',25);
         plot(min(x) - mean(diff(x)),mean(fa),'.','Color',[.5 .5 .5], ...
              'LineWidth',2,'MarkerSize',25);
-        set(gca,'XTick',[min(x)-mean(diff(x)) x])
-        lbl = cell(1,7);
-        lbl(2:end) = strread(num2str(x),'%s');
-        lbl{1} = 'FA';
-        set(gca,'XTickLabels',lbl)       
+        %set(gca,'XTick',[min(uSNR)-mean(diff(x)) x])
+        %lbl = cell(1,7);
+        %lbl(2:end) = strread(num2str(x),'%s');
+        %lbl{1} = 'FA';
+        %set(gca,'XTickLabels',lbl)       
         ylim([0 1]);
         ylabel('Hit Rate');
         xlabel('SNR (dB)');
@@ -136,9 +138,9 @@ for i = 1:2
         hold off
                 
         threshold(i) = fthresh;
-        npsych(i,:) = trials;
-        rpsych(i,:) = resp;
-        lvl(i,:) = x;
+        npsych{i} = ntrials(:);
+        rpsych{i} = nresp(:);
+        lvl{i} = snr(:);
                 
         % save figure 2
         set(f2,'PaperPositionMode','auto');         

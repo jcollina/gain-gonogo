@@ -8,10 +8,11 @@ mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055',...
              'CA061','CA070','CA072','CA073','CA074','CA075','CA102',...
              'CA104','CA106','CA107'};
 %mouseList = {'CA102','CA104','CA106','CA107'};
+faCutoff = .5;
 
 for i = 1:length(mouseList)
-    [dat(i),rpsych(i,:,:) npsych(i,:,:) lvl(i,:,:) threshold(i,:) dp(i,:,:) dp1(i,:,:) rate(i,:,:) fa(i,:,:)] = ...
-        behaviorAnalysis(mouseList{i},.5);
+    [dat(i) threshold(i,:)] = ...
+        behaviorAnalysis(mouseList{i},faCutoff);
 end
 
 taskStr = {'LoHi','HiLo'};
@@ -19,7 +20,6 @@ lineColor = [1 0 0; 0 0 1];
 
 % n mice
 n = size(dp,1);
-
 
 
 %% training figures
@@ -30,7 +30,6 @@ saveFigPDF(f1,[1000 700],'_training_summary.pdf')
 
 %% psychometric figures
 f2 = figure(2); clf; hold on;
-faCutoff = .3;
 plotPsychometricData(dat,faCutoff,lineColor);
 
 

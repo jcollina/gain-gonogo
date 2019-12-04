@@ -1,9 +1,9 @@
 % mouse averaged dprime
-t = [.05 .1 .25 .5 1];
-nLoHi = mode(sum(~isnan(dp(:,1,:))),3);
+t = [.025 .05 .1 .25 .5 1];
+nLoHi = sum(~isnan(dp(:,1,:)));
 mLoHi = nanmean(dp(:,1,:));
 sLoHi = nanstd(dp(:,1,:)) ./ sqrt(nLoHi);
-nHiLo = mode(sum(~isnan(dp(:,2,:))),3);
+nHiLo = sum(~isnan(dp(:,2,:)));
 mHiLo = nanmean(dp(:,2,:));
 sHiLo = nanstd(dp(:,2,:)) ./ sqrt(nHiLo);
 
@@ -25,11 +25,11 @@ plotPrefs;
 hold off
 
 % mouse averaged dprime at highest level
-t = [.05 .1 .25 .5 1];
-nLoHi = mode(sum(~isnan(dp1(:,1,:))),3);
+t = [.025 .05 .1 .25 .5 1];
+nLoHi = sum(~isnan(dp1(:,1,:)));
 mLoHi = nanmean(dp1(:,1,:));
 sLoHi = nanstd(dp1(:,1,:)) ./ sqrt(nLoHi);
-nHiLo = mode(sum(~isnan(dp1(:,2,:))),3);
+nHiLo = sum(~isnan(dp1(:,2,:)));
 mHiLo = nanmean(dp1(:,2,:));
 sHiLo = nanstd(dp1(:,2,:)) ./ sqrt(nHiLo);
 
@@ -50,18 +50,18 @@ plotPrefs;
 hold off
 
 % mouse averaged hit rate at threshold
-t = [.05 .1 .25 .5 1];
-nLoHi = mode(sum(~isnan(rate(:,1,:))),3);
+t = [.025 .05 .1 .25 .5 1];
+nLoHi = sum(~isnan(rate(:,1,:)));
 mLoHi = nanmean(rate(:,1,:));
 sLoHi = nanstd(rate(:,1,:)) ./ sqrt(nLoHi);
-nHiLo = mode(sum(~isnan(rate(:,2,:))),3);
+nHiLo = sum(~isnan(rate(:,2,:)));
 mHiLo = nanmean(rate(:,2,:));
 sHiLo = nanstd(rate(:,2,:)) ./ sqrt(nHiLo);
 
-nfaLoHi = mode(sum(~isnan(fa(:,1,:))),3);
+nfaLoHi = sum(~isnan(fa(:,1,:)));
 mfaLoHi = nanmean(fa(:,1,:));
 sfaLoHi = nanstd(fa(:,1,:)) ./ sqrt(nfaLoHi);
-nfaHiLo = mode(sum(~isnan(fa(:,2,:))),3);
+nfaHiLo = sum(~isnan(fa(:,2,:)));
 mfaHiLo = nanmean(fa(:,2,:));
 sfaHiLo = nanstd(fa(:,2,:)) ./ sqrt(nfaHiLo);
 
@@ -78,7 +78,7 @@ plot(t,squeeze(mfaLoHi),'or')
 plot([0 0],ylim,'k--');
 xlim([-0.05 1.05]);
 set(gca,'XTick',[0 t]);
-title(sprintf('Threshold SNR (n = %d)',min([nLoHi nHiLo])));
+title(sprintf('Threshold SNR (n = %d)',min([mode(nLoHi) mode(nHiLo)])));
 xlabel('Time (s)');
 ylabel('Response Rate');
 legend(p,'High HR','Low HR','High FA','Low FA','location','southeast');
