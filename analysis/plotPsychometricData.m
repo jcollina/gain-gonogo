@@ -14,8 +14,8 @@ for i = 1:length(dat)
         faMat(cnt) = dat(i).psych.fa(j);
         snrMat(cnt,:) = dat(i).psych.snr(j,:);
         contrastI(cnt) = dat(i).psych.contrast(j);
-        days(cnt) =  day(datetime(num2str(dat(i).psych.date(j)),...
-                  'InputFormat','yyMMdd') - dt0);
+        days(cnt) =  day(datetime(num2str(dat(i).psych.date(j)),'InputFormat','yyMMdd') ...
+                         - dt0);
         [~,~,thresh(cnt),~] = fitLogistic(snrMat(cnt,:),perfMat(cnt,:));
         mouseI(cnt) = i;
     end
