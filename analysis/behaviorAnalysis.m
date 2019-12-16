@@ -76,9 +76,9 @@ for i = 1:2
         if sum(ind) == 0
             continue;
         end
-        
+
         % save out all data
-        dat.psych.date = [dat.psych.date; fileInd(ind,3)];
+        dat.psych.date = [dat.psych.date; fileInd(I,3)];
         dat.psych.nresp = [dat.psych.nresp; nresp];
         dat.psych.ntrials = [dat.psych.ntrials; ntrials];
         dat.psych.dprime = [dat.psych.dprime; dp];
@@ -87,7 +87,7 @@ for i = 1:2
         dat.psych.thresh = [dat.psych.thresh; [f.thresh]'];
         dat.psych.snr = [dat.psych.snr; snr];
         dat.psych.contrast = [dat.psych.contrast; ...
-                            ones(sum(ind),1)*i];
+                            ones(sum(I),1)*i];
         
         % remove data above false alarm cutoff
         rate = rate(ind,:);

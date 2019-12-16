@@ -19,7 +19,7 @@ taskStr = {'LoHi','HiLo'};
 lineColor = [1 0 0; 0 0 1];
 
 % n mice
-n = size(dp,1);
+n = size(dat);
 
 
 %% training figures
