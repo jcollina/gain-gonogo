@@ -24,3 +24,4 @@ set(gca,'XTick',[]);
 set(gca,'XTickLabels',[]);
 legend(bp,'Low-to-High','High-to-Low','Location','southeast');
 hold off
+plotPrefs;
