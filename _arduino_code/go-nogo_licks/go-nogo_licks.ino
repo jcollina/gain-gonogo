@@ -2,6 +2,8 @@
 const int audioPin = 5;             // audio monitor pin
 const int buttonPin = 7;            // lickport pin
 const int valvePin = 9;             // water valve pin
+const int lickEvents = 11;          // lick event pin to turn on when lick is detected
+const int valveEvents = 12;         // valve event pin
 
 // state variables:
 int taskState = 0;                  // state of state machine
@@ -39,12 +41,14 @@ void setup() {
   pinMode(buttonPin, INPUT);
   pinMode(audioPin, INPUT);
   pinMode(valvePin, OUTPUT);
+  pinMode(lickEvents, OUTPUT);
+  pinMode(valveEvents, OUTPUT);
 
   // set states for indicator and valve
   digitalWrite(valvePin, valveState);
 
   // setup serial port
-  Serial.begin(9600);
+  Serial.begin(19200);
   Serial.read();
 
   // retrieve parameters from matlab
@@ -89,17 +93,19 @@ void setup() {
 
   // clear out the serial
   Serial.read();
-  Serial.read();
 }
 
 void loop() {
   checkLick();
+  Serial.print(taskState);
+  Serial.println(winState);
 
 
   switch (taskState) {
 
     // GET TRIAL TYPE
     case 0: {
+        //sprintf(trialStr,"%04d ",trialCnt);
         if (Serial.available() > 0) {
           trialType = Serial.read();
           t = micros();
@@ -157,9 +163,6 @@ void loop() {
 
     // WAIT FOR RESPONSE WINDOW
     case 3: {
-          if (Serial.available() > 0) {
-            Serial.println(Serial.read());
-          }
         // check the soundcard input for stim offset
         stimState = digitalRead(audioPin);
 
@@ -170,7 +173,7 @@ void loop() {
           Serial.print(t);
           Serial.println(" RESPON");
           lickTime = 0;
-          winState = LOW;
+          winState = HIGH;
           taskState = 4;
         }
         break;
@@ -197,9 +200,9 @@ void loop() {
         // otherwise, if there were no licks during the window
         if (micros() > respWinEnd) {
           Serial.print(trialStr);
-          Serial.print(respWinEnd);
+          Serial.print(micros());
           Serial.println(" RESPOFF");
-          winState = HIGH;
+          winState = LOW;
           if (trialType == 49) {
             Serial.print(trialStr);
             Serial.print(micros());
@@ -220,18 +223,19 @@ void loop() {
     // REWARD
     case 5: {
         // mark response window end
-        if (winState == LOW) {
+        if (winState == HIGH) {
           if (micros() > respWinEnd) {
             Serial.print(trialStr);
-            Serial.print(respWinEnd);
+            Serial.print(micros());
             Serial.println(" RESPOFF");
-            winState = HIGH;
+            winState = LOW;
           }
         }
         // set reward pin to high
         if (rewardState == LOW) {
           // turn on pin and timer
           digitalWrite(valvePin, HIGH);
+          digitalWrite(valveEvents, HIGH);
           t = micros();
           Serial.print(trialStr);
           Serial.print(t);
@@ -242,6 +246,7 @@ void loop() {
         // when time runs out, turn it off
         if (micros() > rewardEnd) {
           digitalWrite(valvePin, LOW);
+          digitalWrite(valveEvents, LOW);
           Serial.print(trialStr);
           Serial.print(micros());
           Serial.println(" REWARDOFF");
@@ -254,12 +259,12 @@ void loop() {
     // TIMEOUT
     case 6: {
         // mark response window end
-        if (winState == LOW) {
+        if (winState == HIGH) {
           if (micros() > respWinEnd) {
             Serial.print(trialStr);
-            Serial.print(respWinEnd);
+            Serial.print(micros());
             Serial.println(" RESPOFF");
-            winState = HIGH;
+            winState = LOW;
           }
         }
         // initialize timeout
@@ -298,16 +303,17 @@ void loop() {
     // TRIAL END
     case 7: {
         // Wait for response window to end
-        if (winState == LOW) {
+        if (winState == HIGH) {
           if (micros() > respWinEnd) {
             Serial.print(trialStr);
-            Serial.print(respWinEnd);
+            Serial.print(micros());
             Serial.println(" RESPOFF");
-            winState = HIGH;
+            winState = LOW;
           }
         }
-        if (winState == HIGH) {
-          // Mark trial end
+        if (winState == LOW) {
+          // wait 250ms, then print the trial end (this is to wait for the sound to stop playing)
+          delay(250);
           Serial.print(trialStr);
           Serial.print(micros());
           Serial.println(" TOFF");
@@ -371,6 +377,7 @@ void checkLick() {
     // if the button state has changed:
     if (reading != lickState) {
       lickState = reading;
+      digitalWrite(lickEvents,lickState);
 
       // get timestamp for lick start
       if (lickState == HIGH) {

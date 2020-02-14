@@ -10,7 +10,6 @@ int taskState = 0;                  // state of state machine
 int stimState = LOW;                // state of stimulus
 int rewardState = LOW;              // state of reward
 int timeoutState = LOW;             // state of timeout
-int abortState = LOW;               // state of abort
 int winState = LOW;                 // state of response window
 int lickState;                      // state of lickport
 int lastLickState = LOW;            // state of last lickport sample
@@ -98,7 +97,8 @@ void setup() {
 
 void loop() {
   checkLick();
-
+  Serial.print(taskState);
+  Serial.println(winState);
 
   switch (taskState) {
 
@@ -162,27 +162,30 @@ void loop() {
 
     // WAIT FOR ABORT TIMER
     case 3: {
-        // start early abort timer
-        long abortTimer = millis();
-
-        while ( (millis() - abortTimer) < (long)3000 ) {
-          checkLick();
-
-          // if there is a lick...
-          if (lickState == HIGH) {
-            // proceed to timeout state
-            t = micros();
-            Serial.print(trialStr);
-            Serial.print(t);
-            Serial.println(" EARLYABORT");
-            taskState = 7;
-            break;
-          }
-        }
-
-        // otherwise, if the mouse doesn't lick, wait for the response window
+        //        // start early abort timer
+        //        long abortTimer = millis();
+        //
+        //        while ( (millis() - abortTimer) < (long)3000 ) {
+        //          checkLick();
+        //
+        //          // if there is a lick...
+        //          if (lickState == HIGH) {
+        //            // proceed to timeout state
+        //            t = micros();
+        //            Serial.print(trialStr);
+        //            Serial.print(t);
+        //            Serial.println(" EARLYABORT");
+        //            taskState = 7;
+        //            break;
+        //          }
+        //        }
+        //
+        //        // otherwise, if the mouse doesn't lick, wait for the response window
+        //        if (taskState != 7) {
+        //          taskState = 4;
+        //        }
+        //        break;
         taskState = 4;
-        break;
       }
 
 
@@ -198,7 +201,7 @@ void loop() {
           Serial.print(t);
           Serial.println(" RESPON");
           lickTime = 0;
-          winState = LOW;
+          winState = HIGH;
           taskState = 5;
         }
         break;
@@ -227,7 +230,7 @@ void loop() {
           Serial.print(trialStr);
           Serial.print(respWinEnd);
           Serial.println(" RESPOFF");
-          winState = HIGH;
+          winState = LOW;
           if (trialType == 49) {
             Serial.print(trialStr);
             Serial.print(micros());
