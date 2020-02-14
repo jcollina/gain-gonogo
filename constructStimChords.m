@@ -14,6 +14,7 @@ if ~exist(params.stim,'file')
     for i = 1:params.nNoiseExemplars
         for j = 1:length(offset)
             for k = 1:length(params.targetDBShift)
+            
                 fprintf('Noise patt %02d, offset %1.2f, level %05.2f... ',i,offset(j) - params.baseNoiseD,params.targetDBShift(k));
                 tic
                 
@@ -23,14 +24,14 @@ if ~exist(params.stim,'file')
                     / params.chordDuration);
                 [amps, db] = makeDRCAmps(length(blockSamps),params.mu,params.sd,params.nTones,...
                     blockSamps,params.amp70);
-                
+                                
                 % make noise only
                 stim = makeContrastBlocks(params.fs,rs,cs,...
                     sum(blockSamps)*params.chordDuration,params.freqs,amps);
                 stimf{1,j,i,k} = conv(stim,params.filt,'same');
                 DB{1,j,i,k} = db;
                 AMPS{1,j,i,k} = amps;
-                
+                                
                 % add target to noise
                 chordoff = params.amp70 .* ...
                     10 .^ ((params.targetDBShift(k)+params.mu-70)./20);
