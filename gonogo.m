@@ -97,6 +97,9 @@ while cnt <= length(STAGE)
         case 5
             disp('RUNNING STAIRCASE');
             staircase(s,params);
+        case 999
+            disp('TRAINING DEBUG');
+            training_abort(s,params);
     end
     cnt = cnt + 1;
 end

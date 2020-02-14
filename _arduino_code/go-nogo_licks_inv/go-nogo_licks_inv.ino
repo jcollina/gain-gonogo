@@ -48,7 +48,7 @@ void setup() {
   digitalWrite(valvePin, valveState);
 
   // setup serial port
-  Serial.begin(19200);
+  Serial.begin(9600);
   Serial.read();
 
   // retrieve parameters from matlab

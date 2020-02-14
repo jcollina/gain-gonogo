@@ -4,14 +4,14 @@ delete(instrfindall);
 
 % load the arduino sketch
 if params.inverted
-    hexPath = [params.hex filesep 'go-nogo_abort_inv.ino.hex'];
+    hexPath = [params.hex filesep 'go-nogo_debug_inv.ino.hex'];
 else
     hexPath = [params.hex filesep 'go-nogo_licks.ino.hex'];
 end
 loadArduinoSketch(params.com,hexPath);
 
 % open the serial port
-p = setupSerialPort(params.com,9600);
+p = setupSerialPort(params.com,19200);
 
 % construct the stimuli
 params.noiseD = params.baseNoiseD + [.25 .5 .75 1];
@@ -54,13 +54,14 @@ end
 fid = fopen(fn,'w');
 
 fprintf('PRESS ANY KEY TO START...\n');
-KbWait;
+pause;
 
 % send params to arduino
 fprintf(p,'%f %f %f %f %d ',[params.holdD params.respD ...
     params.rewardDuration params.timeoutD params.debounceTime]);
 
 % trial loop
+abort = false;
 abortFlag = false;
 tt = [];
 cnt = 1;
@@ -74,8 +75,9 @@ while cnt < 2000
     
     if contains(out,'TRIAL')
         
-        % if the trial wasn't aborted, make a new trial
-        if ~abortFlag
+        if cnt == 1 || ~abort(cnt-1)
+            % if the last trial wasn't aborted, make a new trial
+
             % determine trial type
             tt(cnt,1) = rand > .5;
             
@@ -89,6 +91,10 @@ while cnt < 2000
             
             % determine noise pattern
             tt(cnt,3) = randi(size(stim,3),1);
+            
+        elseif cnt > 1
+            % if the last trial was aborted, redo the trial
+            tt(cnt,:) = tt(cnt-1,:);
             
         end
         
@@ -108,29 +114,33 @@ while cnt < 2000
         startOutput(s,params.device);
         
     elseif contains(out,'TOFF')
-        % make sure we're ready for the next trial
-        if s.ScansQueued > 0
-            stop(s);
-        end
+        % wait for the sound to end
+        wait(s);
         
-        if ~abortFlag
-            % plot the stuff if there wasn't an abort
-            plotOnline(tt,resp,runningAverage,tstr);
-            cnt = cnt + 1;
-        end
+        % indicate whether this trial was an abort trial and reset the
+        % abort index for the next trial
+        abort(cnt) = abortFlag;
+        abortFlag = false;
+        
+        % plot and update trial count
+        plotOnline(tt,resp,runningAverage,tstr);
+        cnt = cnt + 1;
         
     elseif contains(out,'REWARDON') || contains(out,'TOSTART')
-        % some response logic
-        resp(cnt) = 1;
-        
         % stop the stimulus if it is a timeout
-        if strcmp(params.device,'NIDAQ') || contains(params.device,'Lynx E44')
+        if contains(out,'TOSTART')
             stop(s);
         end
         
+        % some response logic
+        resp(cnt) = 1;
+                
     elseif contains(out,'EARLYABORT')
         % abort the trial for early licks
         stop(s);
+        
+        % mark as invalid response
+        resp(cnt) = nan;
         
         % start the abort flag
         abortFlag = true;
