@@ -187,4 +187,4 @@ rews = sum(resp(1:mn)'==1 & (tt(1:mn,1)>0) & abort(1:mn)' == 0);
 
 fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
 fprintf('\nReceived %03d rewards: %0.4f nL per reward (if  received 1 mL total)\n\n', ...
-    rews,1./rews*1000);
+    rews,1/rews*1000);
