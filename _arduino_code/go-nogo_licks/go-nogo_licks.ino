@@ -97,9 +97,6 @@ void setup() {
 
 void loop() {
   checkLick();
-  Serial.print(taskState);
-  Serial.println(winState);
-
 
   switch (taskState) {
 
