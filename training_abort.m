@@ -57,8 +57,8 @@ fprintf('PRESS ANY KEY TO START...\n');
 pause;
 
 % send params to arduino
-fprintf(p,'%f %f %f %f %d ',[params.holdD params.respD ...
-    params.rewardDuration params.timeoutD params.debounceTime]);
+fprintf(p,'%f %f %f %f %d %f',[params.holdD params.respD ...
+    params.rewardDuration params.timeoutD params.debounceTime params.baseNoiseD]);
 
 % trial loop
 abort = false;
@@ -120,10 +120,13 @@ while cnt < 2000
         % indicate whether this trial was an abort trial and reset the
         % abort index for the next trial
         abort(cnt) = abortFlag;
+        if abort(cnt)
+            resp(cnt) = 0;
+        end
         abortFlag = false;
         
         % plot and update trial count
-        plotOnline(tt,resp,runningAverage,tstr);
+        plotOnline(tt,resp,abort,runningAverage,tstr);
         cnt = cnt + 1;
         
     elseif contains(out,'REWARDON') || contains(out,'TOSTART')
@@ -138,9 +141,6 @@ while cnt < 2000
     elseif contains(out,'EARLYABORT')
         % abort the trial for early licks
         stop(s);
-        
-        % mark as invalid response
-        resp(cnt) = nan;
         
         % start the abort flag
         abortFlag = true;
@@ -160,7 +160,7 @@ if ~exist('resp','var')
 elseif ~exist('level','var')
     level = [];
 end
-save(mat,'params','tt','resp');
+save(mat,'params','tt','resp','abort');
 
 delete(instrfindall)
 if strcmp(params.device,'NIDAQ')
@@ -175,16 +175,16 @@ loadArduinoSketch(params.com,hexPath);
 % save figure
 f1 = figure(1);
 [~,tt,resp,~] = parseLog(fn);
-plotOnline(tt(:,1),resp,runningAverage,tstr);
+plotOnline(tt(:,1),resp,abort,runningAverage,tstr);
 print(f1,sprintf('%s_training_performance.png',params.fn),'-dpng','-r300');
 
 % compute percent correct
-if length(resp)==length(tt)
-    pc = sum(resp' == tt(:,1)) / length(resp);
-else
-   pc = sum(resp' == tt(1:length(resp),1)) / length(resp); 
-end
-rews = sum(resp'==1 & (tt(:,1)>0));
+mn = min([length(resp) length(tt)]);
+pc = sum((resp(1:mn)' == tt(1:mn,1)) & abort(1:mn) == 0) / sum(~abort(1:mn)); 
+
+% compute reward count
+rews = sum(resp(1:mn)'==1 & (tt(1:mn,1)>0) & abort == 0);
+
 fprintf('\n\nPERCENT CORRECT: %02.2f\n\n',pc);
 fprintf('\nReceived %03d rewards: %0.4f nL per reward (if  received 1 mL total)\n\n', ...
     rews,1/rews*1000);

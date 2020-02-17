@@ -10,6 +10,7 @@ int taskState = 0;                  // state of state machine
 int stimState = LOW;                // state of stimulus
 int rewardState = LOW;              // state of reward
 int timeoutState = LOW;             // state of timeout
+int abortState = LOW;               // state of early lick abort
 int winState = LOW;                 // state of response window
 int lickState;                      // state of lickport
 int lastLickState = LOW;            // state of last lickport sample
@@ -35,6 +36,7 @@ float holdTime;
 float respWin;
 float rewardDur;
 float timeoutDur;
+float abortTime;
 
 
 void setup() {
@@ -53,18 +55,19 @@ void setup() {
 
   // retrieve parameters from matlab
   int done = 0;
-  float val[5];
+  float val[6];
   while (!done) {
     while (Serial.available() > 0) {
       val[cnt] = Serial.parseFloat();
       cnt++;
-      if (cnt > 4) {
+      if (cnt > 5) {
         done = 1;
         holdTime = val[0];
         respWin = val[1];
         rewardDur = val[2];
         timeoutDur = val[3];
         debounceDelay = val[4];
+        abortTime = val[5];
 
         Serial.print("HOLDTIME ");
         Serial.println(val[0]);
@@ -76,13 +79,15 @@ void setup() {
         Serial.println(val[3]);
         Serial.print("DEBOUNCE ");
         Serial.println(val[4]);
+        Serial.print("ABORT ");
+        Serial.println(val[5]);
         break;
       }
     }
   }
 
   // initialize first trial
-  sprintf(trialStr,"%04d ",trialCnt);
+  sprintf(trialStr, "%04d ", trialCnt);
   Serial.print(trialStr);
   Serial.print(micros());
   Serial.print(" TRIAL");
@@ -97,9 +102,6 @@ void setup() {
 
 void loop() {
   checkLick();
-  Serial.print(taskState);
-  Serial.println(winState);
-
 
   switch (taskState) {
 
@@ -160,9 +162,36 @@ void loop() {
         break;
       }
 
+    // START A TIMER FOR EARLY TRIAL ABORT
+    case 3: {
+        // start early abort timer
+        long abortTimer = millis();
+
+        while ( (millis() - abortTimer) < (long)(abortTime * (float)1000) ) {
+          checkLick();
+
+          // if there is a lick...
+          if (lickState == HIGH) {
+            // proceed to timeout state
+            t = micros();
+            Serial.print(trialStr);
+            Serial.print(t);
+            Serial.println(" EARLYABORT");
+            taskState = 7;
+            break;
+          }
+        }
+
+        // otherwise, if the mouse doesn't lick, wait for the response window
+        if (taskState != 7) {
+          taskState = 4;
+        }
+        break;
+      }
+
 
     // WAIT FOR RESPONSE WINDOW
-    case 3: {
+    case 4: {
         // check the soundcard input for stim offset
         stimState = digitalRead(audioPin);
 
@@ -174,26 +203,26 @@ void loop() {
           Serial.println(" RESPON");
           lickTime = 0;
           winState = HIGH;
-          taskState = 4;
+          taskState = 5;
         }
         break;
       }
 
 
     // RESPONSE LOGIC
-    case 4: {
+    case 5: {
         if (lickTime > 0) {
           // if the most recent lick was in the window
           if (lickTime > t & lickTime < respWinEnd) {
             // and it was a signal trial
             if (trialType == 49) {
               // deliver reward
-              taskState = 5;
+              taskState = 6;
             }
             // and it was a noise trial
             else {
               // timeout
-              taskState = 6;
+              taskState = 7;
             }
           }
         }
@@ -214,14 +243,14 @@ void loop() {
             Serial.println(" CORRECTREJECT");
           }
           // go to beginning
-          taskState = 7;
+          taskState = 8;
         }
         break;
       }
 
 
     // REWARD
-    case 5: {
+    case 6: {
         // mark response window end
         if (winState == HIGH) {
           if (micros() > respWinEnd) {
@@ -251,13 +280,13 @@ void loop() {
           Serial.print(micros());
           Serial.println(" REWARDOFF");
           rewardState = LOW;
-          taskState = 7;
+          taskState = 8;
         }
         break;
       }
 
     // TIMEOUT
-    case 6: {
+    case 7: {
         // mark response window end
         if (winState == HIGH) {
           if (micros() > respWinEnd) {
@@ -275,9 +304,12 @@ void loop() {
           Serial.print(t);
           Serial.println(" TOSTART");
           timeoutState = HIGH;
+          
         }
+        
         // during timeout
         if (timeoutState == HIGH) {
+          
           // if there is a lick
           if (lickTime > t) {
             // reset the timeout
@@ -286,14 +318,17 @@ void loop() {
             Serial.print(trialStr);
             Serial.print(t);
             Serial.println(" TOSTART");
+            
           }
+          
           // if the timer expires
           if (micros() >= timeoutEnd) {
             // switch states
             Serial.print(trialStr);
             Serial.print(micros());
             Serial.println(" TOEND");
-            taskState = 7;
+            timeoutState = LOW;
+            taskState = 8;
           }
         }
         break;
@@ -301,7 +336,7 @@ void loop() {
 
 
     // TRIAL END
-    case 7: {
+    case 8: {
         // Wait for response window to end
         if (winState == HIGH) {
           if (micros() > respWinEnd) {
@@ -312,13 +347,12 @@ void loop() {
           }
         }
         if (winState == LOW) {
-          // wait 250ms, then print the trial end (this is to wait for the sound to stop playing)
-          delay(250);
+          // print the trial end
           Serial.print(trialStr);
           Serial.print(micros());
           Serial.println(" TOFF");
           trialCnt++;
-          sprintf(trialStr,"%04d ",trialCnt);
+          sprintf(trialStr, "%04d ", trialCnt);
           Serial.print(trialStr);
           Serial.print(micros());
           Serial.print(" TRIAL");
@@ -377,12 +411,12 @@ void checkLick() {
     // if the button state has changed:
     if (reading != lickState) {
       lickState = reading;
-      digitalWrite(lickEvents,lickState);
+      digitalWrite(lickEvents, lickState);
 
       // get timestamp for lick start
       if (lickState == HIGH) {
         lickTime = lastDebounceTime;
-        sprintf(trialStr,"%04d ",trialCnt);
+        sprintf(trialStr, "%04d ", trialCnt);
         Serial.print(trialStr);
         Serial.print(lickTime);
         Serial.println(" LICK");

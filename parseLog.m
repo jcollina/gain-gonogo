@@ -1,4 +1,4 @@
-function [t,trialType,response,RT] = parseLog(fn)
+function [t,trialType,response,RT,abort] = parseLog(fn)
 
 %fn = 'D:\GitHub\gain-gonogo\data\CA046\CA046_1707141235_testing.txt';
 % Open the logfile
@@ -33,6 +33,7 @@ for i = 1:length(tind)-1
         t(i).toStart = [tmpTimes(strcmp(tmpEvents,'TOSTART'))
             tmpTimes(strcmp(tmpEvents,'TOEND'))];
         t(i).condition = tmpEvents(contains(tmpEvents,'COND'));
+        t(i).abort = tmpEvents(contains(tmpEvents,'ABORT'));
                 
         % important variables
         if contains(t(i).condition{1},'-')
@@ -41,7 +42,13 @@ for i = 1:length(tind)-1
         else
             trialType(i,:) = str2num(t(i).condition{1}(end-2:end)')';
         end
-        response(i) = any(t(i).lickTimes > t(i).respWin(1) & t(i).lickTimes < t(i).respWin(2));
+        if isempty(t(i).abort)
+            response(i) = any(t(i).lickTimes > t(i).respWin(1) & t(i).lickTimes < t(i).respWin(2));
+            abort(i) = 0;
+        else
+            response(i) = false;
+            abort(i) = 1;
+        end
         
         % compute reaction time
         if response(i)

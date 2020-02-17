@@ -35,6 +35,7 @@ float holdTime;
 float respWin;
 float rewardDur;
 float timeoutDur;
+float abortTime;
 
 
 void setup() {
@@ -58,13 +59,14 @@ void setup() {
     while (Serial.available() > 0) {
       val[cnt] = Serial.parseFloat();
       cnt++;
-      if (cnt > 4) {
+      if (cnt > 5) {
         done = 1;
         holdTime = val[0];
         respWin = val[1];
         rewardDur = val[2];
         timeoutDur = val[3];
         debounceDelay = val[4];
+        abortTime = val[5];
 
         Serial.print("HOLDTIME ");
         Serial.println(val[0]);
@@ -76,6 +78,8 @@ void setup() {
         Serial.println(val[3]);
         Serial.print("DEBOUNCE ");
         Serial.println(val[4]);
+        Serial.print("ABORT ");
+        Serial.println(val[5]);
         break;
       }
     }
