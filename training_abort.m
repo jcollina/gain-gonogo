@@ -6,7 +6,7 @@ delete(instrfindall);
 if params.inverted
     hexPath = [params.hex filesep 'go-nogo_debug_inv.ino.hex'];
 else
-    hexPath = [params.hex filesep 'go-nogo_licks.ino.hex'];
+    hexPath = [params.hex filesep 'go-nogo_debug.ino.hex'];
 end
 loadArduinoSketch(params.com,hexPath);
 
