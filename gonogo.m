@@ -106,4 +106,4 @@ end
 
 close('all')
 close all
-clear all
+clear all 
