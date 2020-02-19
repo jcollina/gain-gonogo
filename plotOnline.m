@@ -72,7 +72,7 @@ if length(tt) > 1
     plot(1:length(abort),pabort,'k','LineWidth',lw);
     ylabel('p(Abort)');
     xlabel('Trial')
-    ylim([0 l]);
+    ylim([0 1]);
     grid on
     
     drawnow
