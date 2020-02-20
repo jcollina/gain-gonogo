@@ -1,6 +1,6 @@
 function [params,mdl,threshold,sensitivity,FIT] = fitLogistic(x,y)
 
-%% function [params,mdl,FIT] = fitLogistic(x,y)
+%% function [params,mdl,threshold,sensitivity,FIT] = fitLogistic(x,y)
 %
 % This function fits a psychometric curve to data using a logistic
 % function: 
