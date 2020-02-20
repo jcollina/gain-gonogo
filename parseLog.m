@@ -1,5 +1,7 @@
 function [t,trialType,response,RT,abort] = parseLog(fn)
 
+%% function [t,trialType,response,RT,abort] = parseLog(fn)
+
 %fn = 'D:\GitHub\gain-gonogo\data\CA046\CA046_1707141235_testing.txt';
 % Open the logfile
 fid = fopen(fn,'r');
