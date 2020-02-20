@@ -1,9 +1,36 @@
+dp = [];
+dp1 = [];
+rate = [];
+fa = [];
+for i = 1:length(dat)
+    
+    % first entry is all zeros... remove
+    tmp = dat(i).offset.dprime(:,:,2:end); 
+    
+    dp(i,1,:) = nanmean(squeeze(tmp(1,:,dat(i).offset.contrast==1)),2);
+    dp(i,2,:) = nanmean(squeeze(tmp(1,:,dat(i).offset.contrast==2)),2);
+    dp1(i,1,:) = nanmean(squeeze(tmp(2,:,dat(i).offset.contrast==1)),2);
+    dp1(i,2,:) = nanmean(squeeze(tmp(2,:,dat(i).offset.contrast==2)),2);
+    
+    % hit rate
+    tmp = dat(i).offset.hr(:,:,2:end); 
+    rate(i,1,:) = nanmean(squeeze(tmp(1,:,dat(i).offset.contrast==1)),2);
+    rate(i,2,:) = nanmean(squeeze(tmp(1,:,dat(i).offset.contrast==2)),2);
+    
+     % fa
+    tmp = dat(i).offset.fa; 
+    fa(i,1,:) = nanmean(squeeze(tmp(:,dat(i).offset.contrast==1)),2);
+    fa(i,2,:) = nanmean(squeeze(tmp(:,dat(i).offset.contrast==2)),2);
+    
+end
+
+
 % mouse averaged dprime
 t = [.025 .05 .1 .25 .5 1];
-nLoHi = sum(~isnan(dp(:,1,:)));
+nLoHi = max(sum(~isnan(dp(:,1,:))));
 mLoHi = nanmean(dp(:,1,:));
 sLoHi = nanstd(dp(:,1,:)) ./ sqrt(nLoHi);
-nHiLo = sum(~isnan(dp(:,2,:)));
+nHiLo = max(sum(~isnan(dp(:,2,:))));
 mHiLo = nanmean(dp(:,2,:));
 sHiLo = nanstd(dp(:,2,:)) ./ sqrt(nHiLo);
 
@@ -26,10 +53,10 @@ hold off
 
 % mouse averaged dprime at highest level
 t = [.025 .05 .1 .25 .5 1];
-nLoHi = sum(~isnan(dp1(:,1,:)));
+nLoHi = max(sum(~isnan(dp1(:,1,:))));
 mLoHi = nanmean(dp1(:,1,:));
 sLoHi = nanstd(dp1(:,1,:)) ./ sqrt(nLoHi);
-nHiLo = sum(~isnan(dp1(:,2,:)));
+nHiLo = max(sum(~isnan(dp1(:,2,:))));
 mHiLo = nanmean(dp1(:,2,:));
 sHiLo = nanstd(dp1(:,2,:)) ./ sqrt(nHiLo);
 
@@ -51,17 +78,17 @@ hold off
 
 % mouse averaged hit rate at threshold
 t = [.025 .05 .1 .25 .5 1];
-nLoHi = sum(~isnan(rate(:,1,:)));
+nLoHi = max(sum(~isnan(rate(:,1,:))));
 mLoHi = nanmean(rate(:,1,:));
 sLoHi = nanstd(rate(:,1,:)) ./ sqrt(nLoHi);
-nHiLo = sum(~isnan(rate(:,2,:)));
+nHiLo = max(sum(~isnan(rate(:,2,:))));
 mHiLo = nanmean(rate(:,2,:));
 sHiLo = nanstd(rate(:,2,:)) ./ sqrt(nHiLo);
 
-nfaLoHi = sum(~isnan(fa(:,1,:)));
+nfaLoHi = max(sum(~isnan(fa(:,1,:))));
 mfaLoHi = nanmean(fa(:,1,:));
 sfaLoHi = nanstd(fa(:,1,:)) ./ sqrt(nfaLoHi);
-nfaHiLo = sum(~isnan(fa(:,2,:)));
+nfaHiLo = max(sum(~isnan(fa(:,2,:))));
 mfaHiLo = nanmean(fa(:,2,:));
 sfaHiLo = nanstd(fa(:,2,:)) ./ sqrt(nfaHiLo);
 
