@@ -93,7 +93,7 @@ while cnt <= length(STAGE)
             testingOffsets(s,params);
         case 4
             disp('RUNNING TESTING W. OPTO');
-            testing_opto(s,params);
+            testing_opto_abort(s,params);
         case 5
             disp('RUNNING STAIRCASE');
             staircase(s,params);

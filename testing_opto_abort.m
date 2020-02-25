@@ -11,7 +11,7 @@ end
 loadArduinoSketch(params.com,hexPath);
 
 % open the serial port
-p = setupSerialPort(params.com,9600);
+p = setupSerialPort(params.com,19200);
 
 % custom parameters
 params.noiseD = params.baseNoiseD + [.25 .5 .75 1];  % target times
@@ -75,7 +75,7 @@ end
 fid = fopen(fn,'w');
 
 fprintf('PRESS ANY KEY TO START...\n');
-KbWait;
+pause;
 
 params.timeoutD = 10;
 
@@ -83,6 +83,8 @@ params.timeoutD = 10;
 fprintf(p,'%f %f %f %f %d %f',[params.holdD params.respD ...
     params.rewardDuration params.timeoutD params.debounceTime params.baseNoiseD]);
 
+abort = false;
+abortFlag = false;
 tt = [];
 cnt = 1;
 runningAverage = 20;
@@ -206,7 +208,7 @@ if ~exist('resp','var')
 elseif ~exist('level','var')
     level = [];
 end
-save(mat,'params','tt','resp','level','abort'););
+save(mat,'params','tt','resp','level','abort');
 
 % close everything
 delete(instrfindall)
@@ -222,7 +224,7 @@ loadArduinoSketch(params.com,hexPath);
 
 % plot performance over time and save
 f1 = figure(1);
-[~,tt,resp,~] = parseLog(fn);
+[~,tt,resp,~,abort] = parseLog(fn);
 plotOnline(tt(:,1),resp,abort,runningAverage,tstr);
 print(f1,sprintf('%s_testing_performance.png',params.fn),'-dpng','-r300');
 
