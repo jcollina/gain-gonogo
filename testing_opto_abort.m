@@ -15,8 +15,10 @@ p = setupSerialPort(params.com,19200);
 
 % custom parameters
 params.noiseD = params.baseNoiseD + [.25 .5 .75 1];  % target times
-params.optoTime = [-0.05 .075];                      % opto timing (s relative to target onset)
-%[.05 .1 .25 .5 1];
+%params.optoTime = [-0.05 .075];                     % opto timing (s relative to target onset)
+params.optoStim = '25Hz, 5ms pulse';
+params.optoStart = params.baseNoiseD - .1;           % pulse start relative to trial start
+
 % target volumes
 if params.sd(2) - params.sd(1) > 0
     params.targetDBShift = linspace(0,25,6);
@@ -35,11 +37,28 @@ params.stim = fullfile('D:\stimuli\gainBehavior',...
     params.boothID));
 [stim, events, params.target, params.targetF] = constructStimChords(params);
 
+% opto pulse (25Hz = 5ms on, 35ms off)
+pulse = [ones(round(.005*params.fs),1); zeros(round(.035*params.fs),1)]' * .5;
+
 % pregenerate opto traces
 for i = 1:length(events)
-    I = params.noiseD(i) + params.optoTime;
-    opto{i} = zeros(size(events{i}));
-    opto{i}(I(1)*params.fs:I(2)*params.fs) = .5;
+    I = params.optoStart;
+    
+    nreps = floor((size(events{i},2)/params.fs - I) * 25);
+    
+    % make a pulse train
+    pulseTrain = repmat(pulse,1,nreps);
+    
+    % pad with zeros
+    pulseTrain = [zeros(1,I*params.fs) pulseTrain];
+    
+    % if the stimulus isn't evenly divided by the pulses, pad with zeros
+    if length(pulseTrain) ~= length(events{i})
+        pad = length(events{i}) - length(pulseTrain);
+        pulseTrain = [pulseTrain zeros(1,pad)];
+    end
+    
+    opto{i} = pulseTrain;
 end
 
 % shuffle the seed to make the trials random each time, but save the state
@@ -48,9 +67,9 @@ params.rngState = rng('shuffle');
 
 % presentation probabilities
 params.offsetP = [.25 .25 .25 .25];
-%[.2 .2 .2 .2 .2];
-params.dbP = [.4 .05 .05 .05 .05 .2 .2];
+%params.dbP = [.4 .05 .05 .05 .05 .2 .2];
 %params.dbP = [.3 .1 .1 .1 .1 .15 .15];
+params.dbP = [.3 .1 .1 .1 .1 .1 .2];
 params.optoP = [.5 .5];
 
 % open data file
