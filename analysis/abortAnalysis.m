@@ -46,12 +46,12 @@ for m = 1:length(mouseList)
         trialType(abort == 1,:) = [];
         
         % remove trials where the mouse stopped licking
-        [~,~,~,~,goodIdx] = computePerformanceGoNoGo(response,trialType,1,7);
+        [~,~,~,~,goodIdx] = computePerformanceGoNoGo(response,trialType(:,1)>0,1,7);
         response = response(goodIdx==1);
         trialType = trialType(goodIdx==1,:);
         
         % compute performance on remaining trials
-        [hr(i),fa(i),dp(i),pc(i)] = computePerformanceGoNoGo(response,trialType,20,7);
+        [hr(i),fa(i),dp(i),pc(i)] = computePerformanceGoNoGo(response,trialType(:,1)>0,20,7);
 
         % how many total trials did the mice do?
         nTrials(i) = length(tt);
