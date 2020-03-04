@@ -1,0 +1,3 @@
+boothID,comport,reward_duration(s),debounce(ms),device,channels,samplerate,filterfile,amplification,inverted
+booth2,COM3,.09,1000,2- Lynx E44,[1 2],192e3,booth1-170727-wdsfilter-192kHz,10/11,false
+
