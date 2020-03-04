@@ -29,6 +29,8 @@ for i = 1:length(files)
             fileInd(cnt,2) = 3;
         elseif contains(files(i).name,'_optoTesting')
             fileInd(cnt,2) = 4;
+        elseif contains(files(i).name,'threshold_opto')
+            fileInd(cnt,2) = 5;
         end
         
         % extract dates
