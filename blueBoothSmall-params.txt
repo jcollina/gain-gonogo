@@ -1,3 +1,0 @@
-boothID,comport,reward_duration(s),debounce(ms),device,channels,samplerate,filterfile,amplification,inverted
-bluerec1,COM6,.045,100,NIDAQ,[0 1],200e3,190912_SmallBlueBooth_NIDAQ_1k-80k_fs200k,10,true
-

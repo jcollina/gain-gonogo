@@ -17,13 +17,14 @@ if nargin < 1 || ~exist('ID','var')
     ID = 'CA999';
 end
 
+addpath(genpath('_analysis'));
+addpath(genpath('_task'));
+addpath(genpath('_thresholds'));
 
-addpath(genpath('Palamedes'));
-addpath(genpath('analysis'));
 
 %% SETUP
 % load parameter file for this computer
-[params fs] = loadParameters(paramFile);
+[params fs] = loadParameters(fullfile('_params',paramFile));
 
 % setup sound output device
 [s,params.fs] = setupSoundOutput(fs,params.device,params.channel);
@@ -31,7 +32,7 @@ addpath(genpath('analysis'));
 % directory stuff:
 params.IDstr    = ID;
 params.base     = pwd;
-params.data     = [pwd filesep 'data' filesep params.IDstr];
+params.data     = [pwd filesep '_data' filesep params.IDstr];
 params.hex      = [pwd filesep '_hex'];
 params.stage    = STAGE;
 params.filtdir  = 'D:\GitHub\filters';
@@ -85,25 +86,28 @@ while cnt <= length(STAGE)
         case 1
             disp('RUNNING TRAINING');
             training(s,params);
+        case 10
+            disp('RUNNING TRAINING W. ABORT');
+            training_abort(s,params);
         case 2
             disp('RUNNING TESTING');
-            testing(s,params);
+            psych(s,params);
         case 20
             disp('RUNNING TESTING W. ABORT');
-            testing_abort(s,params);
+            psych_abort(s,params);
         case 21
             disp('RUNNING TESTING W. OPTO');
             params.opto = true;
-            testing_opto_abort(s,params);
+            psych_opto_abort(s,params);
         case 3
             disp('RUNNING OFFSET TESTING');
-            testingOffsets(s,params);
+            offsets(s,params);
+        case 31
+            disp('RUNNING THRESHOLD-OPTO TESTING');
+            threshold_opto_abort(s,params);
         case 5
             disp('RUNNING STAIRCASE');
             staircase(s,params);
-        case 999
-            disp('TRAINING DEBUG');
-            training_abort(s,params);
     end
     cnt = cnt + 1;
 end
