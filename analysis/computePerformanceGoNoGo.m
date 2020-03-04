@@ -1,6 +1,6 @@
 function [hr,fa,dp,pc,goodIdx] = computePerformanceGoNoGo(resp,ttype,start,crit,respThresh)
     
-%% function [hr,fa,dp,pc] = computePerformance(resp,ttype,truncate)
+%% function [hr,fa,dp,pc,goodIdx] = computePerformanceGoNoGo(resp,ttype,start,crit,respThresh)
 % 
 % This function takes a vector of "yes/no" responses [resp] and a
 % vector of "present/absent" trials [ttype] to compute the hit rate, false
