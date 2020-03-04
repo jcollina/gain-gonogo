@@ -77,8 +77,8 @@ params.optoP = [.5 .5];
 dt = datestr(now,'yymmddHHMM');
 params.IDsess   = [params.IDstr '_' dt];
 params.fn       = [params.data filesep params.IDsess];
-fn = [params.fn '_threshold_opto.txt'];
-mat = [params.fn '_threshold_opto.mat'];
+fn = [params.fn '_threshold-opto.txt'];
+mat = [params.fn '_threshold-opto.mat'];
 
 % graph title
 tstr = sprintf('%s - %s (%s)\nThreshold-Opto Performance (thresh = %s)',...
