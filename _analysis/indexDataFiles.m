@@ -35,7 +35,7 @@ for i = 1:length(files)
         
         % extract dates
         tmp = strfind(fileList{cnt},'_');
-        dateStr = str2num(fileList{cnt}(tmp(1)+1:tmp(2)-1));
+        dateStr = str2num(fileList{cnt}(tmp(2)+1:tmp(3)-1));
         fileInd(cnt,3) = floor(dateStr/10000);
         
         % add number of trials
