@@ -13,7 +13,7 @@ loadArduinoSketch(params.com,hexPath);
 % open the serial port
 p = setupSerialPort(params.com,9600);
 
-params.noiseD = params.baseNoiseD + [.025 .05 .1 .25 .5 1];
+params.noiseD = params.baseNoiseD + [.05 .1 .25 .5 1];
 rng(params.seed); % (to make the same stimulus each time)
 
 % extract threshold from file

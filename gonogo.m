@@ -102,6 +102,9 @@ while cnt <= length(STAGE)
         case 3
             disp('RUNNING OFFSET TESTING');
             offsets(s,params);
+        case 30
+            disp('RUNNING OFFSET TESTING W. ABORT');
+            offsets_abort(s,params);
         case 31
             disp('RUNNING THRESHOLD-OPTO TESTING');
             threshold_opto_abort(s,params);
