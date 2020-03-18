@@ -4,9 +4,9 @@ delete(instrfindall);
 
 % load the arduino sketch
 if params.inverted
-    hexPath = [params.hex filesep 'go-nogo_debug_inv.ino.hex'];
+    hexPath = [params.hex filesep 'go-nogo_abort_selectReward_inv.ino.hex'];
 else
-    hexPath = [params.hex filesep 'go-nogo_debug.ino.hex'];
+    hexPath = [params.hex filesep 'go-nogo_abort_selectReward.ino.hex'];
 end
 loadArduinoSketch(params.com,hexPath);
 
@@ -25,6 +25,9 @@ else
 end
 params.targetDBShift = [thresh params.targetDBShift];
 disp(['Threshold = ' num2str(thresh)]);
+
+% target times
+params.noiseD = params.baseNoiseD + [.05 .1 .25 .5 1];
 
 % make stimuli
 rng(params.seed); % (to make the same stimulus each time)
@@ -46,9 +49,6 @@ params.dbP = [.3 .3 .4];
 
 % reward contingency on volumes
 params.rewCont = [0 2 1]; % 0 == timeout, 2 == no reward, 1 == reward
-
-% target times
-params.noiseD = params.baseNoiseD + [.05 .1 .25 .5 1];
 
 % open data file
 dt = datestr(now,'yymmddHHMM');
@@ -139,7 +139,7 @@ while cnt < 1e6
         end
         
         % send trial type to arduino
-        fprintf(p,'%d',double(params.rewCont(tt(cnt,1)+1));
+        fprintf(p,'%d',double(params.rewCont(tt(cnt,1)+1)));
                 
         % queue stimulus
         if tt(cnt,1) == 0
@@ -175,7 +175,7 @@ while cnt < 1e6
         plotOnline(tt,resp,abort,runningAverage,tstr);
         cnt = cnt + 1;
         
-    elseif contains(out,'REWARDON') || contains(out,'TOSTART')
+    elseif contains(out,'REWARDON') || contains(out,'TOSTART') || contains(out,'HIT')
         % some response logic
         resp(cnt) = 1;
         

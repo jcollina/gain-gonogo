@@ -4,9 +4,9 @@ delete(instrfindall);
 
 % load the arduino sketch
 if params.inverted
-    hexPath = [params.hex filesep 'go-nogo_debug_inv.ino.hex'];
+    hexPath = [params.hex filesep 'go-nogo_abort_selectReward_inv.ino.hex'];
 else
-    hexPath = [params.hex filesep 'go-nogo_debug.ino.hex'];
+    hexPath = [params.hex filesep 'go-nogo_abort_selectReward.ino.hex'];
 end
 loadArduinoSketch(params.com,hexPath);
 
@@ -43,6 +43,9 @@ params.offsetP = [.25 .25 .25 .25];
 %[.2 .2 .2 .2 .2];
 %params.dbP = [.4 .05 .05 .05 .05 .2 .2];
 params.dbP = [.3 .1 .1 .1 .1 .1 .2];
+
+% reward contingency
+params.rewCont = [0 2 2 2 2 1 1]; % 0 == timeout, 2 == no reward, 1 == reward
 
 % open data file
 dt = datestr(now,'yymmddHHMM');
@@ -134,8 +137,8 @@ while cnt < 1e6
         end
         
         % send trial type to arduino
-        fprintf(p,'%d',double(tt(cnt,1)>0));
-                
+        fprintf(p,'%d',double(params.rewCont(tt(cnt,1)+1)));
+        
         % queue stimulus
         if tt(cnt,1) == 0
             lvl = randi(size(stim,1));
@@ -170,7 +173,7 @@ while cnt < 1e6
         plotOnline(tt,resp,abort,runningAverage,tstr);
         cnt = cnt + 1;
         
-    elseif contains(out,'REWARDON') || contains(out,'TOSTART')
+    elseif contains(out,'REWARDON') || contains(out,'TOSTART') || contains(out,'HIT')
         % some response logic
         resp(cnt) = 1;
         

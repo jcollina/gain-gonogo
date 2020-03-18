@@ -403,7 +403,7 @@ void loop() {
 
 void checkLick() {
   // read the state of the switch into a local variable:
-  int reading = !digitalRead(buttonPin);
+  int reading = digitalRead(buttonPin);
 
   // check to see if you just pressed the button
   // (i.e. the input went from LOW to HIGH),  and you've waited
