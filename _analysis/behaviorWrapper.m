@@ -1,13 +1,12 @@
-
-% find psychometric functions
-addpath(genpath('../Palamedes/'));
-addpath(genpath('~/chris-lab/code_general'));
+addpath(genpath('~/chris-lab/code_general/'));
+addpath(genpath('~/gits/gain-gonogo/'));
 
 %% process all mice
 mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055',...
              'CA061','CA070','CA072','CA073','CA074','CA075','CA102',...
              'CA104','CA106','CA107'};
 %mouseList = {'CA102','CA104','CA106','CA107'};
+mouseList = {'CA118','CA119','CA121','CA122'};
 faCutoff = 1;
 
 for i = 1:length(mouseList)

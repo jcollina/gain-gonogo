@@ -2,7 +2,7 @@ function [dat, threshold] = behaviorAnalysis(ID,faCut)
 
 disp(['ANALYZING MOUSE ' ID]);
 
-baseDir = ['..' filesep 'data'];
+baseDir = ['..' filesep '_data'];
 dataDir = [baseDir filesep ID];
 
 taskStr = {'LoHi','HiLo'};
@@ -266,6 +266,8 @@ for i = 1:2
         mfa(i,:) = nanmean(fa);
     end
 end
+
+
 
 set(f1,'PaperPositionMode','auto');         
 set(f1,'PaperOrientation','landscape');

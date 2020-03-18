@@ -2,8 +2,8 @@ function plotPsychometric_task(tt,resp,abort,params)
  
 %% function plotPsychometric_task(tt,resp,abort,params)
 %
-% fn = '~/gits/gain-gonogo/_data/CA119/CA119_2003181107_testing.txt';
-% load('~/gits/gain-gonogo/_data/CA119/CA119_2003181107_testing.mat','params')
+% fn = '~/gits/gain-gonogo/_data/CA117/CA117_2003181244_optoTesting.txt';
+% load('~/gits/gain-gonogo/_data/CA117/CA117_2003181244_optoTesting.mat','params')
 % 
 % [~,tt,resp,~,abort] = parseLog(fn);
 
