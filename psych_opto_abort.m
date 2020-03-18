@@ -247,7 +247,12 @@ loadArduinoSketch(params.com,hexPath);
 f1 = figure(1);
 [~,tt,resp,~,abort] = parseLog(fn);
 plotOnline(tt(:,1),resp,abort,runningAverage,tstr);
-print(f1,sprintf('%s_testing_performance.png',params.fn),'-dpng','-r300');
+print(f1,sprintf('%s_opto-testing_performance.png',params.fn),'-dpng','-r300');
+
+f2 = figure(2);
+plotPsychometric_task(tt,resp,abort,params)
+title(sprintf('%s Psychometric Curve\n%s - %s',params.IDsess,params.contrastCondition,params.boothID));
+print(f2,sprintf('%s_opto-testing_curve.png',params.fn),'-dpng','-r300');
 
 % compute percent correct
 mn = min([length(resp) length(tt)]);
