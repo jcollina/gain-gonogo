@@ -222,6 +222,12 @@ f1 = figure(1);
 plotOnline(tt(:,1),resp,abort,runningAverage,tstr);
 print(f1,sprintf('%s_offsetTesting_performance.png',params.fn),'-dpng','-r300');
 
+% and psychometric performance
+f2 = figure(2);
+plotOffsets_task(tt,resp,abort,params);
+title(sprintf('%s Offset Curve',params.IDsess));
+print(f2,sprintf('%s_offsetTesting_curve.png',params.fn),'-dpng','-r300');
+
 % compute percent correct
 mn = min([length(resp) length(tt)]);
 pc = sum((resp(1:mn)' == (tt(1:mn,1)>0)) & ~abort(1:mn)') ./ sum(~abort(1:mn)); 

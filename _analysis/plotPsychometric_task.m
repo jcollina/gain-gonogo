@@ -53,31 +53,39 @@ else
     colour = [1 0 0];
 end
 
-xfit = linspace(min(params.targetDBShift),max(params.targetDBShift),100);
+vols = params.targetDBShift;
+xfit = linspace(min(vols),max(vols),100);
+dbDiff = mean(diff(vols));
 
 hold on
 for i = 1:length(uL)
     
     if uL(i) == 1
         pcolor = [63 209 212] / 255;
+        style = 'o';
+        sz = 30;
     else
         pcolor = colour;
+        style = '.';
+        sz = 200;
     end
     
-    scatter(params.targetDBShift,nresp(i,2:end)./ntrials(i,2:end),...
-           35,pcolor,'filled');
+    scatter(vols,nresp(i,2:end)./ntrials(i,2:end),...
+           sz,pcolor,style);
     plot(xfit,mdl(p(i,:),xfit),'Color',pcolor,'LineWidth',1);
-    scatter(params.targetDBShift(1)-mean(diff(params.targetDBShift)),...
-            nresp(i,1)./ntrials(i,1),35,[.5 .5 .5],'filled');
+    s = scatter(vols(1)-dbDiff,...
+                nresp(i,1)./ntrials(i,1),sz,pcolor,style);
+    
     
     % if threshold is within the plot range, plot it
-    if threshold(i) > params.targetDBShift(1) & threshold(i) < params.targetDBShift(end)
+    if threshold(i) > vols(1) & threshold(i) < vols(end)
         plot([threshold(i) threshold(i)],[0 mdl(p(i,:),threshold(i))],'--',...
              'Color',pcolor)
     end
     
 end
 ylim([0 1])
+xlim([min(vols)-2*dbDiff max(vols)+dbDiff])
 ylabel('Response Rate')
 xlabel('Target Volume (dB SNR)')
     
