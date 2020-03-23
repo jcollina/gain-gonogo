@@ -71,8 +71,8 @@ for i = 1:2
         f2 = figure(2); clf;
         [rate,fa,dp,nresp,ntrials,threshold(i),f,snr] = ...
             psychAnalysis(fileList(I),fileInd(I,:));
-
-        ind = fa < faCut;
+        
+        ind = fa < faCut & (sum(nresp,2) ./ sum(ntrials,2))' > .5;
         if sum(ind) == 0
             continue;
         end

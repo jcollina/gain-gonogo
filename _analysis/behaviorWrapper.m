@@ -9,6 +9,7 @@ mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055',...
 mouseList = {'CA118','CA119','CA121','CA122'};
 faCutoff = 1;
 
+threshold = nan(length(mouseList),2);
 for i = 1:length(mouseList)
     [dat(i) threshold(i,:)] = ...
         behaviorAnalysis(mouseList{i},faCutoff);

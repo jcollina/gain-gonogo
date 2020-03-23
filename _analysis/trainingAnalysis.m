@@ -9,18 +9,25 @@ function [dprime,pcorrect,dpOffset,pcOffset,day,hitrate,farate] = ...
 disp('Analyzing training sessions...');
 for i = 1:length(fileList)
     % load the data
+    abort = [];
     load(fileList{i})
     fprintf('\t%i\n',fileInd(i,3));
     
+     % make empty abort variable if there is none
+    if isempty(abort)
+        abort = zeros(size(resp));
+    end
+    
     % remove erroneous trials
-    [mn mi] = min([length(tt) length(resp)]);
+    [mn mi] = min([length(tt) length(resp) length(abort)]);
     response = resp(1:mn)';
     trialType = tt(1:mn,:);
+    abort = abort(1:mn)';
     
     % compute averages and remove early end anding trials
     [hr,fa,dp,pc,goodIdx] = computePerformanceGoNoGo(response,trialType,20,7);
-    response = response(goodIdx==1);
-    trialType = trialType(goodIdx==1,:);    
+    response = response(goodIdx==1&~abort');
+    trialType = trialType(goodIdx==1&~abort',:);    
     
     % compute performance for each offset
     offsets = unique(trialType(:,2));

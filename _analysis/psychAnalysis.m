@@ -17,19 +17,26 @@ dp = [];
 fa = [];
 for i = 1:length(fileList)
     % load the data (and get the date and snr values used)
+    abort = [];
     load(fileList{i})
     snr(i,:) = params.targetDBShift;
     fprintf('\t%i\n',fileInd(i,3));
     
+    % make empty abort variable if there is none
+    if isempty(abort)
+        abort = zeros(size(resp));
+    end
+    
     % remove erroneous trials
-    [mn mi] = min([length(tt) length(resp)]);
+    [mn mi] = min([length(tt) length(resp) length(abort)]);
     response = resp(1:mn)';
     trialType = tt(1:mn,:);
+    abort = abort(1:mn)';
     
     % compute averages and remove early end anding trials
     [~,~,~,~,goodIdx] = computePerformanceGoNoGo(response,trialType,1,7);
-    response = response(goodIdx==1);
-    trialType = trialType(goodIdx==1,:);  
+    response = response(goodIdx==1 & abort' == 0);
+    trialType = trialType(goodIdx==1 & abort' == 0,:);  
     
     % compute stats
     [nresp(i,:),ntrials(i,:),rate(i,:),dp(i,:),fa(i)] = ...
