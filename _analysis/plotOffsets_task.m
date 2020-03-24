@@ -2,8 +2,8 @@ function plotOffsets_task(tt,resp,abort,params)
  
 %% function plotOffsets_task(tt,resp,abort,params)
 %
-% fn = '~/gits/gain-gonogo/_data/CA117/CA117_2003041454_threshold-opto.txt';
-% load('~/gits/gain-gonogo/_data/CA117/CA117_2003041454_threshold-opto.mat','params')
+% fn = 'D:\GitHub\gain-gonogo\_data\CA118\CA118_2003241240_offsetTesting.txt';
+% load('D:\GitHub\gain-gonogo\_data\CA118\CA118_2003241240_offsetTesting.mat','params')
 % 
 % [~,tt,resp,~,abort] = parseLog(fn);
 
@@ -36,7 +36,10 @@ for i = 1:length(uL)
     for j = 1:length(uV)
         for k = 1:length(uT)
         
-            I = all(tt(:,[1 2 4]) == [uV(j) uT(k) uL(i)],2) & include;
+            I = tt(:,1) == uV(j) & ...
+                tt(:,2) == uT(k) & ...
+                tt(:,4) == uL(i) & ...
+                include;
             
             nresp(i,j,k) = sum(response(I));
             ntrials(i,j,k) = sum(I);
@@ -61,6 +64,7 @@ vols = [params.targetDBShift(1) - 5 params.targetDBShift];
 grad = [linspace(colour2(1),colour1(1),length(vols))' ...
         linspace(colour2(2),colour1(2),length(vols))' ...
         linspace(colour2(3),colour1(3),length(vols))'];
+    grad = [.5 .5 .5; colour1; colour2];
 
 
 hold on
