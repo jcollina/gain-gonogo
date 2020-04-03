@@ -20,7 +20,7 @@ params.noiseD = params.baseNoiseD + [.25 .5 .75 1];  % target times
 if params.sd(2) - params.sd(1) > 0
     params.targetDBShift = linspace(0,25,6);
 else
-    params.targetDBShift = linspace(-5,20,6);
+    params.targetDBShift = linspace(0,25,6);
 end
 
 % set the seed
