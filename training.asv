@@ -108,7 +108,7 @@ while cnt < 2000
         end
         % plot the stuff
         abort(cnt) = 0;
-        plotOnline(tt,resp,abort,runningAverage,tstr);
+        plotOnline(tt,resp,runningAverage,tstr);
         cnt = cnt + 1;
     elseif contains(out,'REWARDON') || contains(out,'TOSTART')
         % some response logic
@@ -149,7 +149,7 @@ loadArduinoSketch(params.com,hexPath);
 % save figure
 f1 = figure(1);
 [~,tt,resp,~] = parseLog(fn);
-plotOnline(tt(:,1),resp,abort,runningAverage,tstr);
+plotOnline(tt(:,1),resp,runningAverage,tstr);
 print(f1,sprintf('%s_training_performance.png',params.fn),'-dpng','-r300');
 
 % compute percent correct
