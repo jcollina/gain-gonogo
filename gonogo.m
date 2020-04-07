@@ -63,7 +63,7 @@ elseif strcmp(condition,'hilo')
     params.sd = [15 5];
 end
 params.contrastCondition = condition;
-params.stimVersion = '200305';
+params.stimVersion = '200406';
 params.chordDuration = .025;
 params.nNoiseExemplars = 5;
 params.postTargetTime = 1;
