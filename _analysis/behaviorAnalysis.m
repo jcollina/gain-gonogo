@@ -112,9 +112,10 @@ for i = 1:2
         x = snr(:);
         y = nresp(:) ./ ntrials(:);
                 
+        % weighted fit
+        [params,mdl,fthresh,sensitivity,FIT] = fitLogistic(x,y,[],[],[],ntrials(:));
         %f = psychometricFit(resp,trials,snr(1,:),mean(fa));
-        [params,mdl,fthresh,sensitivity,FIT] = fitLogistic(x,y);
-                   
+                           
         fx = linspace(min(x),max(x),100);
         fy = mdl(params,fx);
         [~,tind] = min(abs(fx-fthresh));

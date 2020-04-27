@@ -38,8 +38,9 @@ function [rate,fa,dp,snr,offsets] = offsetAnalysis(fileList,fileInd,faCut)
         trialType = trialType(goodIdx==1&~abort,:);
                 
         % compute stats
-        lvls = unique(trialType(:,1));
-        offs = unique(trialType(:,2));
+        lvls = unique(tt(:,1));
+        offs = unique(tt(:,2));
+        r = nan(length(lvls),length(offs));
         for j = 1:length(lvls)
             for k = 1:length(offs)
                 ind = trialType(:,1) == lvls(j) & ...

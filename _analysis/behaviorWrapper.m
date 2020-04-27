@@ -7,7 +7,7 @@ mouseList = {'CA046','CA047','CA048','CA049','CA051','CA052','CA055',...
              'CA104','CA106','CA107'};
 %mouseList = {'CA102','CA104','CA106','CA107'};
 mouseList = {'CA118','CA119','CA121','CA122'};
-faCutoff = 1;
+faCutoff = .3;
 
 threshold = nan(length(mouseList),2);
 for i = 1:length(mouseList)
@@ -20,6 +20,8 @@ lineColor = [1 0 0; 0 0 1];
 
 % n mice
 n = size(dat);
+
+keyboard
 
 
 %% training figures

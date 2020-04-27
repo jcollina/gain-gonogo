@@ -41,6 +41,10 @@ if size(y,1) ~= 1
     y = y';
 end
 
+% make values close to 0 and 1 be slightly less for fitting
+y(y == 0) = .001;
+y(y == 1) = .999;
+
 if exist('weights','var') & ~isempty(weights)
     ynew = [];
     xnew = [];
