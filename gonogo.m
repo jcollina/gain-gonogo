@@ -80,37 +80,74 @@ while cnt <= length(STAGE)
         case -1
             disp('RUNNING LICK TUBE PRIMING')
             prime(params);
+            
         case 0
             disp('RUNNING HABITUATION');
             habituation(params);
+            
         case 1
             disp('RUNNING TRAINING');
             training(s,params);
+            
         case 10
             disp('RUNNING TRAINING W. ABORT');
             training_abort(s,params);
+            
         case 2
             disp('RUNNING TESTING');
             psych(s,params);
+            
         case 20
             disp('RUNNING TESTING W. ABORT');
+            params.targetDBShift = linspace(0,25,6); % target volumes
+            params.offsetP = [.25 .25 .25 .25];      % target time probabilities
+            params.dbP = [.4 .05 .05 .05 .05 .2 .2]; % target volume probabilities
+            params.rewCont = [0 2 2 2 2 1 1];        % reward contingency (0=timeout,1=reward,2=noreward)
+            params.stimLabel = 'testing';
+            
             psych_abort(s,params);
+            
         case 21
             disp('RUNNING TESTING W. OPTO');
             params.opto = true;
             psych_opto_abort(s,params);
+            
+        case 22
+            disp('RUNNING PSYCH - WIDE RANGE');
+            params.targetDBShift = [linspace(0,25,6) 30]; % target volumes
+            params.offsetP = [.25 .25 .25 .25];      % target time probabilities
+            params.dbP = [.4 .05 .05 .05 .05 .05 .05 .3];     % target volume probabilities
+            params.rewCont = [0 2 2 2 2 2 2 1];        % reward contingency (0=timeout,1=reward,2=noreward)
+            params.stimLabel = 'testingWide';
+            
+            psych_abort(s,params);
+            
+        case 23
+            disp('RUNNING PSYCH - NARROW RANGE');
+            params.targetDBShift = [linspace(0,25,6) 30]; % target volumes
+            params.offsetP = [.25 .25 .25 .25];      % target time probabilities
+            params.dbP = [.4 .05 .05 .05 .05 .05 .05 .3];     % target volume probabilities
+            params.rewCont = [0 2 2 2 2 2 2 1];        % reward contingency (0=timeout,1=reward,2=noreward)
+            params.stimLabel = 'testingNarrow';
+            
+            psych_abort(s,params);
+            
         case 3
             disp('RUNNING OFFSET TESTING');
             offsets(s,params);
+            
         case 30
             disp('RUNNING OFFSET TESTING W. ABORT');
             offsets_abort(s,params);
+            
         case 31
             disp('RUNNING THRESHOLD-OPTO TESTING');
             threshold_opto_abort(s,params);
+            
         case 5
             disp('RUNNING STAIRCASE');
             staircase(s,params);
+            
     end
     cnt = cnt + 1;
 end

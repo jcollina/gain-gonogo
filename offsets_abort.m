@@ -21,7 +21,7 @@ thresh = threshold(ind,cond);
 if params.sd(2) - params.sd(1) > 0
     params.targetDBShift = 25;
 else
-    params.targetDBShift = 20;
+    params.targetDBShift = 25;
 end
 params.targetDBShift = [thresh params.targetDBShift];
 disp(['Threshold = ' num2str(thresh)]);

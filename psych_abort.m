@@ -16,19 +16,13 @@ p = setupSerialPort(params.com,19200);
 % custom parameters
 params.noiseD = params.baseNoiseD + [.25 .5 .75 1];  % target times
 
-% target volumes
-if params.sd(2) - params.sd(1) > 0
-    params.targetDBShift = linspace(0,25,6);
-else
-    params.targetDBShift = linspace(0,25,6);
-end
-
 % set the seed
 rng(params.seed); % (to make the same stimulus each time)
 
 % stimulus generation
 params.stim = fullfile('D:\stimuli\gainBehavior',...
-    sprintf('%s_testing%sChord-%s-dual.mat',...
+    sprintf('%s_%s%sChord-%s-dual.mat',...
+    params.stimLabel,...
     params.stimVersion,...
     params.contrastCondition,...
     params.boothID));
@@ -37,15 +31,6 @@ params.stim = fullfile('D:\stimuli\gainBehavior',...
 % shuffle the seed to make the trials random each time, but save the state
 % to ensure we can reconstruct trial order if all else fails
 params.rngState = rng('shuffle');
-
-% presentation probabilities
-params.offsetP = [.25 .25 .25 .25];
-%[.2 .2 .2 .2 .2];
-params.dbP = [.4 .05 .05 .05 .05 .2 .2];
-%params.dbP = [.3 .1 .1 .1 .1 .1 .2];
-
-% reward contingency
-params.rewCont = [0 2 2 2 2 1 1]; % 0 == timeout, 2 == no reward, 1 == reward
 
 % open data file
 dt = datestr(now,'yymmddHHMM');
